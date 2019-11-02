@@ -38,10 +38,6 @@ val get_score : t -> int
     adding [x]. *)
 val add_score : t -> int -> t
 
-(** [remove_score t x] is the new player with the current score of [t] after
-    removing [x]. *)
-val remove_score : t -> int -> t
-
 (** [get_achievement t] is the list of achievements of [t]. *)
 val get_achievements : t -> int list
 
@@ -49,6 +45,4 @@ val get_achievements : t -> int list
     after adding the achievement represented by (in) [e] *)
 val add_achievement : t -> int -> t
 
-(** [remove_achievement t e] is the new player with the list of achievements of [t]
-    after removing the achievement represented by (in) [e]*)
-val remove_achievement : t -> int -> t
+

@@ -35,17 +35,28 @@ let update_players (state : t) (players : Play.t) : t = {
   lowest_era = state.lowest_era;
 }
 
+let update_
+
 let current_player (state: t) : int= 
   List.nth state.players state.current_player
 
 let lowest_era (state: t) : int = 
   state.lowest_era 
 
+let update_era_list e_lst i new_e = 
+  let rec update' acc idx = function
+    | [] -> failwith "ith stack not in the list"
+    | x::xs when idx = i -> acc @ [new_e] @ xs
+    | x::xs -> update' (x::acc) (idx+1) xs 
+  in update' [] 0 e_lst
 
 (* *)
 let draw (state: t) (player: Player.t) (era: int): t = 
-  let era_draw = max state.lowest_era era in
-  let card_to_draw = era_draw |> List.nth state.era_cards |> List.nth era_cards in
+  let era_num = max state.lowest_era era in
+  let era_to_remove = List.nth era_num state.era_cards in
+  let card_to_draw, updated_era = Player.pop_card 0 era_to_remove in
   let updated_player = Player.add_hand player card_to_draw in
-  let updated_players = List.sort_uniq Player.compare updated_player::state.players
+  let updated_players = List.sort_uniq Player.compare updated_player::state.players in
+  let updated_eras = update_era_list player.era_cards era_num updated_era in
+  state |> update_players updated_players |> 
 

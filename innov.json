@@ -77,8 +77,8 @@
       "dogmas": [
         {
           "effect1": [
-            "Demand;Draw 1",
-            "Transfer SelfHand:-1,OtherHand:-1"
+            "Demand Draw 1",
+            "Transfer SelfHand:-1,OthersHand:-1"
           ]
         }
       ],

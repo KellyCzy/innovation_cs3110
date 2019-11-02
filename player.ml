@@ -82,21 +82,60 @@ let rec help_check_color lst c =
 (* update the ith stack with [new_s] in the stack list**)
 let update_stack_list s_lst i new_s = 
   let ith = List.nth s_lst i in
-  let update' acc = function
+  let rec update' acc = function
     | [] -> failwith "ith stack not in the list"
     | x::xs -> begin match compare_stack ith x with
         | 0 -> new_s::acc @ xs
-        | -1 | 1 -> update' (x::acc) xs
+        | _ -> update' (x::acc) xs
       end in 
   update' [] s_lst |> List.sort compare_stack
 
+let pop_card i lst = 
+  match lst with
+  | [] -> failwith "cannot pop element from empty list"
+  | x::xs -> let ith = List.nth i lst in
+    (List.filter (fun x -> not (Card.equal x ith)) lst), ith
+
 let add_stack player hand_idx = 
-  let card_to_add = List.nth player.hand hand_idx in
+  let card_to_add, updated_hand = pop_card hand_idx player.hand  in
   let card_c_idx = card_to_add |> Card.get_color |> map_color_to_int in
   let stack_to_update = card_to_add::(List.nth player.board card_c_idx) in
   let updated_stack_list = update_stack_list player.board card_c_idx stack_to_update in
-  let updated_hand = remove_ith_card player.hand remove_ith_card in
   player |> update_hand updated_hand |> update_board updated_stack_list
+
+let remove_stack player color = 
+  let int_of_color = color |> map_color_to_int in
+  match int_of_color |> get_ith_stack player |> pop_card 0 with 
+  | (new_s, ith) -> new_s |> update_stack_list player.board int_of_color |> update_board
+
+let get_score player = 
+  player.score
+
+let update_score player score = {
+  id = player.id;
+  hand = player.hand;
+  board = player.board;
+  score = score;
+  achievements = player.achievements
+}
+
+let update_achievements player a = {
+  id = player.id;
+  hand = player.hand;
+  board = player.board;
+  score = score;
+  achievements = a;
+}
+
+let add_score player n = 
+  player.score + n |> update_score player 
+
+let get_achievements player = 
+  player.achievements
+
+let add_achievement player era = 
+  era::player.achievements |> update_achievements player
+
 
 
 

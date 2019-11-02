@@ -3,8 +3,8 @@ open Card
 open Dogma
 
 let json_to_dogmas (json : Yojson.Basic.t) : Dogma.t list = 
-  let eff1_lst = json |> member "dogmas" |> member "effect1" |> to_list in
-  let eff2_lst = json |> member "dogmas" |> member "effect2" |> to_list in 
+  let eff1_lst = json |> member "dogmas" |> member "effect1" |> to_list |> List.map to_string in
+  let eff2_lst = json |> member "dogmas" |> member "effect2" |> to_list |> List.map to_string in 
   let matching st = 
     match st |> String.split_on_char ' ' with 
     | eff :: content :: [] -> match eff with
@@ -19,15 +19,21 @@ let json_to_dogmas (json : Yojson.Basic.t) : Dogma.t list =
           | "Left" -> Dogma.Left
           | "Right" -> Dogma.Right in Dogma.Splay dir
       | "Tranfer" -> 
-        let piles = content |> String.split ',' in
-        match 
-      | 
 
 
-        let from_json (json : Yojson.Basic.t) : Card.t = 
-          {
-            title = json |> member "title" |> to_string;
-            value = json |> member "value" |> to_int;
+        (        let helper1 str = 
+                   match str with 
+                   | "Red" -> Dogma.Red
+                   | "Purple" -> Dogma.Purple
+                   | "Blue" -> Dogma.Blue
+                   | "Green" -> Dogma.Green
+                   | "Yellow" -> Dogma.Yellow 
+                   | i -> int_of_string i in
+                 m_json (json : Yojson.Basic.t) : Card.t = 
 
-          }
-
+                                                  | pile :: x :: [] -> match pile with 
+                 | "SelfHand" -> Dogma.SelfHand (helper1 x)
+                 | "OthersHand" -> Dogma.OthersHand (helper1 x)
+                 | "SelfStack" -> Dogma.SelfStack (helper1 x)
+                 | "OthersStack" -> Dogma.OthersStack (helper1 x) in
+  piles |> List.map helper2)
