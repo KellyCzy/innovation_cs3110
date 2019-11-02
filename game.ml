@@ -5,9 +5,10 @@ open Dogma
 let json_to_dogmas (json : Yojson.Basic.t) : Dogma.t list = 
   let eff1_lst = json |> member "dogmas" |> member "effect1" |> to_list |> List.map to_string in
   let eff2_lst = json |> member "dogmas" |> member "effect2" |> to_list |> List.map to_string in 
-  let matching st = 
+  let rec matching st = 
     match st |> String.split_on_char ' ' with 
-    | eff :: content :: [] -> match eff with
+    | eff :: content :: [] -> 
+      match eff with
       | "Draw" -> Dogma.Draw (int_of_string content)
       | "Meld" -> Dogma.Meld (int_of_string content)
       | "Tuck" -> Dogma.Tuck (int_of_string content)
@@ -36,6 +37,10 @@ let json_to_dogmas (json : Yojson.Basic.t) : Dogma.t list =
              | "OthersStack" -> Dogma.OthersStack (helper1 x) in
          match piles with 
          | a :: b :: [] -> Dogma.Transfer (helper2 a, helper2 a))
+      | "Demand" -> 
+        let efs = content |> List.split_on_char ';' in
+        let ef e = e |> List.split_on_char ':' |> List.concat ' 'in
+        Dogma.Demand efs |> List.map ef |> matching
 
 
 let from_json (json : Yojson.Basic.t) : Card.t = 
