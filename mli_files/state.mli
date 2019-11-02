@@ -6,7 +6,7 @@ type t
 
 type card_pile = Dogma.card_pile
 
-val init_state : (Card.t list) -> t
+val init_state : (Card.t list list) -> t
 
 val current_player: t -> Player.t
 

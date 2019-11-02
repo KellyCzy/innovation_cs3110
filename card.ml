@@ -1,6 +1,6 @@
 open Dogma
 
-type icon = Castle | Crown | Factory | Plant | Clock | Lightbulb | Pattern
+type icon = Castle | Crown | Factory | Leaf | Clock | Lightbulb | Pattern
 
 type color = Dogma.stack_color
 
@@ -21,7 +21,7 @@ let dogma card = card.dogmas
 
 let dogmas_icon card = card.dogmas_icon
 
-let icons card = card.icon
+let icons card = card.icons
 
 let color card = card.color
 

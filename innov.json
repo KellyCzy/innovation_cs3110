@@ -1,18 +1,26 @@
 {
   "Era1": [
-      {
+    {
       "title": "Agriculture",
       "value": 1,
       "dogmas": [
         {
-          "effect1": ["Return","Draw"]
+          "effect1": [
+            "Return",
+            "Draw"
+          ]
         },
         {
           "effect2": []
         }
       ],
       "dogmas_icon": "Leaf",
-      "icons": ["Logo", "Leaf", "Leaf", "Leaf"],
+      "icons": [
+        "Logo",
+        "Leaf",
+        "Leaf",
+        "Leaf"
+      ],
       "color": "Yellow"
     },
     {
@@ -20,14 +28,25 @@
       "value": 1,
       "dogmas": [
         {
-          "effect1": ["return","draw"]
+          "effect1": [
+            "Return",
+            "Draw"
+          ]
         },
         {
-          "effect2": ["return", "draw"]
+          "effect2": [
+            "return",
+            "draw"
+          ]
         }
       ],
       "dogmas_icon": "Lightbulb",
-      "icons": ["Logo", "Lightbulb", "Lightbulb", "Castle"],
+      "icons": [
+        "Logo",
+        "Lightbulb",
+        "Lightbulb",
+        "Castle"
+      ],
       "color": "Yellow"
     },
     {
@@ -35,15 +54,42 @@
       "value": 2,
       "dogmas": [
         {
-          "effect1": ["draw"]
+          "effect1": [
+            "draw"
+          ]
         },
         {
           "effect2": []
         }
       ],
       "dogmas_icon": "Castle",
-      "icons": ["Logo", "Castle", "Castle", "Castle"],
+      "icons": [
+        "Logo",
+        "Castle",
+        "Castle",
+        "Castle"
+      ],
       "color": "Yellow"
+    },
+    {
+      "title": "Archery",
+      "value": 1,
+      "dogmas": [
+        {
+          "effect1": [
+            "Demand;Draw 1",
+            "Transfer SelfHand:-1,OtherHand:-1"
+          ]
+        }
+      ],
+      "dogmas_icon": "Castle",
+      "icons": [
+        "Castle",
+        "Lightbulb",
+        "Logo",
+        "Castle"
+      ],
+      "color": "Red"
     }
   ]
 }
