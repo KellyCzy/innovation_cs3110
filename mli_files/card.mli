@@ -10,17 +10,17 @@ type icon
 type color 
 
 (** [get_card_title c] is the title of [c]*)
-val get_card_title : t -> string
+val title : t -> string
 
 (** [get_value c] is the value/era of [c]*)
-val get_value : t -> int
+val value : t -> int
 
 (** [get_dogma c] is the list of dogmas on the card [c]*)
-val get_dogma : t -> Dogma.t list
+val dogma_list : t -> Dogma.t list
 
 (** [get_icon c] is the list of icons on the card [c]*)
-val get_icon : t -> icon list
+val icon : t -> icon list
 
 (** [get_colorc c] is the color of the card [c]*)
-val get_color : t -> color
+val color : t -> color
 
