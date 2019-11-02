@@ -34,7 +34,8 @@ let json_to_dogmas (json : Yojson.Basic.t) : Dogma.t list =
              | "OthersHand" -> Dogma.OthersHand (helper1 x)
              | "SelfStack" -> Dogma.SelfStack (helper1 x)
              | "OthersStack" -> Dogma.OthersStack (helper1 x) in
-         piles |> List.map helper2)
+         match piles with 
+         | a :: b :: [] -> Dogma.Transfer (helper2 a, helper2 a))
 
 
 let from_json (json : Yojson.Basic.t) : Card.t = 
