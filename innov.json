@@ -1,0 +1,49 @@
+{
+  "Era1": [
+      {
+      "title": "Agriculture",
+      "value": 1,
+      "dogmas": [
+        {
+          "effect1": ["Return","Draw"]
+        },
+        {
+          "effect2": []
+        }
+      ],
+      "dogmas_icon": "Leaf",
+      "icons": ["Logo", "Leaf", "Leaf", "Leaf"],
+      "color": "Yellow"
+    },
+    {
+      "title": "Tools",
+      "value": 1,
+      "dogmas": [
+        {
+          "effect1": ["return","draw"]
+        },
+        {
+          "effect2": ["return", "draw"]
+        }
+      ],
+      "dogmas_icon": "Lightbulb",
+      "icons": ["Logo", "Lightbulb", "Lightbulb", "Castle"],
+      "color": "Yellow"
+    },
+    {
+      "title": "The Wheel",
+      "value": 2,
+      "dogmas": [
+        {
+          "effect1": ["draw"]
+        },
+        {
+          "effect2": []
+        }
+      ],
+      "dogmas_icon": "Castle",
+      "icons": ["Logo", "Castle", "Castle", "Castle"],
+      "color": "Yellow"
+    }
+  ]
+}
