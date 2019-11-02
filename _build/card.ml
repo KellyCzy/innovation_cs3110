@@ -1,6 +1,6 @@
 open Dogma
 
-type icon = Castle | Crown | Factory | Plant | Clock | Lightbulb | Pattern
+type icon = Castle | Crown | Factory | Leaf | Clock | Lightbulb | Pattern
 
 type color = Dogma.stack_color
 
@@ -12,10 +12,24 @@ type t = {
   icons : icon list;
   color : color;
 }
+let equal card1 card2 = 
+  card1.title = card2.title
 
-let title (card : t) : string = card.title
+let compare card1 card2 = 
+  Stdlib.compare card1.title card2.title
 
-let value card = card.value
+let get_color card = 
+  card.color
 
-let dogma 
+let get_title (card : t) : string = card.title
+
+let get_value card = card.value
+
+let dget_ogma card = card.dogmas
+
+let get_dogmas_icon card = card.dogmas_icon
+
+let get_icons card = card.icons
+
+let get_color card = card.color
 
