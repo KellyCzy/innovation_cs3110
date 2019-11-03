@@ -27,8 +27,8 @@ let init_state (cards_list : Card.t list list) : t = {
     lowest_era = 1;
 }
 
-let update_players (state : t) (players : Play.t) : t = {
-  players = players;
+let update_players (state : t) (player : Player.t) : t = {
+  players = List.sort Player.compare (player::state.players);
   era_cards = state.era_cards;
   achievements = state.achievements;
   current_player = state.current_player;
@@ -65,6 +65,9 @@ let draw (state: t) (player: Player.t) (era: int): t =
   let updated_players = List.sort_uniq Player.compare updated_player::state.players in
   let updated_eras = update_era_list player.era_cards era_num updated_era in
   state |> update_players updated_players |> update_era_cards updated_eras
+
+let meld (state: t) (player: Player.t) (hand_idx: int): t = 
+  let updated_player = Player.add_stack player hand_idx in
 
 
 

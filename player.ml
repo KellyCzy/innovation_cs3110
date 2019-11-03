@@ -115,7 +115,7 @@ let add_card_to_stack card stack = {
   cards = card::stack.cards;
 }
 
-let add_stack player hand_idx = 
+let add_stack (player: t) (hand_idx: int) : t = 
   let updated_hand, card_to_add = pop_card hand_idx player.hand  in
   let color = card_to_add |> Card.get_color in
   let card_c_idx = color |> map_color_to_int in
