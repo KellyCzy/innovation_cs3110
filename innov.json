@@ -3,17 +3,13 @@
     {
       "title": "Agriculture",
       "value": 1,
-      "dogmas": [
-        {
-          "effect1": [
-            "Return",
-            "Draw"
-          ]
-        },
-        {
-          "effect2": []
-        }
-      ],
+      "dogmas": {
+        "effect1": [
+          "Return -1",
+          "Draw 1"
+        ],
+        "effect2": []
+      },
       "dogmas_icon": "Leaf",
       "icons": [
         "Logo",
@@ -26,20 +22,16 @@
     {
       "title": "Tools",
       "value": 1,
-      "dogmas": [
-        {
-          "effect1": [
-            "Return",
-            "Draw"
-          ]
-        },
-        {
-          "effect2": [
-            "return",
-            "draw"
-          ]
-        }
-      ],
+      "dogmas": {
+        "effect1": [
+          "Return -1",
+          "Draw 1"
+        ],
+        "effect2": [
+          "Return -1",
+          "Draw 1"
+        ]
+      },
       "dogmas_icon": "Lightbulb",
       "icons": [
         "Logo",
@@ -52,16 +44,12 @@
     {
       "title": "The Wheel",
       "value": 2,
-      "dogmas": [
-        {
-          "effect1": [
-            "draw"
-          ]
-        },
-        {
-          "effect2": []
-        }
-      ],
+      "dogmas": {
+        "effect1": [
+          "Draw 1"
+        ],
+        "effect2": []
+      },
       "dogmas_icon": "Castle",
       "icons": [
         "Logo",
@@ -74,14 +62,13 @@
     {
       "title": "Archery",
       "value": 1,
-      "dogmas": [
-        {
-          "effect1": [
-            "Demand Draw 1",
-            "Transfer SelfHand:-1,OthersHand:-1"
-          ]
-        }
-      ],
+      "dogmas": {
+        "effect1": [
+          "Demand Draw:1",
+          "Transfer SelfHand:-1,OthersHand:-1"
+        ],
+        "effect2": []
+      },
       "dogmas_icon": "Castle",
       "icons": [
         "Castle",

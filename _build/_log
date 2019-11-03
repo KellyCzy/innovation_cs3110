@@ -1,29 +1,18 @@
 ### Starting build.
 # Target: dogma.ml.depends, tags: { extension:ml, file:dogma.ml, ocaml, ocamldep, quiet }
-ocamlfind ocamldep -modules dogma.ml > dogma.ml.depends # cached
+ocamlfind ocamldep -modules dogma.ml > dogma.ml.depends
 # Target: dogma.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:dogma.cmo, file:dogma.ml, implem, ocaml, quiet }
-ocamlfind ocamlc -c -o dogma.cmo dogma.ml # cached
+ocamlfind ocamlc -c -o dogma.cmo dogma.ml
 # Target: card.ml.depends, tags: { extension:ml, file:card.ml, ocaml, ocamldep, quiet }
-ocamlfind ocamldep -modules card.ml > card.ml.depends # cached
+ocamlfind ocamldep -modules card.ml > card.ml.depends
 # Target: card.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:card.cmo, file:card.ml, implem, ocaml, quiet }
-ocamlfind ocamlc -c -o card.cmo card.ml # cached
+ocamlfind ocamlc -c -o card.cmo card.ml
 # Target: state.ml.depends, tags: { extension:ml, file:state.ml, ocaml, ocamldep, quiet }
-ocamlfind ocamldep -modules state.ml > state.ml.depends # cached
-# Target: command.ml.depends, tags: { extension:ml, file:command.ml, ocaml, ocamldep, quiet }
-ocamlfind ocamldep -modules command.ml > command.ml.depends # cached
-# Target: command.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:command.cmo, file:command.ml, implem, ocaml, quiet }
-ocamlfind ocamlc -c -o command.cmo command.ml # cached
-# Target: player.ml.depends, tags: { extension:ml, file:player.ml, ocaml, ocamldep, quiet }
-ocamlfind ocamldep -modules player.ml > player.ml.depends
-# Target: player.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:player.cmo, file:player.ml, implem, ocaml, quiet }
-ocamlfind ocamlc -c -o player.cmo player.ml
-# Target: state.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:state.cmo, file:state.ml, implem, ocaml, quiet }
-ocamlfind ocamlc -c -o state.cmo state.ml
-+ ocamlfind ocamlc -c -o state.cmo state.ml
-File "state.ml", line 22, characters 31-53:
-22 |       | i -> init_some_players (Player.init_player i)::acc i-1
-                                    ^^^^^^^^^^^^^^^^^^^^^^
-Error: This expression has type Player.t
-       but an expression was expected of type 'a list
+ocamlfind ocamldep -modules state.ml > state.ml.depends
++ ocamlfind ocamldep -modules state.ml > state.ml.depends
+File "state.ml", line 82, characters 0-3:
+82 | let update_hand player hand_idx = 
+     ^^^
+Error: Syntax error
 Command exited with code 2.
 # Compilation unsuccessful.
