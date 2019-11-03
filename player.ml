@@ -195,4 +195,6 @@ let add_achievement player era =
 let check_achieve player achievement = 
   if get_score player >= achievement then true else false
 
-
+let transfer_card_to_stack (card_list Card.t list) (stack: stack) (idx: int) = 
+  let updated_card_list, card = pop_card card_list idx card_list in 
+  let updated_stack = add_card_to_stack card stack true in

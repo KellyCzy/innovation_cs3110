@@ -111,43 +111,44 @@ let score (state : t) (player : Player.t) (hand_idx : int) : t =
 
 
 
-let match_card_pile (card_pile: Dogma.card_pile) (player: Player.t) = 
+let match_card_pile (card_pile: Dogma.card_pile) (myself: Player.t) (other: Player.t) = 
   match card_pile with 
-  | Self_hand i -> let card_list = Some (Player.get_hand myself); let stack = 
-  | Other_hand i -> Player.get_hand other
-  | Self_score _ -> Player.get_score_cards myself
-  | Other_score _ -> Player.get_score_cards other  
-  | Self_stack c -> Player.get_color_stack myself c
-  | Others_stack c -> Player.get_color_stack other c
+  | Self_hand i -> Some (Player.get_hand myself), None
+  | Other_hand i -> Some (Player.get_hand other), None
+  | Self_score _ -> Some (Player.get_score_cards myself), None
+  | Other_score _ -> Some (Player.get_score_cards other), None
+  | Self_stack c ->  None, Some (Player.get_color_stack myself c)
+  | Others_stack c -> None, Some (Player.get_color_stack other c)
 
 
+(*pile1 lose one card, pile2 get one card 
 
-(*pile1 lose one card, pile2 get one card *)
-let transfer (state: t) (myself: Player.t) (other: Player.t) (card_pile1: Dogma.card_pile) (card_pile2: Dogma.card_pile) (hand_idx: int): t =
-  match card_pile1 with 
-  | Self_hand i -> Player.get_hand myself
-  | Other_hand i -> Player.get_hand other
-  | Self_stack c -> Player.get_color_stack myself c
-  | Others_stack c -> Player.get_color_stack other c
-  | Self_score _ -> Player.get_score_cards myself
-  | Other_score _ -> Player.get_score_cards other  
-
-
-
-
-
+*)
+let transfer (state: t) (myself: Player.t) (other: Player.t) (card_pile1: Dogma.card_pile) (card_pile2: Dogma.card_pile) (hand_idx1: int): t =
+  let card_list1, stack1 = match_card_pile card_pile1 myself other in
+  let card_list2, stack2 = match_card_pile card_pile2 myself other in
+  match card_list1, stack1, card_list2, stack2 with 
+  | Some cl1, None, Some cl2, None ->
+  | Some _, None, None, Some _ -> 
+  | None, Some _, None, Some _ ->
+  | None, Some _, Some _, None -> 
 
 
 
 
 
 
-let achieve state player = 
-  let achievement = List.hd state.achievements in
-  let achiev_state = if Player.achieve player achievement*5 
-    then update_achievements state else state in 
-  let new_player = Player.add_achievement player achievement in
-  update_players state new_player
+
+
+
+
+
+    let achieve state player = 
+      let achievement = List.hd state.achievements in
+      let achiev_state = if Player.achieve player achievement*5 
+        then update_achievements state else state in 
+      let new_player = Player.add_achievement player achievement in
+      update_players state new_player
 
 let next_player (state : t) : t = 
   let length = List.length t.players in 

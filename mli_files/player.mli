@@ -5,6 +5,18 @@ type stack
 
 type t
 
+let init_stack color
+
+let update_stack_cards stack cards
+
+let init_player id
+
+let map_color_to_int
+
+let compare_player player1 player2
+
+let compare_stack stack1 stack2
+
 (** [get_hand t] is the list of hand cards of [t]. *)
 val get_hand : t -> Card.t list
 
@@ -16,9 +28,23 @@ val add_hand : t -> Card.t -> t
     after removing the card with index [i]. *)
 val remove_hand : t -> int -> t
 
-(** [get_stack t i] is the list of cards of [t]'s stack 
-    with index of [i]. *)
-val get_stack : t -> int -> Card.t list
+let remove_ith_card lst i
+
+let get_ith_hand player i
+
+let get_ith_stack player i
+
+let get_color_stack (player: t) (c: Dogma.stack_color) : t 
+
+let update_stack_list s_lst i new_s
+
+let pop_card i lst
+
+let pop_stack i lst
+
+let add_card_to_stack (card: Card.t) (stack: stack) (top: bool): stack
+
+
 
 (** [add_stack t i_h] is the new player with the list of cards of [t]'s
     stack with the same color as the card with index of 
@@ -31,8 +57,14 @@ val add_stack : t -> int -> Card.t -> t
     card. *)
 val remove_stack : t -> Dogma.stack_color -> int -> t
 
+let splay (player: t) (color: Dogma.stack_color) (direction: Dogma.splay_direction) : t
+
+let get_score_cards player
+
 (** [get_score t] is the current score of [t]. *)
 val get_score : t -> int
+
+let get_value (player:t) (idx:int) : int
 
 (** [add_score t x] is the new player with the current score of [t] after
     adding [x]. *)
@@ -44,5 +76,9 @@ val get_achievements : t -> int list
 (** [add_achievement t e] is the new player with the list of achievements of [t]
     after adding the achievement represented by (in) [e] *)
 val add_achievement : t -> int -> t
+
+let check_achieve player achievement
+
+let transfer_card_to_stack (card_list Card.t list) (stack: stack) (idx: int)
 
 
