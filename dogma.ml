@@ -3,7 +3,7 @@ type splay_direction = No | Up | Left | Right
 
 type stack_color = Red | Purple | Blue | Green | Yellow
 
-type card_pile = SelfHand of int | OthersHand of int | SelfStack of stack_color | OthersStack of stack_color
+type card_pile = Self_hand of int | Others_hand of int | Self_stack of stack_color | Others_stack of stack_color
 
 type effect = 
   | Draw of int

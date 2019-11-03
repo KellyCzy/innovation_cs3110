@@ -65,6 +65,12 @@ let update_board board player= {
   achievements = player.achievements;
 }
 
+let update_splay_direction (stack: stack) (direction: Dogma.splay_direction) = {
+  color = stack.color;
+  splay = direction;
+  cards = cards;
+}
+
 let get_hand player =
   player.hand
 
@@ -78,11 +84,6 @@ let remove_ith_card lst i =
 
 let get_ith_stack player i = 
   List.nth player.board i
-(* 
-let rec help_check_color lst c =
-  match lst with 
-  | [] -> false
-  | x :: t -> x.color = c || help_check_color t c *)
 
 (* update the ith stack with [new_s] in the stack list**)
 let update_stack_list s_lst i new_s = 
@@ -109,17 +110,18 @@ let pop_stack i stack =
     let updated_cards, ele = (List.filter (fun x -> Card.equal x ith) cards), ith in
     (update_stack_cards stack updated_cards), ith
 
-let add_card_to_stack card stack = {
+let add_card_to_stack (card: Card.t) (stack: stack) (top: bool): stack = {
   color = stack.color;
   splay = stack.splay;
-  cards = card::stack.cards;
+  cards = if top then card::stack.cards stack.cards@[card]
 }
 
-let add_stack (player: t) (hand_idx: int) : t = 
+(* add a card to top of bottom of a stack of corresponding color *)
+let add_stack (player: t) (hand_idx: int) (top: bool): t = 
   let updated_hand, card_to_add = pop_card hand_idx player.hand  in
   let color = card_to_add |> Card.get_color in
   let card_c_idx = color |> map_color_to_int in
-  let stack_to_update = add_card_to_stack card_to_add (List.nth player.board card_c_idx) in
+  let stack_to_update = add_card_to_stack card_to_add (List.nth player.board card_c_idx) top in
   let updated_stack_list = update_stack_list player.board card_c_idx stack_to_update in
   player |> update_hand updated_hand |> update_board updated_stack_list
 
@@ -131,11 +133,24 @@ let remove_stack player color =
   let updated_board = rest |> update_stack_list player.board int_of_color in
   (update_board updated_board player), ele
 
+(* splay the player's *)
+let splay (player: t) (color: Dogma.stack_color) (direction: Dogma.splay_direction) : t =
+  let color_idx = map_color_to_int color in 
+  let stack = get_ith_stack player color_idx in
+  let updated_stack = update_splay_direction stack direction 
+
+(* get player's score cards *)
 let get_score_cards player = 
   player.score
 
+(* get the sum of player's scores*)
 let get_score player =
   List.fold_left (fun acc ele -> Card.get_value ele) 0 player.score
+
+(** get the value of idx th card in player's hand *)
+let get_value (player:t) (idx:int) : int= 
+  let card = List.nth player.hand idx in
+  card.value
 
 let update_score player score = {
   id = player.id;
@@ -152,7 +167,6 @@ let update_achievements player a = {
   score = player.score;
   achievements = a;
 }
-
 
 let add_score player score_card = 
   score_card::player.score |> update_score player 

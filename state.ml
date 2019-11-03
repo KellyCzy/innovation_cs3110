@@ -67,7 +67,29 @@ let draw (state: t) (player: Player.t) (era: int): t =
   state |> update_players updated_players |> update_era_cards updated_eras
 
 let meld (state: t) (player: Player.t) (hand_idx: int): t = 
-  let updated_player = Player.add_stack player hand_idx in
+  let updated_player = Player.add_stack player hand_idx true in
+  update_players state updated_player
 
+let tuck (state: t) (player: Player.t) (hand_idx:int):t = 
+  let updated_player = Player.add_stack player hand_idx false in
+  update_players state updated_player
+
+let splay
+
+
+
+
+let update_hand player hand_idx = 
+  let new_hand = remove_ith_card player.hand hand_idx in
+  Player.update_hand new_hand player
+
+let update_era_cards state player hand_idx =
+  let era = Player.get_value player hand_idx in
+  let era_cards = List.nth state 
+
+
+
+let return (state:t) (player:Player.t) (hand_idx:int):t = 
+  let update_hand player hand_idx in
 
 
