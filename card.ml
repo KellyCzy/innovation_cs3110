@@ -18,6 +18,7 @@ let equal card1 card2 =
 let compare card1 card2 = 
   Stdlib.compare card1.title card2.title
 
+
 let get_color card = 
   card.color
 

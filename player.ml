@@ -21,11 +21,7 @@ let init_stack color = {
   cards = [];
 }
 
-let update_stack_cards stack cards = {
-  color = stack.color;
-  splay = stack.splay;
-  cards = cards;
-}
+
 
 let init_player id = {
   id = id;
@@ -73,8 +69,17 @@ let update_splay_direction (stack: stack) (direction: Dogma.splay_direction) = {
   cards = cards;
 }
 
+let update_stack_cards stack cards = {
+  color = stack.color;
+  splay = stack.splay;
+  cards = cards;
+}
+
 let get_hand player =
   player.hand
+
+let get_board player =
+  player.board
 
 let add_hand player card = 
   update_hand (card::player.hand) player
@@ -147,13 +152,14 @@ let remove_stack player color =
 (*transfer one card from card_list to stack, return updated card list and updated stack*)
 let transfer_card_to_stack (card_list: Card.t list) (stack: stack) (idx: int) (top: bool)= 
   let updated_card_list, card = pop_card idx card_list in 
-  let updated_stack = push_stack card stack top in
-  updated_card_list, updated_stack
+  if Card.get_color card <> stack.color then failwith "cannot transfer card of a different color"
+  else let updated_stack = push_stack card stack top in
+    updated_card_list, updated_stack
 
-let transfer_stack_to_card (card_list Card.t list) (stack: stack) (idx: int) =
-  let updated_stack, card = pop_stack idx stack in
+let transfer_stack_to_card (card_list Card.t list) (stack: stack)=
+  let updated_stack, card = pop_stack 0 stack in
   let updated_card_list = push_card card card_list in
-  updated_card_list, updated_stack
+  updated_stack, updated_card_list
 
 (*transfer card at position [idx] from card_list1 to card_list2*)
 let transfer_card_to_card (card_list1: Card.t list) (card_list2: Card.t list) (idx:int) =
@@ -163,9 +169,10 @@ let transfer_card_to_card (card_list1: Card.t list) (card_list2: Card.t list) (i
 
 (* transfer one card from stack1 to stack2*)
 let transfer_stack_to_stack (stack1: stack) (stack2: stack) (top: bool) =
-  let updated_stack1, card = pop_stack idx stack1 in
-  let updated_stack2 = push_stack card stack2 top in
-  updated_stack1, updated_stack2
+  if stack1.color <> stack2.color then failwith "cannot transfer card of a different color"
+  else let updated_stack1, card = pop_stack idx stack1 in
+    let updated_stack2 = push_stack card stack2 top in
+    updated_stack1, updated_stack2
 
 
 (* splay the player's *)
