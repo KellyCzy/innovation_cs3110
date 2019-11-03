@@ -77,10 +77,17 @@ let get_hand player =
 let add_hand player card = 
   update_hand (card::player.hand) player
 
+(** Remove the [i]th hand card. *)
+let remove_hand player i = 
+  update_hand (remove_ith_card player.hand i) player
+
 (** Remove the [i]th element of [lst]. *)
 let remove_ith_card lst i = 
   let ith = List.nth lst i in
   List.filter (fun x -> not (Card.equal x ith)) lst
+
+let get_ith_hand player i = 
+  List.nth player.hand i
 
 let get_ith_stack player i = 
   List.nth player.board i
@@ -137,7 +144,9 @@ let remove_stack player color =
 let splay (player: t) (color: Dogma.stack_color) (direction: Dogma.splay_direction) : t =
   let color_idx = map_color_to_int color in 
   let stack = get_ith_stack player color_idx in
-  let updated_stack = update_splay_direction stack direction 
+  let updated_stack = update_splay_direction stack direction in
+  let updated_stack_list = update_stack_list player.board color_idx updated_stack in
+  player |> updated_board updated_stack_list
 
 (* get player's score cards *)
 let get_score_cards player = 

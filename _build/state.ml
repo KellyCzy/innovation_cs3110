@@ -49,6 +49,7 @@ let current_player (state: t) : int=
 let lowest_era (state: t) : int = 
   state.lowest_era 
 
+(* update the ith era in e_lst with new_e, return an updated e_lst *)
 let update_era_list e_lst i new_e = 
   let rec update' acc idx = function
     | [] -> failwith "ith stack not in the list"
@@ -63,7 +64,7 @@ let draw (state: t) (player: Player.t) (era: int): t =
   let card_to_draw, updated_era = Player.pop_card 0 era_to_remove in
   let updated_player = Player.add_hand player card_to_draw in
   let updated_players = List.sort_uniq Player.compare updated_player::state.players in
-  let updated_eras = update_era_list player.era_cards era_num updated_era in
+  let updated_eras = update_era_list state.era_cards era_num updated_era in
   state |> update_players updated_players |> update_era_cards updated_eras
 
 let meld (state: t) (player: Player.t) (hand_idx: int): t = 
@@ -74,11 +75,18 @@ let tuck (state: t) (player: Player.t) (hand_idx:int):t =
   let updated_player = Player.add_stack player hand_idx false in
   update_players state updated_player
 
+<<<<<<< HEAD
 let splay
+=======
+let splay (state: t) (player: Player.t) (color: Dogma.stack_color) (direction: Dogma.splay_direction) = 
+  let updated_player = Player.splay player color direction in
+  update_players state player
+>>>>>>> 044ee0e00e1d8d38a9f44ea64d8a1ee704ecaa14
 
 
 
 
+<<<<<<< HEAD
 let update_hand player hand_idx = 
   let new_hand = remove_ith_card player.hand hand_idx in
   Player.update_hand new_hand player
@@ -91,5 +99,26 @@ let update_era_cards state player hand_idx =
 
 let return (state:t) (player:Player.t) (hand_idx:int):t = 
   let update_hand player hand_idx in
+=======
+
+let update_era_cards state player card =
+  let era = Player.get_value player hand_idx in
+  let era_cards = List.nth state.era_cards era in
+  update_era_list state.era_cards era (card::era_cards)
+
+let return (state:t) (player:Player.t) (hand_idx:int):t = 
+  let updated_hand_cards, card = 
+    Player.pop_card hand_idx (Play.get_hand player) in
+  let era_cards = update_era_cards state player card in
+  update_era_cards state era_cards
+
+
+
+let score player hand_idx = 
+  let card = hand_idx |> Player.get_ith_hand in
+  let updated_player = card |> Player.update
+                       |> Player.add_score player 
+
+>>>>>>> 044ee0e00e1d8d38a9f44ea64d8a1ee704ecaa14
 
 
