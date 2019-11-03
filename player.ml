@@ -21,8 +21,6 @@ let init_stack color = {
   cards = [];
 }
 
-
-
 let init_player id = {
   id = id;
   hand = [];
@@ -66,7 +64,7 @@ let update_board board player= {
 let update_splay_direction (stack: stack) (direction: Dogma.splay_direction) = {
   color = stack.color;
   splay = direction;
-  cards = cards;
+  cards = stack.cards;
 }
 
 let update_stack_cards stack cards = {
@@ -90,7 +88,7 @@ let get_ith_hand player i =
 let get_ith_stack player i = 
   List.nth player.board i
 
-let get_color_stack (player: t) (c: Dogma.stack_color) : t = 
+let get_color_stack (player: t) (c: Dogma.stack_color) : stack = 
   get_ith_stack player (map_color_to_int c)
 
 (* update the ith stack with [new_s] in the stack list**)
@@ -103,6 +101,7 @@ let update_stack_list s_lst i new_s =
         | _ -> update' (x::acc) xs
       end in 
   update' [] s_lst |> List.sort compare_stack
+
 
 let pop_card i lst = 
   match lst with
@@ -126,7 +125,7 @@ let remove_hand player i =
 let push_stack (card: Card.t) (stack: stack) (top: bool): stack = {
   color = stack.color;
   splay = stack.splay;
-  cards = if top then card::stack.cards stack.cards@[card]
+  cards = if top then card::stack.cards else stack.cards@[card]
 }
 
 let push_card (card: Card.t) (card_list: Card.t list) : Card.t list =
@@ -153,26 +152,30 @@ let remove_stack player color =
 let transfer_card_to_stack (card_list: Card.t list) (stack: stack) (idx: int) (top: bool)= 
   let updated_card_list, card = pop_card idx card_list in 
   if Card.get_color card <> stack.color then failwith "cannot transfer card of a different color"
-  else let updated_stack = push_stack card stack top in
-    updated_card_list, updated_stack
+  else begin 
+    let updated_stack = push_stack card stack top in
+    updated_card_list, updated_stack 
+  end
 
-let transfer_stack_to_card (card_list Card.t list) (stack: stack)=
+let transfer_stack_to_card (stack: stack) (card_list: Card.t list) =
   let updated_stack, card = pop_stack 0 stack in
   let updated_card_list = push_card card card_list in
   updated_stack, updated_card_list
 
 (*transfer card at position [idx] from card_list1 to card_list2*)
 let transfer_card_to_card (card_list1: Card.t list) (card_list2: Card.t list) (idx:int) =
-  let updated_card_list1, card = pop_card idx card_list in 
+  let updated_card_list1, card = pop_card idx card_list1 in 
   let updated_card_list2 = push_card card card_list2 in
   updated_card_list1, updated_card_list2
 
 (* transfer one card from stack1 to stack2*)
 let transfer_stack_to_stack (stack1: stack) (stack2: stack) (top: bool) =
   if stack1.color <> stack2.color then failwith "cannot transfer card of a different color"
-  else let updated_stack1, card = pop_stack idx stack1 in
+  else begin 
+    let updated_stack1, card = pop_stack 0 stack1 in
     let updated_stack2 = push_stack card stack2 top in
     updated_stack1, updated_stack2
+  end
 
 
 (* splay the player's *)
@@ -181,7 +184,7 @@ let splay (player: t) (color: Dogma.stack_color) (direction: Dogma.splay_directi
   let stack = get_ith_stack player color_idx in
   let updated_stack = update_splay_direction stack direction in
   let updated_stack_list = update_stack_list player.board color_idx updated_stack in
-  player |> updated_board updated_stack_list
+  player |> update_board updated_stack_list
 
 (* get player's score cards *)
 let get_score_cards player = 
@@ -204,7 +207,7 @@ let update_score player score = {
   achievements = player.achievements
 }
 
-let update_achievements player a = {
+let update_achievements (player: t) (a: int list) = {
   id = player.id;
   hand = player.hand;
   board = player.board;
@@ -218,11 +221,9 @@ let add_score player score_card =
 let get_achievements player = 
   player.achievements
 
-let add_achievement player era = 
-  era::player.achievements |> update_achievements player
 
-(** check if player can achieve *)
-let check_achieve player achievement = 
-  if get_score player >= achievement then true else false
+let add_achievement (player: t) (era: int) = 
+  if (get_score player < era*5) then failwith "not enough score to achieve"
+  else era::player.achievements |> update_achievements player
 
 

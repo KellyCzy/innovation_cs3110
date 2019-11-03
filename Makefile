@@ -1,4 +1,4 @@
-MODULES=dogma card state player game 
+MODULES=dogma card player state game 
 OBJECTS=$(MODULES:=.cmo)
 MLS=$(MODULES:=.ml)
 # MLIS=$(MODULES:=.mli)
@@ -8,7 +8,20 @@ OCAMLBUILD=ocamlbuild -use-ocamlfind
 
 default: build
 	utop 
+
+build:
+	$(OCAMLBUILD) $(OBJECTS)
+
+# test:
+# 	$(OCAMLBUILD) -tag 'debug' $(TEST) && ./$(TEST)
+
+# play:
+# 	$(OCAMLBUILD) $(MAIN) && ./$(MAIN)
+
+check:
+	bash checkenv.sh && bash checktypes.sh
 	
+
 test:
 	$(OCAMLBUILD) -tag debug $(TEST) && ./$(TEST)
 

@@ -5,9 +5,9 @@ type stack_color = Red | Purple | Blue | Green | Yellow
 
 type card_pile = 
   | Self_hand of int 
-  | Others_hand of int 
+  | Other_hand of int 
   | Self_stack of stack_color 
-  | Others_stack of stack_color
+  | Other_stack of stack_color
   | Self_score of int 
   | Other_score of int (*dont use this int*)
 
