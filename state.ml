@@ -22,7 +22,7 @@ let init_state (cards_list : Card.t list list) : t = {
       | i -> init_some_players (Player.init_player i)::acc i-1
     in init_some_players [] 4;
     era_cards = cards_list;
-    achievements = rnd_sort_list 5;
+    achievements = range 10;
     current_player = 0;
     lowest_era = 1;
 }
@@ -39,6 +39,19 @@ let update_era_cards state era_cards = {
   players = state.player;
   era_cards = era_cards;
   achievements = state.achievements;
+  current_player = state.current_player;
+  lowest_era = state.lowest_era;
+}
+
+let new_achievement state =
+  match state.achievements with
+  |[]->[]
+  | h::t -> t
+
+let update_achievements state = {
+  players = state.player;
+  era_cards = state.era_cards;
+  achievements = new_achievement state;
   current_player = state.current_player;
   lowest_era = state.lowest_era;
 }
@@ -93,14 +106,55 @@ let return (state:t) (player:Player.t) (hand_idx:int):t =
 
 
 
-let score player hand_idx = 
-  let updated_player = card |> Player.remove_hand player hand_idx in
-  let card = hand_idx |> Player.get_ith_hand in
-  |> Player.add_score player 
-
-let transfer (state: t)
+let score (state : t) (player : Player.t) (hand_idx : int) : t = 
+  transfer state player player (Player.get_hand player) (Player.get_score_cards player) hand_idx
 
 
 
-let 
+let match_card_pile (card_pile: Dogma.card_pile) (player: Player.t) = 
+  match card_pile with 
+  | Self_hand i -> let card_list = Some (Player.get_hand myself); let stack = 
+  | Other_hand i -> Player.get_hand other
+  | Self_score _ -> Player.get_score_cards myself
+  | Other_score _ -> Player.get_score_cards other  
+  | Self_stack c -> Player.get_color_stack myself c
+  | Others_stack c -> Player.get_color_stack other c
 
+
+
+(*pile1 lose one card, pile2 get one card *)
+let transfer (state: t) (myself: Player.t) (other: Player.t) (card_pile1: Dogma.card_pile) (card_pile2: Dogma.card_pile) (hand_idx: int): t =
+  match card_pile1 with 
+  | Self_hand i -> Player.get_hand myself
+  | Other_hand i -> Player.get_hand other
+  | Self_stack c -> Player.get_color_stack myself c
+  | Others_stack c -> Player.get_color_stack other c
+  | Self_score _ -> Player.get_score_cards myself
+  | Other_score _ -> Player.get_score_cards other  
+
+
+
+
+
+
+
+
+
+
+
+let achieve state player = 
+  let achievement = List.hd state.achievements in
+  let achiev_state = if Player.achieve player achievement*5 
+    then update_achievements state else state in 
+  let new_player = Player.add_achievement player achievement in
+  update_players state new_player
+
+let next_player (state : t) : t = 
+  let length = List.length t.players in 
+  {
+    players: t.players;
+    era_card = t.era_card;
+    achievements: t.achievements;
+    current_player: (t.current_player + 1) mod length;
+    lowest_era: t.lowest_era;
+  }
