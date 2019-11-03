@@ -42,6 +42,8 @@ let map_color_to_int = function
   | Green -> 3
   | Yellow -> 4
 
+(* let map_int_to_color = function *)
+
 
 let compare_player player1 player2 = 
   Stdlib.compare player1.id player2.id
@@ -91,6 +93,9 @@ let get_ith_hand player i =
 
 let get_ith_stack player i = 
   List.nth player.board i
+
+let get_color_stack (player: t) (c: Dogma.stack_color) : t = 
+  get_ith_stack player (map_color_to_int c)
 
 (* update the ith stack with [new_s] in the stack list**)
 let update_stack_list s_lst i new_s = 
@@ -186,7 +191,8 @@ let get_achievements player =
 let add_achievement player era = 
   era::player.achievements |> update_achievements player
 
-
-
+(** check if player can achieve *)
+let check_achieve player achievement = 
+  if get_score player >= achievement then true else false
 
 
