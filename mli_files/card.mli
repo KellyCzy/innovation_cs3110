@@ -1,4 +1,4 @@
-open Dogma
+
 (** type of a card. 
       A card should contains a [tile], [value],  [dogma], [icon], [color]*)
 type t 

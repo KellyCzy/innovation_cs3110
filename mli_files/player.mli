@@ -1,17 +1,15 @@
-open Card
-open Dogma
 
 type stack
 
 type t
 
-let init_stack color
+val init_stack : Dogma.stack_color -> stack
 
 let update_stack_cards stack cards
 
 let init_player id
 
-let map_color_to_int
+val map_color_to_int : Dogma.stack_color -> int
 
 let compare_player player1 player2
 

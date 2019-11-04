@@ -1,5 +1,3 @@
-(* open Dogma *)
-open Dogma
 
 type color = Red | Purple | Blue | Green | Yellow
 (* type color = Red|Black *)

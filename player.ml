@@ -1,5 +1,3 @@
-open Card
-open Dogma
 
 type stack = {
   color : Dogma.stack_color;

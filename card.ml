@@ -1,4 +1,3 @@
-open Dogma
 
 type icon = Castle | Crown | Factory | Leaf | Clock | Lightbulb | Pattern
 
