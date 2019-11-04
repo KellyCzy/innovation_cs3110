@@ -54,7 +54,7 @@ let json_to_dogmas (json : Yojson.Basic.t) : Dogma.t list =
            | "Left" -> Dogma.Left
            | "Right" -> Dogma.Right in Dogma.Splay dir
        | "Tranfer" ->  
-         (let piles = content |> String.split ',' in
+         (let piles = content |> String.split_on_char ',' in
           let helper2 str =  match str |> String.split_on_char ':' with
             | pile :: x :: [] -> match pile with 
               | "Self_hand" -> Dogma.Self_hand (int_of_string x)
@@ -65,10 +65,11 @@ let json_to_dogmas (json : Yojson.Basic.t) : Dogma.t list =
               | "Other_score" -> Dogma.Other_score (int_of_string x)in
           match piles with 
           | a :: b :: [] -> Dogma.Transfer (helper2 a, helper2 a))
-       | "Demand" -> 
-         let efs = content |> List.split_on_char ';' in
-         let ef e = e |> List.split_on_char ':' |> List.concat ' 'in
-         Dogma.Demand efs |> List.map ef |> matching) in
+       (* | "Demand" -> 
+         let efs = content |> String.split_on_char ';' in
+         let ef e = e |> String.split_on_char ':' |> String.concat " " in
+         Dogma.Demand efs |> List.map ef |> matching *)
+         ) in
   (eff1_lst |> List.map matching) :: (eff2_lst |> List.map matching) :: []
 
 let single_card (json : Yojson.Basic.t) : Card.t = 
