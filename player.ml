@@ -1,3 +1,5 @@
+open Dogma
+open Card 
 
 type stack = {
   color : Dogma.stack_color;
@@ -31,11 +33,11 @@ let init_player id = {
 }
 
 let map_color_to_int = function
-  | Red -> 0
-  | Purple -> 1
-  | Blue -> 2
-  | Green -> 3
-  | Yellow -> 4
+  | Dogma.Red -> 0
+  | Dogma.Purple -> 1
+  | Dogma.Blue -> 2
+  | Dogma.Green -> 3
+  | Dogma.Yellow -> 4
 
 (* let map_int_to_color = function *)
 
