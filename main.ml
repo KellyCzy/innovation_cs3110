@@ -16,44 +16,71 @@ let win (state: State.t): bool =
                    Player.get_achievements) >= total_era +1)
   then true else false
 
-
 (** Helper function *)
-let run_game_1 game state = 
+let rec run_game_1 state = 
   if state |> win then (print_string ("Game ends!"); 
                         print_string "\n"; exit 0)
   else
     print_endline ("It's your turn!\n");
   print_string "> ";
   match read_line () with
-  | exception End_of_file -> ()
+  | exception End_of_file -> state
   | string -> match Command.parse string with
     | exception Empty -> 
       print_string "You didn't type in any command! \n";
-      run_game_1 game state
+      run_game_1 state
     | exception Malformed -> 
       print_string "No such command! \n";
       print_string "You can only Meld/Draw/Dogma/Achieve \n";
-      run_game_1 game state
-    | Meld x -> let new_state = State.meld state state.current_player x 
-      in run_game_2 new_state;
-    | Draw x -> let new_state = State.draw state state.current_player x 
-      in run_game_2 new_state;
-    | Achieve _ -> let new_state = State.achieve state state.current_player
-      in run_game_2 new_state;
-    | Dogma col -> 
+      run_game_1 state
+    | Meld x -> 
+      State.meld state (State.current_player state) x 
+    | Draw x -> 
+      State.draw state (State.current_player state) x 
+    | Achieve _ -> 
+      State.achieve state (State.current_player state) 
+    (* | Dogma col -> 
       let num = Player.map_color_to_int col in
       let stack = Player.get_ith_stack (State.current_player state) num in
       let card = Player.get_top_card stack in
       let dogma = Card.get_dogma card in
-      dogma_effect state dogma;
+      dogma_effect state dogma; *)
     | _ -> print_string "You didn't type in any command! \n";
-      run_game_1 game state
+      run_game_1 state
 
+(** Helper function *)
+let rec run_game_2 state = 
+  if state |> win then (print_string ("Game ends!"); 
+                        print_string "\n"; exit 0)
+  else
+    print_endline ("It's your turn!\n");
+  print_string "> ";
+  match read_line () with
+  | exception End_of_file -> state
+  | string -> match Command.parse string with
+    | exception Empty -> 
+      print_string "You didn't type in any command! \n";
+      run_game_2 state
+    | exception Malformed -> 
+      print_string "No such command! \n";
+      print_string "You can only Meld/Draw/Dogma/Achieve \n";
+      run_game_2 state
+    | Meld x -> 
+      State.meld state (State.current_player state) x 
+    | Draw x -> 
+      State.draw state (State.current_player state) x 
+    | Achieve _ -> 
+      State.achieve state (State.current_player state)
+    (* | Dogma col -> 
+      let num = Player.map_color_to_int col in
+      let stack = Player.get_ith_stack (State.current_player state) num in
+      let card = Player.get_top_card stack in
+      let dogma = Card.get_dogma card in
+      dogma_effect state dogma; *)
+    | _ -> print_string "You didn't type in any command! \n";
+      run_game_2 state
 
-
-
-
-let dogma_effect state dogma = begin
+(* let dogma_effect state dogma = begin
   match dogma with
   | Draw x -> let new_state = State.draw state state.current_player x 
     in run_game_2 new_state;
@@ -62,17 +89,14 @@ let dogma_effect state dogma = begin
   | Tuck x -> let new_state = State.tuck state state.current_player x 
     in run_game_2 new_state;
   | _ -> print_string "Need to be completed \n";
-end
+end *)
 
 
 
-
-
-
-let play_game f =
-  let state = game_init f in (
-    run_game_1 state
-  )
+let rec play_game state =
+  let state_after_1 = run_game_1 state in
+  let state_after_2 = run_game_2 state_after_1 in 
+  play_game state_after_2
 
 (** [main ()] prompts for the game to play, then starts it. *)
 let main () =
@@ -82,7 +106,7 @@ let main () =
   print_string  "> ";
   match read_line () with
   | exception End_of_file -> ()
-  | file_name -> play_game file_name
+  | file_name -> file_name |> game_init |> play_game  
 
 (* Execute the game engine. *)
 let () = main ()
