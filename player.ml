@@ -7,6 +7,9 @@ type stack = {
   cards : Card.t list;
 }
 
+let get_top_card stack = 
+  List.hd stack.cards
+
 type t = {
   id : int;
   hand : Card.t list;

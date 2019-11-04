@@ -1,7 +1,8 @@
 (* open Dogma *)
+open Dogma
 
-(* type color = Dogma.stack_color *)
-type color = Red|Black
+type color = Red | Purple | Blue | Green | Yellow
+(* type color = Red|Black *)
 
 (** Raised when an empty command is parsed. *)
 exception Empty
@@ -35,12 +36,21 @@ type command =
 
 let match_color str = 
   match str with
+  | "Yellow"
+  | "yellow" 
+    -> Yellow
   | "red"
-  | "Red" 
+  | "Red"
     -> Red
-  | "Black"
-  | "black"
-    -> Black
+  | "purple"
+  | "Purple"
+    -> Purple
+  | "blue"
+  | "Blue"
+    -> Blue
+  | "green"
+  | "Green"
+    -> Green
   | _ -> raise Empty
 
 let parse str =

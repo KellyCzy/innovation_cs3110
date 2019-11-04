@@ -18,7 +18,7 @@ let win (state: State.t): bool =
 
 
 (** Helper function *)
-let rec run_game game state = 
+let run_game_1 state = 
   if state |> win then (print_string ("Game ends!"); 
                         print_string "\n"; exit 0)
   else
@@ -29,24 +29,60 @@ let rec run_game game state =
   | string -> match Command.parse string with
     | exception Empty -> 
       print_string "You didn't type in any command! \n";
-      run_game game state
+      run_game_1 game state
     | exception Malformed -> 
       print_string "No such command! \n";
       print_string "You can only Meld/Draw/Dogma/Achieve \n";
-      run_game game state
-    | 
+      run_game_1 game state
+    | Meld x -> let new = State.meld state state.current_player x 
+      in run_game_2 new;
+    | Draw x -> let new = State.draw state state.current_player x 
+      in run_game_2 new;
+    | Achieve _ -> let new = State.achieve state state.current_player
+      in run_game_2 new;
+    | Dogma col -> 
+      let num = Player.map_color_to_int col in
+      let stack = Player.get_ith_stack (State.current_player state) num in
+      let card = Player.get_top_card stack in
+      let dogma = Card.get_dogma card in
+      dogma_effect state dogma;
+    | _ -> print_string "You didn't type in any command! \n";
+      run_game_1 game state
 
 
 
-      (** [main ()] prompts for the game to play, then starts it. *)
-      let main () =
-        ANSITerminal.(print_string [red]
-                        "\n\nWelcome to the Innovation engine.\n");
-        print_endline "Please enter the name of the game file you want to load.\n";
-        print_string  "> ";
-        match read_line () with
-        | exception End_of_file -> ()
-        | file_name -> game_init file_name
+
+
+let dogma_effect state dogma = begin
+  match dogma with
+  | Draw x -> let new = State.draw state state.current_player x 
+    in run_game_2 new;
+  | Meld x -> let new = State.meld state state.current_player x 
+    in run_game_2 new;
+  | Tuck x -> let new = State.tuck state state.current_player x 
+    in run_game_2 new;
+  | _ -> print_string "Need to be completed \n";
+end
+
+
+
+
+
+
+let play_game f =
+  let state = game_init f in (
+    run_game state
+  )
+
+(** [main ()] prompts for the game to play, then starts it. *)
+let main () =
+  ANSITerminal.(print_string [red]
+                  "\n\nWelcome to the Innovation engine.\n");
+  print_endline "Please enter the name of the game file you want to load.\n";
+  print_string  "> ";
+  match read_line () with
+  | exception End_of_file -> ()
+  | file_name -> play_game file_name
 
 (* Execute the game engine. *)
 let () = main ()
