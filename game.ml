@@ -2,7 +2,7 @@ open Yojson.Basic.Util
 open Card
 open Dogma
 
-exception Invalid_Json
+exception Invalid_Json of string
 
 let string_to_color str : Dogma.stack_color =
   match str with 
@@ -11,7 +11,7 @@ let string_to_color str : Dogma.stack_color =
   | "Blue" -> Dogma.Blue
   | "Green" -> Dogma.Green
   | "Yellow" -> Dogma.Yellow
-  | _ -> raise Invalid_Json
+  | _ -> raise (Invalid_Json str)
 
 let string_to_icon str : Card.icon =
   match str with 
@@ -22,7 +22,7 @@ let string_to_icon str : Card.icon =
   | "Clock" -> Card.Clock
   | "Lightbulb" -> Card.Lightbulb
   | "Pattern" -> Card.Pattern
-  | _ -> raise Invalid_Json
+  | _ -> raise (Invalid_Json str)
 
 (** JSON format:
     Draw : ["Draw i"] [i] is the era of the card
@@ -57,8 +57,8 @@ let json_to_dogmas (json : Yojson.Basic.t) : Dogma.t list =
             | "Up" -> Dogma.Up
             | "Left" -> Dogma.Left
             | "Right" -> Dogma.Right 
-            | _ -> raise Invalid_Json in Dogma.Splay dir
-        | "Tranfer" ->  
+            | _ -> raise (Invalid_Json content) in Dogma.Splay dir
+        | "Transfer" ->  
           (let piles = content |> String.split_on_char ',' in
            let helper2 str =  match str |> String.split_on_char ':' with
              | pile :: x :: [] -> (match pile with 
@@ -68,17 +68,17 @@ let json_to_dogmas (json : Yojson.Basic.t) : Dogma.t list =
                  | "Other_stack" -> Dogma.Other_stack (string_to_color x) 
                  | "Self_score" -> Dogma.Self_score (int_of_string x)
                  | "Other_score" -> Dogma.Other_score (int_of_string x)
-                 | _ -> raise Invalid_Json) 
-             | _ -> raise Invalid_Json in
+                 | _ -> raise (Invalid_Json pile)) 
+             | _ -> raise (Invalid_Json str) in
            match piles with 
            | a :: b :: [] -> Dogma.Transfer (helper2 a, helper2 a)
-           | _ -> raise Invalid_Json)
+           | _ -> raise (Invalid_Json content) )
         | "Demand" -> 
           let efs = content |> String.split_on_char ';' in
           let ef e = e |> String.split_on_char ':' |> String.concat " " in
           Dogma.Demand (efs |> List.map ef |> List.map matching)
-        | _ -> raise Invalid_Json)
-     | _ -> raise Invalid_Json) in
+        | _ -> raise (Invalid_Json eff))
+     | _ -> raise (Invalid_Json st)) in
   (eff1_lst |> List.map matching) :: (eff2_lst |> List.map matching) :: []
 
 let single_card (json : Yojson.Basic.t) : Card.t = 

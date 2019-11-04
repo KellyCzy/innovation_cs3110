@@ -65,7 +65,7 @@
       "dogmas": {
         "effect1": [
           "Demand Draw:1",
-          "Transfer SelfHand:-1,OthersHand:-1"
+          "Transfer Self_hand:-1,Other_hand:-1"
         ],
         "effect2": []
       },
