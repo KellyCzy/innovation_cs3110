@@ -78,7 +78,7 @@ let json_to_dogmas (json : Yojson.Basic.t) : Dogma.t list =
           let ef e = e |> String.split_on_char ':' |> String.concat " " in
           Dogma.Demand (efs |> List.map ef |> List.map matching)
         | _ -> raise Invalid_Json)
-     | _ -> raise Invalid_Json)in
+     | _ -> raise Invalid_Json) in
   (eff1_lst |> List.map matching) :: (eff2_lst |> List.map matching) :: []
 
 let single_card (json : Yojson.Basic.t) : Card.t = 
@@ -87,7 +87,7 @@ let single_card (json : Yojson.Basic.t) : Card.t =
     value = json |> member "value" |> to_int;
     dogmas = json |> member "dogmas" |> json_to_dogmas;
     dogmas_icon = json |> member "dogmas_icon" |> to_string |> string_to_icon;
-    icons = json |> member "icons" |> to_list |> List.map to_string |>List.map string_to_icon;
+    icons = json |> member "icons" |> to_list |> List.map to_string |> List.map string_to_icon;
     color = json |> member "color" |> to_string |> string_to_color
   }
 
