@@ -19,6 +19,6 @@ type effect =
   | Return of int
   | Score of int
   | Transfer of card_pile * card_pile
-  | Demand of int * effect list
+  | Demand of effect list
 
 type t = effect list

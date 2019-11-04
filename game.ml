@@ -65,11 +65,10 @@ let json_to_dogmas (json : Yojson.Basic.t) : Dogma.t list =
               | "Other_score" -> Dogma.Other_score (int_of_string x)in
           match piles with 
           | a :: b :: [] -> Dogma.Transfer (helper2 a, helper2 a))
-       (* | "Demand" -> 
+       | "Demand" -> 
          let efs = content |> String.split_on_char ';' in
          let ef e = e |> String.split_on_char ':' |> String.concat " " in
-         Dogma.Demand efs |> List.map ef |> matching *)
-         ) in
+         Dogma.Demand (efs |> List.map ef |> List.map matching))in
   (eff1_lst |> List.map matching) :: (eff2_lst |> List.map matching) :: []
 
 let single_card (json : Yojson.Basic.t) : Card.t = 
@@ -78,16 +77,16 @@ let single_card (json : Yojson.Basic.t) : Card.t =
     value = json |> member "value" |> to_int;
     dogmas = json |> member "dogmas" |> json_to_dogmas;
     dogmas_icon = json |> member "dogmas_icon" |> to_string |> string_to_icon;
-    icons = json |> member "icons" |> to_list |> List.map string_to_icon;
+    icons = json |> member "icons" |> to_list |> List.map to_string |>List.map string_to_icon;
     color = json |> member "color" |> to_string |> string_to_color
   }
 
 let era_cards (json : Yojson.Basic.t) (era : string) : Card.t list = 
   json |> member era |> to_list |> List.map single_card
 
-let rec all_cards (json : Yojson.Basic.t) eras : Card.t list list = 
+let rec all_cards (json : Yojson.Basic.t) (eras : int) : Card.t list list = 
   match eras with 
   | 0 -> []
-  | a -> era_cards json "Era"^string_of_int :: all_cards json a-1
+  | a -> (era_cards json ("Era" ^ string_of_int a)) :: (all_cards json (a - 1))
 
 
