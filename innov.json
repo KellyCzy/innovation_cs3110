@@ -12,7 +12,7 @@
       },
       "dogmas_icon": "Leaf",
       "icons": [
-        "Logo",
+        "Pattern",
         "Leaf",
         "Leaf",
         "Leaf"
@@ -34,7 +34,7 @@
       },
       "dogmas_icon": "Lightbulb",
       "icons": [
-        "Logo",
+        "Pattern",
         "Lightbulb",
         "Lightbulb",
         "Castle"
@@ -52,7 +52,7 @@
       },
       "dogmas_icon": "Castle",
       "icons": [
-        "Logo",
+        "Pattern",
         "Castle",
         "Castle",
         "Castle"
@@ -73,7 +73,7 @@
       "icons": [
         "Castle",
         "Lightbulb",
-        "Logo",
+        "Pattern",
         "Castle"
       ],
       "color": "Red"
