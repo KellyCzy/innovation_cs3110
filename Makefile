@@ -18,8 +18,8 @@ build:
 play:
 	$(OCAMLBUILD) $(MAIN) && ./$(MAIN)
 
-check:
-	bash checkenv.sh && bash checktypes.sh
+#check:
+#	bash checkenv.sh && bash checktypes.sh
 	
 
 test:
