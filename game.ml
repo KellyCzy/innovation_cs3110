@@ -2,6 +2,8 @@ open Yojson.Basic.Util
 open Card
 open Dogma
 
+exception Invalid_Json
+
 let string_to_color str : Dogma.stack_color =
   match str with 
   | "Red" -> Dogma.Red
@@ -9,6 +11,7 @@ let string_to_color str : Dogma.stack_color =
   | "Blue" -> Dogma.Blue
   | "Green" -> Dogma.Green
   | "Yellow" -> Dogma.Yellow
+  | _ -> raise Invalid_Json
 
 let string_to_icon str : Card.icon =
   match str with 
@@ -19,6 +22,7 @@ let string_to_icon str : Card.icon =
   | "Clock" -> Card.Clock
   | "Lightbulb" -> Card.Lightbulb
   | "Pattern" -> Card.Pattern
+  | _ -> raise Invalid_Json
 
 (** JSON format:
     Draw : ["Draw i"] [i] is the era of the card
@@ -42,33 +46,39 @@ let json_to_dogmas (json : Yojson.Basic.t) : Dogma.t list =
   let rec matching st = 
     (match st |> String.split_on_char ' ' with 
      | eff :: content :: [] -> 
-       match eff with
-       | "Draw" -> Dogma.Draw (int_of_string content)
-       | "Meld" -> Dogma.Meld (int_of_string content)
-       | "Tuck" -> Dogma.Tuck (int_of_string content)
-       | "Return" -> Dogma.Return (int_of_string content)
-       | "Score" -> Dogma.Score (int_of_string content)
-       | "Splay" -> 
-         let dir = match content with
-           | "Up" -> Dogma.Up
-           | "Left" -> Dogma.Left
-           | "Right" -> Dogma.Right in Dogma.Splay dir
-       | "Tranfer" ->  
-         (let piles = content |> String.split_on_char ',' in
-          let helper2 str =  match str |> String.split_on_char ':' with
-            | pile :: x :: [] -> match pile with 
-              | "Self_hand" -> Dogma.Self_hand (int_of_string x)
-              | "Other_hand" -> Dogma.Other_hand (int_of_string x)
-              | "Self_stack" -> Dogma.Self_stack (string_to_color x)
-              | "Other_stack" -> Dogma.Other_stack (string_to_color x) 
-              | "Self_score" -> Dogma.Self_score (int_of_string x)
-              | "Other_score" -> Dogma.Other_score (int_of_string x)in
-          match piles with 
-          | a :: b :: [] -> Dogma.Transfer (helper2 a, helper2 a))
-       | "Demand" -> 
-         let efs = content |> String.split_on_char ';' in
-         let ef e = e |> String.split_on_char ':' |> String.concat " " in
-         Dogma.Demand (efs |> List.map ef |> List.map matching))in
+       (match eff with
+        | "Draw" -> Dogma.Draw (int_of_string content)
+        | "Meld" -> Dogma.Meld (int_of_string content)
+        | "Tuck" -> Dogma.Tuck (int_of_string content)
+        | "Return" -> Dogma.Return (int_of_string content)
+        | "Score" -> Dogma.Score (int_of_string content)
+        | "Splay" -> 
+          let dir = match content with
+            | "Up" -> Dogma.Up
+            | "Left" -> Dogma.Left
+            | "Right" -> Dogma.Right 
+            | _ -> raise Invalid_Json in Dogma.Splay dir
+        | "Tranfer" ->  
+          (let piles = content |> String.split_on_char ',' in
+           let helper2 str =  match str |> String.split_on_char ':' with
+             | pile :: x :: [] -> (match pile with 
+                 | "Self_hand" -> Dogma.Self_hand (int_of_string x)
+                 | "Other_hand" -> Dogma.Other_hand (int_of_string x)
+                 | "Self_stack" -> Dogma.Self_stack (string_to_color x)
+                 | "Other_stack" -> Dogma.Other_stack (string_to_color x) 
+                 | "Self_score" -> Dogma.Self_score (int_of_string x)
+                 | "Other_score" -> Dogma.Other_score (int_of_string x)
+                 | _ -> raise Invalid_Json) 
+             | _ -> raise Invalid_Json in
+           match piles with 
+           | a :: b :: [] -> Dogma.Transfer (helper2 a, helper2 a)
+           | _ -> raise Invalid_Json)
+        | "Demand" -> 
+          let efs = content |> String.split_on_char ';' in
+          let ef e = e |> String.split_on_char ':' |> String.concat " " in
+          Dogma.Demand (efs |> List.map ef |> List.map matching)
+        | _ -> raise Invalid_Json)
+     | _ -> raise Invalid_Json)in
   (eff1_lst |> List.map matching) :: (eff2_lst |> List.map matching) :: []
 
 let single_card (json : Yojson.Basic.t) : Card.t = 
