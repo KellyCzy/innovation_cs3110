@@ -95,15 +95,43 @@
         "Castle"
       ],
       "color": "Purple"
+    },
+    {
+      "title": "Code of Laws",
+      "value": 1,
+      "dogmas": {
+        "effect1": [
+          "Demand Tuck:-1;Splay:Left"
+        ],
+        "effect2": []
+      },
+      "dogmas_icon": "Crown",
+      "icons": [
+        "Pattern",
+        "Crown",
+        "Crown",
+        "Leaf"
+      ],
+      "color": "Purple"
+    },
+    {
+      "title": "Mysticism",
+      "value": 1,
+      "dogmas": {
+        "effect1": [
+          "Draw 1",
+          "Meld 0"
+        ],
+        "effect2": []
+      },
+      "dogmas_icon": "Castle",
+      "icons": [
+        "Pattern",
+        "Castle",
+        "Castle",
+        "Castle"
+      ],
+      "color": "Purple"
     }
-    // {
-    //   "title": "Code of Laws",
-    //   "value": 1,
-    //   "dogmas": {
-    //     "effect1": [
-    //       "Demand T"
-    //     ]
-    //   }
-    // }
   ]
 }

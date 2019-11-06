@@ -82,17 +82,38 @@ let get_id player =
 let get_hand player =
   player.hand
 
+let print_hand player = 
+  String.concat " " (List.map Card.card_to_string player.hand)
+
+let get_ith_stack player i = 
+  List.nth player.board i
+
+
+let get_stack_top (player: t) (index: int): string =
+  let stack = List.nth player.board index in
+  try
+    (List.nth stack.cards 0) |> Card.card_to_string
+  with Failure _ ->  " empty stack"
+
+
+let print_board player =
+  String.concat "\n" 
+    ["Red: " ^ get_stack_top player 0;
+     "Purple: " ^ get_stack_top player 1;
+     "Blue: " ^ get_stack_top player 2;
+     "Green: " ^ get_stack_top player 3;
+     "Yellow: " ^ get_stack_top player 4]
+
+
+
 let get_board player =
   player.board
 
-let add_hand player card = 
+let add_hand player card =  
   update_hand (card::player.hand) player
 
 let get_ith_hand player i = 
   List.nth player.hand i
-
-let get_ith_stack player i = 
-  List.nth player.board i
 
 let get_color_stack (player: t) (c: Dogma.stack_color) : stack = 
   get_ith_stack player (map_color_to_int c)

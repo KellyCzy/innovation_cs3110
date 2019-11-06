@@ -41,7 +41,7 @@ let icon_to_string icon : string =
   | Leaf -> "Leaf"
   | Clock -> "Clock"
   | Lightbulb -> "Lightbulb"
-  | Pattern -> "INNOVATION!!!" 
+  | Pattern -> "Blank" 
 
 let color_to_string color : string =
   match color with 
@@ -56,6 +56,6 @@ let card_to_string card : string =
   "Color: " ^ (color_to_string card.color) ^ "\n" ^
   "Era: " ^ (string_of_int (card.value)) ^ "\n" ^
   "Dogma icon: " ^ (icon_to_string card.dogmas_icon) ^ "\n" ^
-  "Icons: " ^ (card.icons |> List.map icon_to_string |> String.concat ",") ^ "]\n"
+  "Icons: " ^ (card.icons |> List.map icon_to_string |> String.concat ", ") ^ "]\n"
 
 

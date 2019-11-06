@@ -45,7 +45,6 @@ let update_player (state : t) (new_player : Player.t): t = {
   lowest_era = state.lowest_era;
 }
 
-
 let update_player_lists (players : Player.t list) (state : t)  : t = {
   players = players;
   era_cards = state.era_cards;
@@ -74,11 +73,13 @@ let get_current_player (state: t): int =
   state.current_player
 
 let current_player (state: t) : Player.t= 
-  let player_indices = List.map Player.get_id state.players in
-  List.iter (printf "player_indices: %d \n") player_indices;
+  (* let player_indices = List.map Player.get_id state.players in *)
   let updated_player = List.nth state.players state.current_player in
   updated_player
 
+
+let print_hand state = 
+  Player.print_hand (current_player state)
 
 let lowest_era (state: t) : int = 
   state.lowest_era
@@ -181,6 +182,9 @@ let achieve (state: t) (player: Player.t) : t =
   let updated_player = Player.add_achievement player achievement in
   update_player (delete_one_achievement state) updated_player 
 
+let print_player_board (state: t) (index: int): string = 
+  let player = List.nth state.players index in
+  Player.print_board player
 
 let next_player (state : t) : t = 
   {

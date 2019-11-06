@@ -32,7 +32,7 @@ type command =
   | Achieve of int
   | Dogma of color
   | Hand
-  | Board
+  | Board of int
   | Score
 
 let match_color str = 
@@ -69,10 +69,10 @@ let parse str =
     Dogma (match_color (List.hd (List.tl (string_list str))))
   else if List.hd (string_list str) = "hand" || 
           List.hd (string_list str) = "Hand" then 
-    Hand
+    Hand 
   else if List.hd (string_list str) = "board" || 
           List.hd (string_list str) = "board" then 
-    Board
+    Board (int_of_string (List.hd (List.tl (string_list str))))
   else if List.hd (string_list str) = "score" || 
           List.hd (string_list str) = "Score" then 
     Score

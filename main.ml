@@ -39,8 +39,16 @@ let rec run_game_1 state =
       State.draw state (State.current_player state) x 
     | Achieve _ -> 
       State.achieve state (State.current_player state) 
-    (* | Hand ->
-       State.current_player *)
+    | Hand ->
+      let str = State.print_hand state in
+      printf "Hand: %s\n" str;
+      run_game_1 state
+    | Board x ->
+      let str = State.print_player_board state x in
+      printf "Board of player #%d:\n %s" x str;
+      run_game_1 state
+    (* | Score -> 
+       State.score state *)
     (* | Dogma col -> 
        let num = Player.map_color_to_int col in
        let stack = Player.get_ith_stack (State.current_player state) num in
@@ -58,7 +66,7 @@ let rec run_game_2 state =
     print_string "> ";
   match read_line () with
   | exception End_of_file -> state
-  | string -> match Command.parse string with
+  | string -> try match Command.parse string with
     | exception Empty -> 
       print_string "You didn't type in any command! \n";
       run_game_2 state
@@ -67,14 +75,23 @@ let rec run_game_2 state =
       print_string "You can only Meld/Draw/Dogma/Achieve \n";
       run_game_2 state
     | Meld x -> 
-
       State.meld state (State.current_player state) x 
     | Draw x -> 
+      let str = State.print_hand state in
+      printf "Hand card: %s\n" str;
       State.draw state (State.current_player state) x 
     | Achieve _ -> 
       State.achieve state (State.current_player state)
-    (* | Hand ->
-       State.print_hand state *)
+    | Hand ->
+      let str = State.print_hand state in
+      printf "Hand card: %s\n" str;
+      run_game_2 state
+    | Board x ->
+      let str = State.print_player_board state x in
+      printf "Board of %d:\n %s" x str;
+      run_game_2 state
+    (*| Score -> 
+      State.score state *)
     (* | Dogma col -> 
        let num = Player.map_color_to_int col in
        let stack = Player.get_ith_stack (State.current_player state) num in
@@ -82,6 +99,10 @@ let rec run_game_2 state =
        let dogma = Card.get_dogma card in
        dogma_effect state dogma; *)
     | _ -> print_string "You didn't type in any command! \n";
+      run_game_2 state
+
+    with 
+    | Failure str -> print_string (str ^ "\n"); 
       run_game_2 state
 
 (* let dogma_effect state dogma = begin
