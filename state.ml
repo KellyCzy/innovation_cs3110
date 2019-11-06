@@ -64,7 +64,7 @@ let current_player (state: t) : Player.t=
   List.nth state.players state.current_player
 
 let lowest_era (state: t) : int = 
-  state.lowest_era 
+  state.lowest_era
 
 (* update the ith era in e_lst with new_e, return an updated e_lst *)
 let update_era_list e_lst i new_e = 
@@ -77,7 +77,7 @@ let update_era_list e_lst i new_e =
 (* *)
 let draw (state: t) (player: Player.t) (era: int): t = 
   let era_num = max state.lowest_era era in
-  let era_to_remove = List.nth state.era_cards era_num  in
+  let era_to_remove = List.nth state.era_cards (era_num - 1) in
   let updated_era, card_to_draw = Player.pop_card 0 era_to_remove in
   let updated_player = Player.add_hand player card_to_draw in
   let updated_players = List.sort_uniq Player.compare_player (updated_player::state.players) in

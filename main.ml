@@ -40,11 +40,11 @@ let rec run_game_1 state =
     | Achieve _ -> 
       State.achieve state (State.current_player state) 
     (* | Dogma col -> 
-      let num = Player.map_color_to_int col in
-      let stack = Player.get_ith_stack (State.current_player state) num in
-      let card = Player.get_top_card stack in
-      let dogma = Card.get_dogma card in
-      dogma_effect state dogma; *)
+       let num = Player.map_color_to_int col in
+       let stack = Player.get_ith_stack (State.current_player state) num in
+       let card = Player.get_top_card stack in
+       let dogma = Card.get_dogma card in
+       dogma_effect state dogma; *)
     | _ -> print_string "You didn't type in any command! \n";
       run_game_1 state
 
@@ -72,24 +72,24 @@ let rec run_game_2 state =
     | Achieve _ -> 
       State.achieve state (State.current_player state)
     (* | Dogma col -> 
-      let num = Player.map_color_to_int col in
-      let stack = Player.get_ith_stack (State.current_player state) num in
-      let card = Player.get_top_card stack in
-      let dogma = Card.get_dogma card in
-      dogma_effect state dogma; *)
+       let num = Player.map_color_to_int col in
+       let stack = Player.get_ith_stack (State.current_player state) num in
+       let card = Player.get_top_card stack in
+       let dogma = Card.get_dogma card in
+       dogma_effect state dogma; *)
     | _ -> print_string "You didn't type in any command! \n";
       run_game_2 state
 
 (* let dogma_effect state dogma = begin
-  match dogma with
-  | Draw x -> let new_state = State.draw state state.current_player x 
+   match dogma with
+   | Draw x -> let new_state = State.draw state state.current_player x 
     in run_game_2 new_state;
-  | Meld x -> let new_state = State.meld state state.current_player x 
+   | Meld x -> let new_state = State.meld state state.current_player x 
     in run_game_2 new_state;
-  | Tuck x -> let new_state = State.tuck state state.current_player x 
+   | Tuck x -> let new_state = State.tuck state state.current_player x 
     in run_game_2 new_state;
-  | _ -> print_string "Need to be completed \n";
-end *)
+   | _ -> print_string "Need to be completed \n";
+   end *)
 
 
 
