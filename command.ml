@@ -31,6 +31,9 @@ type command =
   | Draw of int
   | Achieve of int
   | Dogma of color
+  | Hand
+  | Board
+  | Score
 
 let match_color str = 
   match str with
@@ -64,5 +67,14 @@ let parse str =
   else if List.hd (string_list str) = "dogma" || 
           List.hd (string_list str) = "Dogma" then 
     Dogma (match_color (List.hd (List.tl (string_list str))))
+  else if List.hd (string_list str) = "hand" || 
+          List.hd (string_list str) = "Hand" then 
+    Hand
+  else if List.hd (string_list str) = "board" || 
+          List.hd (string_list str) = "board" then 
+    Board
+  else if List.hd (string_list str) = "score" || 
+          List.hd (string_list str) = "Score" then 
+    Score
   else raise Malformed
 

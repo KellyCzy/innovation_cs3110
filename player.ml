@@ -76,6 +76,9 @@ let update_stack_cards stack cards = {
   cards = cards;
 }
 
+let get_id player =
+  player.id
+
 let get_hand player =
   player.hand
 
@@ -115,7 +118,7 @@ let pop_card i lst =
 let pop_stack i stack = 
   let cards = stack.cards in
   match cards with
-  | [] -> failwith "cannot pop element from empty list"
+  | [] -> failwith "cannot pop element from empty stack"
   | x::xs -> let ith = List.nth cards i  in
     let updated_cards, ele = (List.filter (fun x -> Card.equal x ith) cards), ith in
     (update_stack_cards stack updated_cards), ith

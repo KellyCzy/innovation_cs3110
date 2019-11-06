@@ -65,7 +65,7 @@
       "dogmas": {
         "effect1": [
           "Demand Draw:1",
-          "Transfer Self_hand:-1,Other_hand:-1"
+          "Transfer Self_hand=-1,Other_hand=-1"
         ],
         "effect2": []
       },
@@ -77,6 +77,33 @@
         "Castle"
       ],
       "color": "Red"
+    },
+    {
+      "title": "City States",
+      "value": 1,
+      "dogmas": {
+        "effect1": [
+          "Demand Transfer:Self_stack=Purple,Other_stack=Purple;Draw:1"
+        ],
+        "effect2": []
+      },
+      "dogmas_icon": "Crown",
+      "icons": [
+        "Pattern",
+        "Crown",
+        "Crown",
+        "Castle"
+      ],
+      "color": "Purple"
     }
+    // {
+    //   "title": "Code of Laws",
+    //   "value": 1,
+    //   "dogmas": {
+    //     "effect1": [
+    //       "Demand T"
+    //     ]
+    //   }
+    // }
   ]
 }

@@ -1,6 +1,7 @@
 open Player
 open Card
 open Command
+open Printf
 
 type t = {
   players: Player.t list;
@@ -17,24 +18,33 @@ let range n =
   in range' [] n
 
 let rec init_some_players acc= function
-  | 0 -> acc
+  | -1 -> acc
   | i -> init_some_players ((Player.init_player i)::acc) (i-1)
 
 let init_state (cards_list : Card.t list list) : t = {
-  players = init_some_players [] 4;
+  players = init_some_players [] 3;
   era_cards = cards_list;
   achievements = range 10;
   current_player = 0;
   lowest_era = 1;
 }
 
-let update_player (state : t) (player : Player.t) : t = {
-  players = List.sort Player.compare_player (player::state.players);
+let swap_player (new_player: Player.t) (player_list: Player.t list) : Player.t list= 
+  let index = Player.get_id new_player in
+  let rec swap acc = function
+    | [] -> failwith "player_list is empty"
+    | x::xs -> if (Player.get_id x) = index then (acc @ [new_player] @ xs)
+      else swap (acc@[x]) xs in
+  swap [] player_list
+
+let update_player (state : t) (new_player : Player.t): t = {
+  players = swap_player new_player state.players;
   era_cards = state.era_cards;
   achievements = state.achievements;
   current_player = state.current_player;
   lowest_era = state.lowest_era;
 }
+
 
 let update_player_lists (players : Player.t list) (state : t)  : t = {
   players = players;
@@ -60,8 +70,15 @@ let delete_one_achievement state = {
   lowest_era = state.lowest_era;
 }
 
+let get_current_player (state: t): int = 
+  state.current_player
+
 let current_player (state: t) : Player.t= 
-  List.nth state.players state.current_player
+  let player_indices = List.map Player.get_id state.players in
+  List.iter (printf "player_indices: %d \n") player_indices;
+  let updated_player = List.nth state.players state.current_player in
+  updated_player
+
 
 let lowest_era (state: t) : int = 
   state.lowest_era
@@ -69,23 +86,23 @@ let lowest_era (state: t) : int =
 (* update the ith era in e_lst with new_e, return an updated e_lst *)
 let update_era_list e_lst i new_e = 
   let rec update' acc idx = function
-    | [] -> failwith "ith stack not in the list"
+    | [] -> acc
     | x::xs when idx = i -> acc @ [new_e] @ xs
     | x::xs -> update' (x::acc) (idx+1) xs 
   in update' [] 0 e_lst
 
 (* *)
 let draw (state: t) (player: Player.t) (era: int): t = 
-  let era_num = max state.lowest_era era in
-  let era_to_remove = List.nth state.era_cards (era_num - 1) in
+  let era_num = (max state.lowest_era era) - 1 in
+  let era_to_remove = List.nth state.era_cards era_num in
   let updated_era, card_to_draw = Player.pop_card 0 era_to_remove in
   let updated_player = Player.add_hand player card_to_draw in
-  let updated_players = List.sort_uniq Player.compare_player (updated_player::state.players) in
+  let state_with_updated_player = update_player state updated_player in
   let updated_eras = update_era_list state.era_cards era_num updated_era in
-  state |> update_player_lists updated_players |> update_era_cards updated_eras
+  state_with_updated_player |> update_era_cards updated_eras
 
 let meld (state: t) (player: Player.t) (hand_idx: int): t = 
-  let updated_player = Player.add_stack player hand_idx true in
+  let updated_player = Player.add_stack player (hand_idx - 1) true in
   update_player state updated_player
 
 let tuck (state: t) (player: Player.t) (hand_idx:int):t = 
@@ -94,7 +111,7 @@ let tuck (state: t) (player: Player.t) (hand_idx:int):t =
 
 let splay (state: t) (player: Player.t) (color: Dogma.stack_color) (direction: Dogma.splay_direction) = 
   let updated_player = Player.splay player color direction in
-  update_player state player
+  update_player state updated_player
 
 let update_era state player card: Card.t list list =
   let era = Card.get_value card in
@@ -151,7 +168,8 @@ let transfer (state: t) (myself: Player.t) (other: Player.t) (card_pile1: Dogma.
       let updated_s1, updated_cl2 = Player.transfer_stack_to_card s1 cl2 in
       let updated_pl1, _ = match_update_card_pile myself other card_pile1 fake_card_list updated_s1 in
       let _, updated_pl2 = match_update_card_pile myself other card_pile2 updated_cl2 fake_stack in
-      updated_pl1, updated_pl2 in
+      updated_pl1, updated_pl2 
+    | _, _, _, _ -> failwith "fail to match card list or stack" in
   update_player (update_player state updated_player1) updated_player2
 
 let score (state : t) (player : Player.t) (hand_idx : int) : t = 

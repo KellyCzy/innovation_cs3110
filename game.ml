@@ -60,7 +60,7 @@ let json_to_dogmas (json : Yojson.Basic.t) : Dogma.t list =
             | _ -> raise (Invalid_json_format content) in Dogma.Splay dir
         | "Transfer" ->  
           (let piles = content |> String.split_on_char ',' in
-           let helper2 str =  match str |> String.split_on_char ':' with
+           let helper2 str =  match str |> String.split_on_char '=' with
              | pile :: x :: [] -> (match pile with 
                  | "Self_hand" -> Dogma.Self_hand (int_of_string x)
                  | "Other_hand" -> Dogma.Other_hand (int_of_string x)

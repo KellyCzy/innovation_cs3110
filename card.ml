@@ -33,3 +33,29 @@ let get_icons card = card.icons
 
 let get_color card = card.color
 
+let icon_to_string icon : string = 
+  match icon with 
+  | Castle -> "Castle"
+  | Crown -> "Crown"
+  | Factory -> "Factory"
+  | Leaf -> "Leaf"
+  | Clock -> "Clock"
+  | Lightbulb -> "Lightbulb"
+  | Pattern -> "INNOVATION!!!" 
+
+let color_to_string color : string =
+  match color with 
+  | Dogma.Red -> "Red"
+  | Dogma.Purple -> "Purple"
+  | Dogma.Blue -> "Blue"
+  | Dogma.Green -> "Green"
+  | Dogma.Yellow -> "Yellow"
+
+let card_to_string card : string =  
+  "\n[Card name: " ^ card.title ^ "\n" ^ 
+  "Color: " ^ (color_to_string card.color) ^ "\n" ^
+  "Era: " ^ (string_of_int (card.value)) ^ "\n" ^
+  "Dogma icon: " ^ (icon_to_string card.dogmas_icon) ^ "\n" ^
+  "Icons: " ^ (card.icons |> List.map icon_to_string |> String.concat ",") ^ "]\n"
+
+

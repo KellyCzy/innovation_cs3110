@@ -3,12 +3,13 @@ open State
 open Player
 open Dogma
 open Command
+open Printf
 
 let total_era = 1
 
 let game_init f =
   let json = f |> Yojson.Basic.from_file in 
-  Game.all_cards json total_era |> State.init_state 
+  (Game.all_cards json total_era )|> State.init_state 
 
 
 let win (state: State.t): bool = 
@@ -21,8 +22,7 @@ let rec run_game_1 state =
   if state |> win then (print_string ("Game ends!"); 
                         print_string "\n"; exit 0)
   else
-    print_endline ("It's your turn!\n");
-  print_string "> ";
+    print_string "> ";
   match read_line () with
   | exception End_of_file -> state
   | string -> match Command.parse string with
@@ -39,6 +39,8 @@ let rec run_game_1 state =
       State.draw state (State.current_player state) x 
     | Achieve _ -> 
       State.achieve state (State.current_player state) 
+    (* | Hand ->
+       State.current_player *)
     (* | Dogma col -> 
        let num = Player.map_color_to_int col in
        let stack = Player.get_ith_stack (State.current_player state) num in
@@ -53,8 +55,7 @@ let rec run_game_2 state =
   if state |> win then (print_string ("Game ends!"); 
                         print_string "\n"; exit 0)
   else
-    print_endline ("It's your turn!\n");
-  print_string "> ";
+    print_string "> ";
   match read_line () with
   | exception End_of_file -> state
   | string -> match Command.parse string with
@@ -66,11 +67,14 @@ let rec run_game_2 state =
       print_string "You can only Meld/Draw/Dogma/Achieve \n";
       run_game_2 state
     | Meld x -> 
+
       State.meld state (State.current_player state) x 
     | Draw x -> 
       State.draw state (State.current_player state) x 
     | Achieve _ -> 
       State.achieve state (State.current_player state)
+    (* | Hand ->
+       State.print_hand state *)
     (* | Dogma col -> 
        let num = Player.map_color_to_int col in
        let stack = Player.get_ith_stack (State.current_player state) num in
@@ -89,14 +93,17 @@ let rec run_game_2 state =
    | Tuck x -> let new_state = State.tuck state state.current_player x 
     in run_game_2 new_state;
    | _ -> print_string "Need to be completed \n";
+
    end *)
 
 
-
 let rec play_game state =
+  printf "It's player %d's first turn!\n" (State.get_current_player state);
   let state_after_1 = run_game_1 state in
-  let state_after_2 = run_game_2 state_after_1 in 
-  play_game state_after_2
+  printf "It's player %d's second turn!\n" (State.get_current_player state_after_1);
+  let state_after_2 = run_game_2 state_after_1 in
+  let next_player_state = State.next_player state_after_2 in
+  play_game next_player_state
 
 (** [main ()] prompts for the game to play, then starts it. *)
 let main () =
