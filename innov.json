@@ -39,7 +39,7 @@
         "Lightbulb",
         "Castle"
       ],
-      "color": "Yellow"
+      "color": "Blue"
     },
     {
       "title": "The Wheel",
@@ -132,6 +132,62 @@
         "Castle"
       ],
       "color": "Purple"
+    },
+    {
+      "title": "Domestication",
+      "value": 1,
+      "dogmas": {
+        "effect1": [
+          "Meld x",
+          "Draw 1"
+        ],
+        "effect2": []
+      },
+      "dogmas_icon": "Castle",
+      "icons": [
+        "Castle",
+        "Crown",
+        "Pattern",
+        "Castle"
+      ],
+      "color": "Yellow"
+    },
+    {
+      "title": "Sailing",
+      "value": 1,
+      "dogmas": {
+        "effect1": [
+          "Draw 1",
+          "Meld 0"
+        ],
+        "effect2": []
+      },
+      "dogmas_icon": "Crown",
+      "icons": [
+        "Crown",
+        "Crown",
+        "Pattern",
+        "Leaf"
+      ],
+      "color": "Green"
+    },
+    {
+      "title": "Writing",
+      "value": 1,
+      "dogmas": {
+        "effect1": [
+          "Draw 2"
+        ],
+        "effect2": []
+      },
+      "dogmas_icon": "Lightbulb",
+      "icons": [
+        "Pattern",
+        "Lightbulb",
+        "Lightbulb",
+        "Crown"
+      ],
+      "color": "Blue"
     }
   ]
 }
