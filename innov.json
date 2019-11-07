@@ -138,7 +138,7 @@
       "value": 1,
       "dogmas": {
         "effect1": [
-          "Meld x",
+          "Meld X",
           "Draw 1"
         ],
         "effect2": []
@@ -188,6 +188,102 @@
         "Crown"
       ],
       "color": "Blue"
+    },
+    {
+      "title": "Metalworking",
+      "value": 1,
+      "dogmas": {
+        "effect1": [
+          "Draw X"
+        ],
+        "effect2": []
+      },
+      "dogmas_icon": "Castle",
+      "icons": [
+        "Castle",
+        "Castle",
+        "Pattern",
+        "Castle"
+      ],
+      "color": "Red"
+    },
+    {
+      "title": "Clothing",
+      "value": 1,
+      "dogmas": {
+        "effect1": [
+          "Meld X",
+          "Draw X"
+        ],
+        "effect2": []
+      },
+      "dogmas_icon": "Leaf",
+      "icons": [
+        "Pattern",
+        "Crown",
+        "Leaf",
+        "Leaf"
+      ],
+      "color": "Green"
+    },
+    {
+      "title": "Pottery",
+      "value": 1,
+      "dogmas": {
+        "effect1": [
+          "Return X"
+        ],
+        "effect2": [
+          "Draw 1"
+        ]
+      },
+      "dogmas_icon": "Leaf",
+      "icons": [
+        "Pattern",
+        "Leaf",
+        "Leaf",
+        "Leaf"
+      ],
+      "color": "Blue"
+    },
+    {
+      "title": "Masonry",
+      "value": 1,
+      "dogmas": {
+        "effect1": [
+          "Meld X",
+          "Achieve X"
+        ],
+        "effect2": []
+      },
+      "dogmas_icon": "Castle",
+      "icons": [
+        "Castle",
+        "Pattern",
+        "Castle",
+        "Castle"
+      ],
+      "color": "Yellow"
+    },
+    {
+      "title": "Oars",
+      "value": 1,
+      "dogmas": {
+        "effect1": [
+          "Demand Transfer: X"
+        ],
+        "effect2": [
+          "Draw X"
+        ]
+      },
+      "dogmas_icon": "Castle",
+      "icons": [
+        "Castle",
+        "Crown",
+        "Pattern",
+        "Castle"
+      ],
+      "color": "Red"
     }
   ]
 }
