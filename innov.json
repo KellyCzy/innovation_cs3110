@@ -138,7 +138,7 @@
       "value": 1,
       "dogmas": {
         "effect1": [
-          "Meld X",
+          "Meld -1",
           "Draw 1"
         ],
         "effect2": []
@@ -194,7 +194,7 @@
       "value": 1,
       "dogmas": {
         "effect1": [
-          "Draw X"
+          "Draw -1"
         ],
         "effect2": []
       },
@@ -212,8 +212,8 @@
       "value": 1,
       "dogmas": {
         "effect1": [
-          "Meld X",
-          "Draw X"
+          "Meld -1",
+          "Draw -1"
         ],
         "effect2": []
       },
@@ -231,10 +231,10 @@
       "value": 1,
       "dogmas": {
         "effect1": [
-          "Return X"
+          "Return -1"
         ],
         "effect2": [
-          "Draw 1"
+          "Draw -1"
         ]
       },
       "dogmas_icon": "Leaf",
@@ -251,8 +251,7 @@
       "value": 1,
       "dogmas": {
         "effect1": [
-          "Meld X",
-          "Achieve X"
+          "Meld -1"
         ],
         "effect2": []
       },
@@ -270,10 +269,10 @@
       "value": 1,
       "dogmas": {
         "effect1": [
-          "Demand Transfer: X"
+          "Demand Transfer:Self_hand=-1,Other_score=-1;Draw:1"
         ],
         "effect2": [
-          "Draw X"
+          "Draw -1"
         ]
       },
       "dogmas_icon": "Castle",
