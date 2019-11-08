@@ -25,7 +25,7 @@ let rec run_game_1 state =
     print_string "> ";
   match read_line () with
   | exception End_of_file -> state
-  | string -> match Command.parse string with
+  | string -> try match Command.parse string with
     | exception Empty -> 
       print_string "You didn't type in any command! \n";
       run_game_1 state
@@ -56,6 +56,10 @@ let rec run_game_1 state =
        let dogma = Card.get_dogma card in
        dogma_effect state dogma; *)
     | _ -> print_string "You didn't type in any command! \n";
+      run_game_1 state
+
+    with 
+    | Failure str -> print_string (str ^ "\n"); 
       run_game_1 state
 
 (** Helper function *)

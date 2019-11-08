@@ -1,4 +1,4 @@
-MODULES=dogma card player state game 
+MODULES=dogma card player state game authors
 OBJECTS=$(MODULES:=.cmo)
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)
@@ -43,7 +43,7 @@ perf:
 	gnuplot perf.p
 
 zip:
-	zip search_src.zip *.ml* _tags Makefile analysis.pdf
+	zip innovation_src.zip *.ml* _tags Makefile mli_files innov.json INSTALL.md 
 	
 docs: docs-public docs-private
 	
