@@ -43,3 +43,14 @@ Five achievements cards could be achieved anytime when satisfied the requirement
 * `meld [hand_idx]`: meld a card with index `hand_idx` from your hand cards
 * `board [player_idx]`: display the player `player_idx`'s board cards
 * More features upcoming!
+
+## One Example of How to Play
+* `make play`
+* `innov.json`
+* `draw 1` to draw an card from era 1
+* `hand 0` to display the handcard of player 0
+* `meld 1` to meld the frist card from hand
+* `board 0` to display the handcard of player 0
+* `draw 1`
+* `meld 1`
+* ...
