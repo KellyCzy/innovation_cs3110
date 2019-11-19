@@ -46,6 +46,7 @@ let rec run_game_1 state =
     | Board x ->
       let str = State.print_player_board state x in
       printf "Board of player #%d:\n %s" x str;
+      print_string "\n";
       run_game_1 state
     (* | Score -> 
        State.score state *)
