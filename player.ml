@@ -104,8 +104,6 @@ let print_board player =
      "Green: " ^ get_stack_top player 3;
      "Yellow: " ^ get_stack_top player 4]
 
-
-
 let get_board player =
   player.board
 

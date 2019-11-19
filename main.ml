@@ -11,7 +11,6 @@ let game_init f =
   let json = f |> Yojson.Basic.from_file in 
   (Game.all_cards json total_era )|> State.init_state 
 
-
 let win (state: State.t): bool = 
   if (List.length (List.nth state.players state.current_player |> 
                    Player.get_achievements) >= total_era +1)
@@ -48,8 +47,10 @@ let rec run_game_1 state =
       printf "Board of player #%d:\n %s" x str;
       print_string "\n";
       run_game_1 state
-    (* | Score -> 
-       State.score state *)
+    | Score -> 
+      let score = State.get_current_player_score state in
+      printf "Score: %d\n" score;
+      run_game_1 state
     (* | Dogma col -> 
        let num = Player.map_color_to_int col in
        let stack = Player.get_ith_stack (State.current_player state) num in
@@ -58,7 +59,6 @@ let rec run_game_1 state =
        dogma_effect state dogma; *)
     | _ -> print_string "You didn't type in any command! \n";
       run_game_1 state
-
     with 
     | Failure str -> print_string (str ^ "\n"); 
       run_game_1 state
@@ -95,8 +95,10 @@ let rec run_game_2 state =
       let str = State.print_player_board state x in
       printf "Board of %d:\n %s" x str;
       run_game_2 state
-    (*| Score -> 
-      State.score state *)
+    | Score -> 
+      let score = State.get_current_player_score state in
+      printf "Score: %d\n" score;
+      run_game_2 state
     (* | Dogma col -> 
        let num = Player.map_color_to_int col in
        let stack = Player.get_ith_stack (State.current_player state) num in

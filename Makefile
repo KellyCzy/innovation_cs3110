@@ -1,4 +1,4 @@
-MODULES=dogma card player state game authors
+MODULES=dogma card player state game authors main
 OBJECTS=$(MODULES:=.cmo)
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)

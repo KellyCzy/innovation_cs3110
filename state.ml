@@ -77,6 +77,8 @@ let current_player (state: t) : Player.t=
   let updated_player = List.nth state.players state.current_player in
   updated_player
 
+let get_current_player_score (state:t): int = 
+  state |> current_player |> Player.get_score
 
 let print_hand state = 
   Player.print_hand (current_player state)
@@ -175,7 +177,6 @@ let transfer (state: t) (myself: Player.t) (other: Player.t) (card_pile1: Dogma.
 
 let score (state : t) (player : Player.t) (hand_idx : int) : t = 
   transfer state player player (Dogma.Self_hand hand_idx) (Dogma.Self_score (-1)) hand_idx false
-
 
 let achieve (state: t) (player: Player.t) : t = 
   let achievement = List.hd state.achievements in
