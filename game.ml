@@ -71,7 +71,7 @@ let json_to_dogmas (json : Yojson.Basic.t) : Dogma.t list =
                  | _ -> raise (Invalid_json_format pile)) 
              | _ -> raise (Invalid_json_format str) in
            match piles with 
-           | a :: b :: [] -> Dogma.Transfer (helper2 a, helper2 a)
+           | a :: b :: [] -> Dogma.Transfer (helper2 a, helper2 a, -1)
            | _ -> raise (Invalid_json_format content) )
         | "Demand" -> 
           let efs = content |> String.split_on_char ';' in
@@ -94,9 +94,15 @@ let single_card (json : Yojson.Basic.t) : Card.t =
 let era_cards (json : Yojson.Basic.t) (era : string) : Card.t list = 
   json |> member era |> to_list |> List.map single_card
 
+let shuffle clist = 
+  QCheck.Gen.(generate1 (shuffle_l clist))
+
 let rec all_cards (json : Yojson.Basic.t) (eras : int) : Card.t list list = 
   match eras with 
   | 0 -> []
-  | a -> (era_cards json ("Era" ^ string_of_int a)) :: (all_cards json (a - 1))
+  | a -> (shuffle (era_cards json ("Era" ^ string_of_int a))) :: (all_cards json (a - 1))
+
+
+
 
 

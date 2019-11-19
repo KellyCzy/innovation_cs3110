@@ -158,7 +158,7 @@
       "dogmas": {
         "effect1": [
           "Draw 1",
-          "Meld 0"
+          "Meld 1"
         ],
         "effect2": []
       },
@@ -272,7 +272,7 @@
           "Demand Transfer:Self_hand=-1,Other_score=-1;Draw:1"
         ],
         "effect2": [
-          "Draw -1"
+          "Draw 1"
         ]
       },
       "dogmas_icon": "Castle",

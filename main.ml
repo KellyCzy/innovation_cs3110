@@ -4,12 +4,13 @@ open Player
 open Dogma
 open Command
 open Printf
+open Frontend
 
 let total_era = 1
 
 let game_init f =
   let json = f |> Yojson.Basic.from_file in 
-  (Game.all_cards json total_era )|> State.init_state 
+  (Game.all_cards json total_era)|> State.init_state 
 
 let win (state: State.t): bool = 
   if (List.length (List.nth state.players state.current_player |> 
@@ -19,27 +20,37 @@ let win (state: State.t): bool =
 let input_number () = 
   print_endline "Please enter the index of the card. \n";
   print_endline ">";
-  let str = read_line() in
+  let str = read_line () in
   match Command.parse str with
   | Number int -> int
   | _ -> failwith "unimplemented"
 
-let dogma_effect state (dogma : Dogma.effect) = begin
+let rec rec_return state = 
+  try 
+    let i = input_number () in
+    State.return state (State.current_player state) i
+  with _ -> rec_return state
+
+let dogma_effect (state: State.t) (dogma : Dogma.effect) :State.t = 
   match dogma with
-  | Draw x -> State.draw state (State.current_player state) x 
+  | Draw x -> if (x<0) then  let i = input_number () in
+      State.draw state (State.current_player state) i
+    else 
+      State.draw state (State.current_player state) x 
   | Meld x -> State.meld state (State.current_player state) x 
   | Tuck x -> State.tuck state (State.current_player state) x 
   (* | Splay dir -> let new_state = State.splay state state.current_player col *)
-  | Return x -> if (x<0) then let int = input_number () in 
-      State.return state (State.current_player state) int 
+  | Return x -> if (x<0) then  let i = input_number () in
+      State.return state (State.current_player state) i
     else 
       State.return state (State.current_player state) x
   | Score x -> State.score state (State.current_player state) x 
+  | Transfer (cp1, cp2, id) -> let other = State.get_player state id in
+    let myself = State.current_player state in 
+    State.transfer state myself other cp1 cp2 0 true
   | _ -> print_string "Need to be completed \n"; state
 
-end
-
-let rec go_through_effects state dogma =
+let rec go_through_effects (state: State.t) (dogma: Dogma.t) : State.t =
   match dogma with 
   | [] -> state
   | x :: t -> let new_state = dogma_effect state x in
@@ -97,6 +108,7 @@ let rec run_game_1 state =
     with 
     | Failure str -> print_string (str ^ "\n"); 
       run_game_1 state
+    | _ -> run_game_1 state
 
 (** Helper function *)
 let rec run_game_2 state = 
@@ -149,8 +161,12 @@ let rec run_game_2 state =
       run_game_2 state
 
 let rec play_game state =
+  Frontend.display state;
+  print_string "\n\n";
   printf "It's player %d's first turn!\n" (State.get_current_player state);
   let state_after_1 = run_game_1 state in
+  Frontend.display state;
+  print_string "\n\n";
   printf "It's player %d's second turn!\n" (State.get_current_player state_after_1);
   let state_after_2 = run_game_2 state_after_1 in
   let next_player_state = State.next_player state_after_2 in

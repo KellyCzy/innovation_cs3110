@@ -72,6 +72,17 @@ let delete_one_achievement state = {
 let get_current_player (state: t): int = 
   state.current_player
 
+let get_player (state: t) (id: int) : Player.t = 
+  List.nth state.players id 
+
+let get_score_by_id (state: t) (id: int) : int = 
+  let player = List.nth state.players id in 
+  Player.get_score player
+
+let get_hand_size_by_id (state: t) (id: int) : int = 
+  let player = List.nth state.players id in 
+  Player.get_hand player |> List.length
+
 let current_player (state: t) : Player.t= 
   (* let player_indices = List.map Player.get_id state.players in *)
   let updated_player = List.nth state.players state.current_player in
@@ -124,7 +135,6 @@ let update_era state player card: Card.t list list =
 let return (state: t) (player: Player.t) (hand_idx: int): t = 
   let updated_hand_cards, card = Player.pop_card hand_idx (Player.get_hand player) in
   update_era_cards (update_era state player card) state
-
 
 let match_card_pile (card_pile: Dogma.card_pile) (myself: Player.t) (other: Player.t) = 
   match card_pile with 

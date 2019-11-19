@@ -18,7 +18,7 @@ type effect =
   | Splay of splay_direction
   | Return of int
   | Score of int
-  | Transfer of card_pile * card_pile
+  | Transfer of card_pile * card_pile * int
   | Demand of effect list
 
 type t = effect list

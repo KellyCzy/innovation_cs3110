@@ -98,11 +98,11 @@ let get_stack_top (player: t) (index: int): string =
 
 let print_board player =
   String.concat "\n" 
-    ["Red: " ^ get_stack_top player 0;
-     "Purple: " ^ get_stack_top player 1;
-     "Blue: " ^ get_stack_top player 2;
-     "Green: " ^ get_stack_top player 3;
-     "Yellow: " ^ get_stack_top player 4]
+    ["Red: " ^ get_stack_top player 0 ^ "\n";
+     "Purple: " ^ get_stack_top player 1 ^ "\n";
+     "Blue: " ^ get_stack_top player 2 ^ "\n";
+     "Green: " ^ get_stack_top player 3 ^ "\n";
+     "Yellow: " ^ get_stack_top player 4 ^ "\n"]
 
 let get_board player =
   player.board
