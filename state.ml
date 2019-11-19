@@ -176,7 +176,8 @@ let transfer (state: t) (myself: Player.t) (other: Player.t) (card_pile1: Dogma.
   update_player (update_player state updated_player1) updated_player2
 
 let score (state : t) (player : Player.t) (hand_idx : int) : t = 
-  transfer state player player (Dogma.Self_hand hand_idx) (Dogma.Self_score (-1)) hand_idx false
+  if hand_idx > (List.length (Player.get_hand player)) then failwith "idx out of bound" 
+  else transfer state player player (Dogma.Self_hand hand_idx) (Dogma.Self_score (-1)) hand_idx false
 
 let achieve (state: t) (player: Player.t) : t = 
   let achievement = List.hd state.achievements in
@@ -187,11 +188,10 @@ let print_player_board (state: t) (index: int): string =
   let player = List.nth state.players index in
   Player.print_board player
 
-let next_player (state : t) : t = 
-  {
-    players= state.players;
-    era_cards = state.era_cards;
-    achievements= state.achievements;
-    current_player= (state.current_player + 1) mod (List.length state.players);
-    lowest_era= state.lowest_era;
-  }
+    {
+      players= state.players;
+      era_cards = state.era_cards;
+      achievements= state.achievements;
+      current_player= (state.current_player + 1) mod (List.length state.players);
+      lowest_era= state.lowest_era;
+    }

@@ -34,6 +34,7 @@ type command =
   | Hand
   | Board of int
   | Score
+  | Number of int
 
 let match_color str = 
   match str with
@@ -76,5 +77,7 @@ let parse str =
   else if List.hd (string_list str) = "score" || 
           List.hd (string_list str) = "Score" then 
     Score
-  else raise Malformed
-
+  else
+    (match string_list str with 
+     | a :: [] -> (try Number (int_of_string a) with | _ -> raise Malformed)
+     | _ -> raise Malformed) 
