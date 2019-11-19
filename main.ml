@@ -16,6 +16,41 @@ let win (state: State.t): bool =
                    Player.get_achievements) >= total_era +1)
   then true else false
 
+let input_number () = 
+  print_endline "Please enter the index of the card. \n";
+  print_endline ">";
+  let str = read_line() in
+  match Command.parse str with
+  | Number int -> int
+  | _ -> failwith "unimplemented"
+
+let dogma_effect state (dogma : Dogma.effect) = begin
+  match dogma with
+  | Draw x -> State.draw state (State.current_player state) x 
+  | Meld x -> State.meld state (State.current_player state) x 
+  | Tuck x -> State.tuck state (State.current_player state) x 
+  (* | Splay dir -> let new_state = State.splay state state.current_player col *)
+  | Return x -> if (x<0) then let int = input_number () in 
+      State.return state (State.current_player state) int 
+    else 
+      State.return state (State.current_player state) x
+  | Score x -> State.score state (State.current_player state) x 
+  | _ -> print_string "Need to be completed \n"; state
+
+end
+
+let rec go_through_effects state dogma =
+  match dogma with 
+  | [] -> state
+  | x :: t -> let new_state = dogma_effect state x in
+    go_through_effects new_state t
+
+let execute_dogmas state dogmas = 
+  match dogmas with 
+  | x :: y :: [] -> let state_after_x = go_through_effects state x in 
+    go_through_effects state_after_x y
+  | _ -> failwith "impossible"
+
 (** Helper function *)
 let rec run_game_1 state = 
   if state |> win then (print_string ("Game ends!"); 
@@ -113,34 +148,6 @@ let rec run_game_2 state =
     | Failure str -> print_string (str ^ "\n"); 
       run_game_2 state
 
-let input_number = 
-  print_string "Please enter the index of the card. /n";
-  print_string ">";
-  match Command.parse read_line () with
-  | Number int -> int
-  | _ -> failwith "unimplemented"
-
-let dogma_effect state dogma col = begin
-  match dogma with
-  | Draw x -> State.draw state state.current_player x 
-  | Meld x -> State.meld state state.current_player x 
-  | Tuck x -> State.tuck state state.current_player x 
-  (* | Splay dir -> let new_state = State.splay state state.current_player col *)
-  | Return x -> if (x<0) then let int = input_number in 
-      State.return state state.current_player int 
-    else 
-      State.return state state.current_player x
-  | Score x -> State.score state state.current_player x 
-  | _ -> print_string "Need to be completed \n";
-
-end
-
-let execute_dogmas state dogmas = 
-  match dogmas with 
-  | x :: y :: [] -> let state_after_x = dogma_effect state x in 
-    dogma_effect state_after_x y
-  | _ -> failwith "impossible"
-
 let rec play_game state =
   printf "It's player %d's first turn!\n" (State.get_current_player state);
   let state_after_1 = run_game_1 state in
@@ -154,9 +161,7 @@ let main () =
   ANSITerminal.(print_string [red]
                   "\n\nWelcome to the Innovation engine.\n");
   ANSITerminal.(print_string [green]
-                  "\n\nInstructions:\n 'draw x' to draw a card from card pile x\n 
-                   'meld x' to meld your xth hand card\n 'achieve x' to take the 
-                   achievement of era x \n");
+                  "\n\nInstructions:\n'draw x' to draw a card from card pile x\n'meld x' to meld your xth hand card\n'achieve x' to take the achievement of era x \n\n");
   "innov.json" |> game_init |> play_game
 
 (* Execute the game engine. *)

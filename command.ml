@@ -1,6 +1,4 @@
-
-type color = Red | Purple | Blue | Green | Yellow
-(* type color = Red|Black *)
+open Dogma
 
 (** Raised when an empty command is parsed. *)
 exception Empty
@@ -30,7 +28,7 @@ type command =
   | Meld of int
   | Draw of int
   | Achieve of int
-  | Dogma of color
+  | Dogma of Dogma.stack_color
   | Hand
   | Board of int
   | Score
@@ -40,19 +38,19 @@ let match_color str =
   match str with
   | "Yellow"
   | "yellow" 
-    -> Yellow
+    -> Dogma.Yellow
   | "red"
   | "Red"
-    -> Red
+    -> Dogma.Red
   | "purple"
   | "Purple"
-    -> Purple
+    -> Dogma.Purple
   | "blue"
   | "Blue"
-    -> Blue
+    -> Dogma.Blue
   | "green"
   | "Green"
-    -> Green
+    -> Dogma.Green
   | _ -> raise Empty
 
 let parse str =

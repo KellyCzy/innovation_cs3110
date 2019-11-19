@@ -188,10 +188,11 @@ let print_player_board (state: t) (index: int): string =
   let player = List.nth state.players index in
   Player.print_board player
 
-    {
-      players= state.players;
-      era_cards = state.era_cards;
-      achievements= state.achievements;
-      current_player= (state.current_player + 1) mod (List.length state.players);
-      lowest_era= state.lowest_era;
-    }
+let next_player (state : t) : t = 
+  {
+    players= state.players;
+    era_cards = state.era_cards;
+    achievements= state.achievements;
+    current_player= (state.current_player + 1) mod (List.length state.players);
+    lowest_era= state.lowest_era;
+  }
