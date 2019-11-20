@@ -10,6 +10,7 @@ type t = {
   current_player: int;
   lowest_era: int;
 }
+
 (* the first n natural numbers: [0; n-1] *)
 let range n = 
   let rec range' acc = function
@@ -82,6 +83,36 @@ let get_score_by_id (state: t) (id: int) : int =
 let get_hand_size_by_id (state: t) (id: int) : int = 
   let player = List.nth state.players id in 
   Player.get_hand player |> List.length
+
+let check_empty (color: string) (stack: stack) : string =
+  match stack.cards with 
+  | [] -> " "
+  | _ -> color
+
+let get_emojis (stack: stack list) (name: string) (acc: string list) : string list =
+  match name with 
+  | "red" -> 
+    (List.find (fun x -> Player.get_stack_color x = Dogma.Red) stack |> check_empty "red") :: acc
+  | "purple" -> 
+    (List.find (fun x -> Player.get_stack_color x = Dogma.Purple) stack |> check_empty "purple") :: acc
+  | "blue" ->
+    (List.find (fun x -> Player.get_stack_color x = Dogma.Blue) stack |> check_empty "blue") :: acc
+  | "green" -> 
+    (List.find (fun x -> Player.get_stack_color x = Dogma.Green) stack |> check_empty "green") :: acc
+  | "yellow" ->
+    (List.find (fun x -> Player.get_stack_color x = Dogma.Yellow) stack |> check_empty "yellow") :: acc
+  | _ -> failwith "impossible"
+
+let get_stacks_by_id (state: t) (id: int) : string list =
+  let player = List.nth state.players id in 
+  let board = player |> Player.get_board in 
+  let after_red = get_emojis board "red" [] in 
+  let after_purple  = get_emojis board "purple" after_red in
+  let after_blue  = get_emojis board "blue" after_purple in
+  let after_green  = get_emojis board "green" after_blue in
+  let after_yellow = get_emojis board "yellow" after_green in
+  after_yellow
+(* String.concat " " after_yellow *)
 
 let current_player (state: t) : Player.t= 
   (* let player_indices = List.map Player.get_id state.players in *)

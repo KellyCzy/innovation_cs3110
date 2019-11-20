@@ -165,7 +165,7 @@ let rec play_game state =
   print_string "\n\n";
   printf "It's player %d's first turn!\n" (State.get_current_player state);
   let state_after_1 = run_game_1 state in
-  Frontend.display state;
+  Frontend.display state_after_1;
   print_string "\n\n";
   printf "It's player %d's second turn!\n" (State.get_current_player state_after_1);
   let state_after_2 = run_game_2 state_after_1 in

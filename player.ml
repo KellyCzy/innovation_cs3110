@@ -41,6 +41,8 @@ let map_color_to_int = function
 
 (* let map_int_to_color = function *)
 
+let get_stack_color stack =
+  stack.color
 
 let compare_player player1 player2 = 
   Stdlib.compare player1.id player2.id
