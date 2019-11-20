@@ -22,3 +22,17 @@ type effect =
   | Demand of effect list
 
 type t = effect list
+
+let map_effect_string = function
+  | Draw _ -> "Draw"
+  | Meld _ -> " Meld"
+  | Tuck _ -> "Tuck"
+  | Splay _ -> "Splay"
+  | Return _ -> "Return"
+  | Score _ -> "Score"
+  | Transfer _ -> "Transfer"
+  | Demand _ -> "Demand"
+
+let rec print_effects = function
+  | x::xs -> Printf.printf "%s" (map_effect_string x); print_effects xs
+  | [] -> ()

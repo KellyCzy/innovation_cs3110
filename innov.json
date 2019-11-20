@@ -2,11 +2,11 @@
   "Era1": [
     {
       "title": "Agriculture",
-      "value": 1,
+      "value": 0,
       "dogmas": {
         "effect1": [
           "Return -1",
-          "Draw 1"
+          "Draw 0"
         ],
         "effect2": []
       },
@@ -21,15 +21,15 @@
     },
     {
       "title": "Tools",
-      "value": 1,
+      "value": 0,
       "dogmas": {
         "effect1": [
           "Return -1",
-          "Draw 1"
+          "Draw 0"
         ],
         "effect2": [
           "Return -1",
-          "Draw 1"
+          "Draw 0"
         ]
       },
       "dogmas_icon": "Lightbulb",
@@ -43,10 +43,10 @@
     },
     {
       "title": "The Wheel",
-      "value": 2,
+      "value": 0,
       "dogmas": {
         "effect1": [
-          "Draw 1"
+          "Draw 0"
         ],
         "effect2": []
       },
@@ -61,10 +61,10 @@
     },
     {
       "title": "Archery",
-      "value": 1,
+      "value": 0,
       "dogmas": {
         "effect1": [
-          "Demand Draw:1",
+          "Demand Draw:0",
           "Transfer Self_hand=-1,Other_hand=-1"
         ],
         "effect2": []
@@ -80,7 +80,7 @@
     },
     {
       "title": "City States",
-      "value": 1,
+      "value": 0,
       "dogmas": {
         "effect1": [
           "Demand Transfer:Self_stack=Purple,Other_stack=Purple;Draw:1"
@@ -98,7 +98,7 @@
     },
     {
       "title": "Code of Laws",
-      "value": 1,
+      "value": 0,
       "dogmas": {
         "effect1": [
           "Demand Tuck:-1;Splay:Left"
@@ -116,10 +116,10 @@
     },
     {
       "title": "Mysticism",
-      "value": 1,
+      "value": 0,
       "dogmas": {
         "effect1": [
-          "Draw 1",
+          "Draw 0",
           "Meld 0"
         ],
         "effect2": []
@@ -135,11 +135,11 @@
     },
     {
       "title": "Domestication",
-      "value": 1,
+      "value": 0,
       "dogmas": {
         "effect1": [
           "Meld -1",
-          "Draw 1"
+          "Draw 0"
         ],
         "effect2": []
       },
@@ -154,11 +154,11 @@
     },
     {
       "title": "Sailing",
-      "value": 1,
+      "value": 0,
       "dogmas": {
         "effect1": [
-          "Draw 1",
-          "Meld 1"
+          "Draw 0",
+          "Meld 0"
         ],
         "effect2": []
       },
@@ -173,10 +173,10 @@
     },
     {
       "title": "Writing",
-      "value": 1,
+      "value": 0,
       "dogmas": {
         "effect1": [
-          "Draw 2"
+          "Draw 0"
         ],
         "effect2": []
       },
@@ -191,7 +191,7 @@
     },
     {
       "title": "Metalworking",
-      "value": 1,
+      "value": 0,
       "dogmas": {
         "effect1": [
           "Draw -1"
@@ -209,7 +209,7 @@
     },
     {
       "title": "Clothing",
-      "value": 1,
+      "value": 0,
       "dogmas": {
         "effect1": [
           "Meld -1",
@@ -228,7 +228,7 @@
     },
     {
       "title": "Pottery",
-      "value": 1,
+      "value": 0,
       "dogmas": {
         "effect1": [
           "Return -1"
@@ -248,7 +248,7 @@
     },
     {
       "title": "Masonry",
-      "value": 1,
+      "value": 0,
       "dogmas": {
         "effect1": [
           "Meld -1"
@@ -266,13 +266,13 @@
     },
     {
       "title": "Oars",
-      "value": 1,
+      "value": 0,
       "dogmas": {
         "effect1": [
           "Demand Transfer:Self_hand=-1,Other_score=-1;Draw:1"
         ],
         "effect2": [
-          "Draw 1"
+          "Draw 0"
         ]
       },
       "dogmas_icon": "Castle",

@@ -27,7 +27,7 @@ let init_state (cards_list : Card.t list list) : t = {
   era_cards = cards_list;
   achievements = range 10;
   current_player = 0;
-  lowest_era = 1;
+  lowest_era = 0;
 }
 
 let swap_player (new_player: Player.t) (player_list: Player.t list) : Player.t list= 
@@ -74,14 +74,16 @@ let get_current_player (state: t): int =
   state.current_player
 
 let get_player (state: t) (id: int) : Player.t = 
+  (* Printf.printf "line 77: length %d" (List.length state.players);
+     Printf.printf "index %d\n" id; *)
   List.nth state.players id 
 
 let get_score_by_id (state: t) (id: int) : int = 
-  let player = List.nth state.players id in 
+  let player = get_player state id in 
   Player.get_score player
 
 let get_hand_size_by_id (state: t) (id: int) : int = 
-  let player = List.nth state.players id in 
+  let player = get_player state id in 
   Player.get_hand player |> List.length
 
 let check_empty (color: string) (stack: stack) : string =
@@ -104,7 +106,7 @@ let get_emojis (stack: stack list) (name: string) (acc: string list) : string li
   | _ -> failwith "impossible"
 
 let get_stacks_by_id (state: t) (id: int) : string list =
-  let player = List.nth state.players id in 
+  let player = get_player state id in 
   let board = player |> Player.get_board in 
   let after_red = get_emojis board "red" [] in 
   let after_purple  = get_emojis board "purple" after_red in
@@ -115,7 +117,8 @@ let get_stacks_by_id (state: t) (id: int) : string list =
 (* String.concat " " after_yellow *)
 
 let current_player (state: t) : Player.t= 
-  (* let player_indices = List.map Player.get_id state.players in *)
+  (* Printf.printf "line 120: length %d" (List.length state.players);
+     Printf.printf "index %d\n" state.current_player; *)
   let updated_player = List.nth state.players state.current_player in
   updated_player
 
@@ -138,7 +141,9 @@ let update_era_list e_lst i new_e =
 
 (* *)
 let draw (state: t) (player: Player.t) (era: int): t = 
-  let era_num = (max state.lowest_era era) - 1 in
+  let era_num = (max state.lowest_era era)  in
+  (* Printf.printf "line 145 length %d" (List.length state.era_cards);
+     Printf.printf "index %d\n" era_num; *)
   let era_to_remove = List.nth state.era_cards era_num in
   let updated_era, card_to_draw = Player.pop_card 0 era_to_remove in
   let updated_player = Player.add_hand player card_to_draw in
@@ -147,7 +152,7 @@ let draw (state: t) (player: Player.t) (era: int): t =
   state_with_updated_player |> update_era_cards updated_eras
 
 let meld (state: t) (player: Player.t) (hand_idx: int): t = 
-  let updated_player = Player.add_stack player (hand_idx - 1) true in
+  let updated_player = Player.add_stack player hand_idx true in
   update_player state updated_player
 
 let tuck (state: t) (player: Player.t) (hand_idx:int):t = 
@@ -158,14 +163,24 @@ let splay (state: t) (player: Player.t) (color: Dogma.stack_color) (direction: D
   let updated_player = Player.splay player color direction in
   update_player state updated_player
 
-let update_era state player card: Card.t list list =
+let update_era state card: Card.t list list =
   let era = Card.get_value card in
+  (* Printf.printf "era %d\n" era;
+     Printf.printf "length state.era_cards %d\n" (List.length state.era_cards);
+     Printf.printf "length state.era_cards[0] %d\n" (state.era_cards |> List.hd |> List.length); *)
+  (* let era_cards = List.hd state.era_cards in *)
+  (* Printf.printf "length era_cards %d\n" (era_cards |> List.length); *)
+
   let era_cards = List.nth state.era_cards era in
   update_era_list state.era_cards era (era_cards@[card])
 
 let return (state: t) (player: Player.t) (hand_idx: int): t = 
+  Printf.printf "player hand card %d" (List.length (Player.get_hand player));
   let updated_hand_cards, card = Player.pop_card hand_idx (Player.get_hand player) in
-  update_era_cards (update_era state player card) state
+  Printf.printf "updated_hand_cards %d" (List.length updated_hand_cards);
+  let updated_player = update_hand updated_hand_cards player in
+  let updated_state = update_player state updated_player in 
+  update_era_cards (update_era state card) updated_state
 
 let match_card_pile (card_pile: Dogma.card_pile) (myself: Player.t) (other: Player.t) = 
   match card_pile with 
@@ -226,7 +241,7 @@ let achieve (state: t) (player: Player.t) : t =
   update_player (delete_one_achievement state) updated_player 
 
 let print_player_board (state: t) (index: int): string = 
-  let player = List.nth state.players index in
+  let player = get_player state index in 
   Player.print_board player
 
 let next_player (state : t) : t = 

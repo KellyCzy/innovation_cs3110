@@ -33,14 +33,14 @@ let rec rec_return state =
 
 let dogma_effect (state: State.t) (dogma : Dogma.effect) :State.t = 
   match dogma with
-  | Draw x -> if (x<0) then  let i = input_number () in
+  | Draw x -> if (x<0) then let i = input_number () in
       State.draw state (State.current_player state) i
     else 
       State.draw state (State.current_player state) x 
   | Meld x -> State.meld state (State.current_player state) x 
   | Tuck x -> State.tuck state (State.current_player state) x 
   (* | Splay dir -> let new_state = State.splay state state.current_player col *)
-  | Return x -> if (x<0) then  let i = input_number () in
+  | Return x -> if (x<0) then let i = input_number () in
       State.return state (State.current_player state) i
     else 
       State.return state (State.current_player state) x
@@ -70,41 +70,42 @@ let rec run_game_1 state =
     print_string "> ";
   match read_line () with
   | exception End_of_file -> state
-  | string -> try match Command.parse string with
-    | exception Empty -> 
-      print_string "You didn't type in any command! \n";
-      run_game_1 state
-    | exception Malformed -> 
-      print_string "No such command! \n";
-      print_string "You can only Meld/Draw/Dogma/Achieve \n";
-      run_game_1 state
-    | Meld x -> 
-      State.meld state (State.current_player state) x 
-    | Draw x -> 
-      State.draw state (State.current_player state) x
-    | Achieve _ -> 
-      State.achieve state (State.current_player state) 
-    | Hand ->
-      let str = State.print_hand state in
-      printf "Hand: %s\n" str;
-      run_game_1 state
-    | Board x ->
-      let str = State.print_player_board state x in
-      printf "Board of player #%d:\n %s" x str;
-      print_string "\n";
-      run_game_1 state
-    | Score -> 
-      let score = State.get_current_player_score state in
-      printf "Score: %d\n" score;
-      run_game_1 state
-    | Dogma col -> 
-      let num = Player.map_color_to_int col in
-      let stack = Player.get_ith_stack (State.current_player state) num in
-      let card = Player.get_top_card stack in
-      let dogma = Card.get_dogma card in
-      execute_dogmas state dogma
-    | _ -> print_string "You didn't type in any command! \n";
-      run_game_1 state
+  | string -> 
+    try match Command.parse string with
+      | exception Empty -> 
+        print_string "You didn't type in any command! \n";
+        run_game_1 state
+      | exception Malformed -> 
+        print_string "No such command! \n";
+        print_string "You can only Meld/Draw/Dogma/Achieve \n";
+        run_game_1 state
+      | Meld x -> 
+        State.meld state (State.current_player state) x 
+      | Draw x -> 
+        State.draw state (State.current_player state) x
+      | Achieve _ -> 
+        State.achieve state (State.current_player state) 
+      | Hand ->
+        let str = State.print_hand state in
+        printf "Hand: %s\n" str;
+        run_game_1 state
+      | Board x ->
+        let str = State.print_player_board state x in
+        printf "Board of player #%d:\n %s" x str;
+        print_string "\n";
+        run_game_1 state
+      | Score -> 
+        let score = State.get_current_player_score state in
+        printf "Score: %d\n" score;
+        run_game_1 state
+      | Dogma col -> 
+        let num = Player.map_color_to_int col in
+        let stack = Player.get_ith_stack (State.current_player state) num in
+        let card = Player.get_top_card stack in
+        let dogma = Card.get_dogma card in
+        execute_dogmas state dogma 
+      | _ -> print_string "You didn't type in any command! \n";
+        run_game_1 state
     with 
     | Failure str -> print_string (str ^ "\n"); 
       run_game_1 state

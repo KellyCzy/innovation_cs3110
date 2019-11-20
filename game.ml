@@ -95,7 +95,8 @@ let era_cards (json : Yojson.Basic.t) (era : string) : Card.t list =
   json |> member era |> to_list |> List.map single_card
 
 let shuffle clist = 
-  QCheck.Gen.(generate1 (shuffle_l clist))
+  clist
+(* QCheck.Gen.(generate1 (shuffle_l clist)) *)
 
 let rec all_cards (json : Yojson.Basic.t) (eras : int) : Card.t list list = 
   match eras with 
