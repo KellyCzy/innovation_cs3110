@@ -34,22 +34,22 @@ let display state =
   let player3 = (current_id + 2) mod 4 in 
   let player4 = (current_id + 3)  mod 4 in
   (* print_bytes "U+1F7EA"; *)
-  print_string " -------------------------------------------------------------- \n";
-  print_string ("|            " ^ "player: " ^ (string_of_int player3) ^ "                                         | \n");
-  print_string ("|            " ^ "score: " ^ (string_of_int (score state player3)) ^ "                                          | \n");
-  print_string ("|            " ^ "hand: " ^ (string_of_int (hand state player3)) ^ "                                           | \n");
-  print_string ("|            " ^ "board: "); print_blist (get_stack state player3); print_string ("                                 | \n");
-  print_string "|                                                              | \n";
-  print_string "|                                                              | \n";
-  print_string ("| " ^ "player: " ^ (string_of_int player4) ^ "                                 " ^ "next player: " ^ (string_of_int player2) ^ "     | \n");
-  print_string ("| " ^ "score: " ^ (string_of_int (score state player4)) ^ "                                  " ^ "score: " ^ (string_of_int (score state player2)) ^ "           | \n");
-  print_string ("| " ^ "hand: " ^ (string_of_int (hand state player4)) ^ "                                   " ^ "hand: " ^ (string_of_int (hand state player2)) ^ "            | \n");
-  print_string ("| " ^ "board: "); print_blist (get_stack state player4); print_string ("                         " ^ "board: "); print_blist (get_stack state player2);  print_string ("  | \n");
-  print_string "|                                                              | \n";
-  print_string "|                                                              | \n";
-  print_string ("|            " ^ "current player: " ^ (string_of_int current_id) ^ "                                 | \n");
-  print_string ("|            " ^ "score: " ^  (string_of_int (score state current_id)) ^ "                                          | \n");
-  print_string ("|            " ^ "hand: " ^  (string_of_int (hand state current_id)) ^ "                                           | \n");
-  print_string ("|            " ^ "board: "); print_blist (get_stack state current_id); print_string ("                                 | \n");
-  print_string " -------------------------------------------------------------- \n";
+  print_string " ---------------------------------------------------------------------- \n";
+  print_string ("|            " ^ "player: " ^ (string_of_int player3) ^ "                                                 | \n");
+  print_string ("|            " ^ "score: " ^ (string_of_int (score state player3)) ^ "                                                  | \n");
+  print_string ("|            " ^ "hand: " ^ (string_of_int (hand state player3)) ^ "                                                   | \n");
+  print_string ("|            " ^ "board: "); print_blist (get_stack state player3); print_string ("                                    | \n");
+  print_string "|                                                                      | \n";
+  print_string "|                                                                      | \n";
+  print_string ("| " ^ "player: " ^ (string_of_int player4) ^ "                                 " ^ "next player: " ^ (string_of_int player2) ^ "             | \n");
+  print_string ("| " ^ "score: " ^ (string_of_int (score state player4)) ^ "                                  " ^ "score: " ^ (string_of_int (score state player2)) ^ "                   | \n");
+  print_string ("| " ^ "hand: " ^ (string_of_int (hand state player4)) ^ "                                   " ^ "hand: " ^ (string_of_int (hand state player2)) ^ "                    | \n");
+  print_string ("| " ^ "board: "); print_blist (get_stack state player4); print_string ("                         " ^ "board: "); print_blist (get_stack state player2);  print_string ("| \n");
+  print_string "|                                                                      | \n";
+  print_string "|                                                                      | \n";
+  print_string ("|            " ^ "current player: " ^ (string_of_int current_id) ^ "                                         | \n");
+  print_string ("|            " ^ "score: " ^  (string_of_int (score state current_id)) ^ "                                                  | \n");
+  print_string ("|            " ^ "hand: " ^  (string_of_int (hand state current_id)) ^ "                                                   | \n");
+  print_string ("|            " ^ "board: "); print_blist (get_stack state current_id); print_string ("                                    | \n");
+  print_string " ---------------------------------------------------------------------- \n";
 
