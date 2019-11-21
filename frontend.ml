@@ -18,7 +18,7 @@ let print_blist list =
     | "yellow" -> ANSITerminal.(print_string [yellow] "[]")
     | "green" -> ANSITerminal.(print_string [green] "[]")
     | "blue" -> ANSITerminal.(print_string [blue] "[]")
-    | " " -> ANSITerminal.(print_string [blue] "😰 ")
+    | " " -> ANSITerminal.(print_string [blue] "😰")
     | _ -> () in 
   list |> List.iter helper 
 
