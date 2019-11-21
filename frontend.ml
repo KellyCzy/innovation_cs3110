@@ -34,7 +34,7 @@ let display state =
   let player3 = (current_id + 2) mod 4 in 
   let player4 = (current_id + 3)  mod 4 in
   (* print_bytes "U+1F7EA"; *)
-  print_string " ---------------------------------------------------------------------- \n";
+  print_string " \n---------------------------------------------------------------------- \n";
   print_string ("|            " ^ "player: " ^ (string_of_int player3) ^ "                                                 | \n");
   print_string ("|            " ^ "score: " ^ (string_of_int (score state player3)) ^ "                                                  | \n");
   print_string ("|            " ^ "hand: " ^ (string_of_int (hand state player3)) ^ "                                                   | \n");

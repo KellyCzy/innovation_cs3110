@@ -1,6 +1,26 @@
 {
   "Era1": [
     {
+      "title": "Tools",
+      "value": 0,
+      "dogmas": {
+        "effect1": [
+          "Draw 0",
+          "Return -1"
+        ],
+        "effect2": [
+        ]
+      },
+      "dogmas_icon": "Lightbulb",
+      "icons": [
+        "Pattern",
+        "Lightbulb",
+        "Lightbulb",
+        "Castle"
+      ],
+      "color": "Blue"
+    },
+    {
       "title": "Masonry",
       "value": 0,
       "dogmas": {
@@ -208,28 +228,6 @@
         "Leaf"
       ],
       "color": "Yellow"
-    },
-    {
-      "title": "Tools",
-      "value": 0,
-      "dogmas": {
-        "effect1": [
-          "Return -1",
-          "Draw 0"
-        ],
-        "effect2": [
-          "Return -1",
-          "Draw 0"
-        ]
-      },
-      "dogmas_icon": "Lightbulb",
-      "icons": [
-        "Pattern",
-        "Lightbulb",
-        "Lightbulb",
-        "Castle"
-      ],
-      "color": "Blue"
     },
     {
       "title": "Archery",
