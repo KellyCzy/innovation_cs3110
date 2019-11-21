@@ -88,11 +88,13 @@ let rec run_game_1 state =
       | Hand ->
         let str = State.print_hand state in
         printf "Hand: %s\n" str;
+        Frontend.display state;
         run_game_1 state
       | Board x ->
         let str = State.print_player_board state x in
         printf "Board of player #%d:\n %s" x str;
         print_string "\n";
+        Frontend.display state;
         run_game_1 state
       | Score -> 
         let score = State.get_current_player_score state in
@@ -138,10 +140,12 @@ let rec run_game_2 state =
     | Hand ->
       let str = State.print_hand state in
       printf "Hand card: %s\n" str;
+      Frontend.display state;
       run_game_2 state
     | Board x ->
       let str = State.print_player_board state x in
       printf "Board of %d:\n %s" x str;
+      Frontend.display state;
       run_game_2 state
     | Score -> 
       let score = State.get_current_player_score state in
@@ -178,7 +182,7 @@ let main () =
   ANSITerminal.(print_string [red]
                   "\n\nWelcome to the Innovation engine.\n");
   ANSITerminal.(print_string [green]
-                  "\n\nInstructions:\n'draw x' to draw a card from card pile x\n'meld x' to meld your xth hand card\n'achieve x' to take the achievement of era x \n\n");
+                  "\nInstructions:\n'draw x' to draw a card from card pile x\n'meld x' to meld your xth hand card\n'dogma c' to execute the dogmas of the top card in stack c\n\n");
   "innov.json" |> game_init |> play_game
 
 (* Execute the game engine. *)
