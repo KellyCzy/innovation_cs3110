@@ -32,6 +32,8 @@ let get_ith_hand player i
 
 let get_ith_stack player i
 
+let get_top_card_name player index
+
 let get_color_stack (player: t) (c: Dogma.stack_color) : t 
 
 let update_stack_list s_lst i new_s
