@@ -78,10 +78,10 @@ let make_after_meld_test
       assert_equal expected_output card_name
     )
 
-let new_state_dogma = 
-  let stack = Player.get_ith_stack (new_state_meld|>current_player) 0 in
-  let card = Player.get_top_card stack in
-  Main.execute_dogmas new_state_meld (card|>Card.get_dogma)
+(* let new_state_dogma = 
+   let stack = Player.get_ith_stack (new_state_meld|>current_player) 0 in
+   let card = Player.get_top_card stack in
+   Main.execute_dogmas new_state_meld (card|>Card.get_dogma) *)
 
 let make_after_dogma_test
     (name : string) 
@@ -108,7 +108,7 @@ let test_tests =
 
     make_after_meld_test "after meld card" old_state_meld "Archery";
 
-    make_after_dogma_test "after dogma" new_state_dogma "Masonry";
+    (* make_after_dogma_test "after dogma" new_state_dogma "Masonry"; *)
   ]
 
 let suite = 
