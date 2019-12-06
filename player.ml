@@ -90,12 +90,17 @@ let print_hand player =
 let get_ith_stack player i = 
   List.nth player.board i
 
-
 let get_stack_top (player: t) (index: int): string =
   let stack = List.nth player.board index in
   try
     (List.nth stack.cards 0) |> Card.card_to_string
   with Failure _ ->  " empty stack"
+
+let get_top_card_name player index = 
+  let stack = List.nth player.board index in
+  try
+    (List.nth stack.cards 0)|>Card.get_title
+  with Failure _ ->  "empty stack"
 
 
 let print_board player =

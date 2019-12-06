@@ -103,11 +103,13 @@ let rec run_game_1 state =
       | Hand ->
         let str = State.print_hand state in
         printf "Hand: %s\n" str;
+        Frontend.display state;
         run_game_1 state
       | Board x ->
         let str = State.print_player_board state x in
         printf "Board of player #%d:\n %s" x str;
         print_string "\n";
+        Frontend.display state;
         run_game_1 state
       | Score -> 
         let score = State.get_current_player_score state in
@@ -153,10 +155,12 @@ let rec run_game_2 state =
     | Hand ->
       let str = State.print_hand state in
       printf "Hand card: %s\n" str;
+      Frontend.display state;
       run_game_2 state
     | Board x ->
       let str = State.print_player_board state x in
       printf "Board of %d:\n %s" x str;
+      Frontend.display state;
       run_game_2 state
     | Score -> 
       let score = State.get_current_player_score state in

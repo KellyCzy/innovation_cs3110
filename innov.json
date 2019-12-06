@@ -64,13 +64,10 @@
       "value": 0,
       "dogmas": {
         "effect1": [
-          "Return -1",
-          "Draw 0"
+          "Draw 0",
+          "Return -1"
         ],
-        "effect2": [
-          "Return -1",
-          "Draw 0"
-        ]
+        "effect2": []
       },
       "dogmas_icon": "Lightbulb",
       "icons": [
@@ -82,18 +79,19 @@
       "color": "Blue"
     },
     {
-      "title": "The Wheel",
+      "title": "Masonry",
       "value": 0,
       "dogmas": {
         "effect1": [
+          "Draw 0",
           "Draw 0"
         ],
         "effect2": []
       },
       "dogmas_icon": "Castle",
       "icons": [
-        "Pattern",
         "Castle",
+        "Pattern",
         "Castle",
         "Castle"
       ],
@@ -109,17 +107,17 @@
         ],
         "effect2": []
       },
-      "dogmas_icon": "Crown",
+      "dogmas_icon": "Lightbulb",
       "icons": [
         "Pattern",
-        "Crown",
-        "Crown",
-        "Castle"
+        "Lightbulb",
+        "Lightbulb",
+        "Crown"
       ],
-      "color": "Purple"
+      "color": "Blue"
     },
     {
-      "title": "Code of Laws",
+      "title": "The Wheel",
       "value": 0,
       "dogmas": {
         "effect1": [
@@ -128,14 +126,14 @@
         ],
         "effect2": []
       },
-      "dogmas_icon": "Crown",
+      "dogmas_icon": "Castle",
       "icons": [
         "Pattern",
-        "Crown",
-        "Crown",
-        "Leaf"
+        "Castle",
+        "Castle",
+        "Castle"
       ],
-      "color": "Purple"
+      "color": "Yellow"
     },
     {
       "title": "Mysticism",
@@ -161,7 +159,7 @@
       "value": 0,
       "dogmas": {
         "effect1": [
-          "Meld -1",
+          "Meld 0",
           "Draw 0"
         ],
         "effect2": []
@@ -176,48 +174,11 @@
       "color": "Yellow"
     },
     {
-      "title": "Sailing",
-      "value": 0,
-      "dogmas": {
-        "effect1": [
-          "Draw 0",
-          "Meld 0"
-        ],
-        "effect2": []
-      },
-      "dogmas_icon": "Crown",
-      "icons": [
-        "Crown",
-        "Crown",
-        "Pattern",
-        "Leaf"
-      ],
-      "color": "Green"
-    },
-    {
-      "title": "Writing",
-      "value": 0,
-      "dogmas": {
-        "effect1": [
-          "Draw 0"
-        ],
-        "effect2": []
-      },
-      "dogmas_icon": "Lightbulb",
-      "icons": [
-        "Pattern",
-        "Lightbulb",
-        "Lightbulb",
-        "Crown"
-      ],
-      "color": "Blue"
-    },
-    {
       "title": "Metalworking",
       "value": 0,
       "dogmas": {
         "effect1": [
-          "Draw -1"
+          "Draw 0"
         ],
         "effect2": []
       },
@@ -235,8 +196,8 @@
       "value": 0,
       "dogmas": {
         "effect1": [
-          "Meld -1",
-          "Draw -1"
+          "Draw 0",
+          "Meld 0"
         ],
         "effect2": []
       },
@@ -257,7 +218,7 @@
           "Return -1"
         ],
         "effect2": [
-          "Draw -1"
+          "Draw 0"
         ]
       },
       "dogmas_icon": "Leaf",
@@ -270,19 +231,77 @@
       "color": "Blue"
     },
     {
-      "title": "Masonry",
+      "title": "Oars",
       "value": 0,
       "dogmas": {
         "effect1": [
-          "Meld -1"
+          "Demand Transfer:Self_hand=-1,Other_score=-1;Draw:1"
+        ],
+        "effect2": [
+          "Draw 0"
+        ]
+      },
+      "dogmas_icon": "Castle",
+      "icons": [
+        "Castle",
+        "Crown",
+        "Pattern",
+        "Castle"
+      ],
+      "color": "Red"
+    },
+    {
+      "title": "Agriculture",
+      "value": 0,
+      "dogmas": {
+        "effect1": [
+          "Return -1",
+          "Draw 0"
+        ],
+        "effect2": []
+      },
+      "dogmas_icon": "Leaf",
+      "icons": [
+        "Pattern",
+        "Leaf",
+        "Leaf",
+        "Leaf"
+      ],
+      "color": "Yellow"
+    },
+    {
+      "title": "Archery",
+      "value": 0,
+      "dogmas": {
+        "effect1": [
+          "Demand Draw:0",
+          "Transfer Self_hand=-1,Other_hand=-1"
         ],
         "effect2": []
       },
       "dogmas_icon": "Castle",
       "icons": [
         "Castle",
+        "Lightbulb",
         "Pattern",
-        "Castle",
+        "Castle"
+      ],
+      "color": "Red"
+    },
+    {
+      "title": "City States",
+      "value": 0,
+      "dogmas": {
+        "effect1": [
+          "Demand Transfer:Self_stack=Purple,Other_stack=Purple;Draw:1"
+        ],
+        "effect2": []
+      },
+      "dogmas_icon": "Crown",
+      "icons": [
+        "Pattern",
+        "Crown",
+        "Crown",
         "Castle"
       ],
       "color": "Yellow"
