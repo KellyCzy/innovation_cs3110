@@ -3,8 +3,6 @@ open Card
 open Command
 open Printf
 
-exception Win of string
-
 type t = {
   players: Player.t list;
   era_cards: Card.t list list;
@@ -75,16 +73,10 @@ let delete_one_achievement state = {
 let get_current_player (state: t): int = 
   state.current_player
 
-let get_players (state:t) : Player.t list = 
-  state.players
-
 let get_player (state: t) (id: int) : Player.t = 
-  try 
-    (* Printf.printf "line 77: length %d" (List.length state.players);
-       Printf.printf "index %d\n" id; *)
-    if id < 0 then List.nth state.players (state.current_player+1)
-    else List.nth state.players id 
-  with f -> Printf.printf "The index of player you're looking for is %d\n" id; raise f
+  (* Printf.printf "line 77: length %d" (List.length state.players);
+     Printf.printf "index %d\n" id; *)
+  List.nth state.players id 
 
 let get_score_by_id (state: t) (id: int) : int = 
   let player = get_player state id in 
@@ -130,7 +122,6 @@ let current_player (state: t) : Player.t=
   let updated_player = List.nth state.players state.current_player in
   updated_player
 
-
 let get_current_player_score (state:t): int = 
   state |> current_player |> Player.get_score
 
@@ -148,19 +139,17 @@ let update_era_list e_lst i new_e =
     | x::xs -> update' (x::acc) (idx+1) xs 
   in update' [] 0 e_lst
 
+(* *)
 let draw (state: t) (player: Player.t) (era: int): t = 
   let era_num = (max state.lowest_era era)  in
   (* Printf.printf "line 145 length %d" (List.length state.era_cards);
      Printf.printf "index %d\n" era_num; *)
   let era_to_remove = List.nth state.era_cards era_num in
-  if List.length era_to_remove != 0 then 
-    let updated_era, card_to_draw = Player.pop_card 0 era_to_remove in
-    let updated_player = Player.add_hand player card_to_draw in
-    let state_with_updated_player = update_player state updated_player in
-    let updated_eras = update_era_list state.era_cards era_num updated_era in
-    state_with_updated_player |> update_era_cards updated_eras 
-  else let () = print_string "There is no more card to draw" in
-    state
+  let updated_era, card_to_draw = Player.pop_card 0 era_to_remove in
+  let updated_player = Player.add_hand player card_to_draw in
+  let state_with_updated_player = update_player state updated_player in
+  let updated_eras = update_era_list state.era_cards era_num updated_era in
+  state_with_updated_player |> update_era_cards updated_eras
 
 let meld (state: t) (player: Player.t) (hand_idx: int): t = 
   let updated_player = Player.add_stack player hand_idx true in
@@ -186,9 +175,9 @@ let update_era state card: Card.t list list =
   update_era_list state.era_cards era (era_cards@[card])
 
 let return (state: t) (player: Player.t) (hand_idx: int): t = 
-  (* Printf.printf "player hand card %d" (List.length (Player.get_hand player)); *)
+  Printf.printf "player hand card %d" (List.length (Player.get_hand player));
   let updated_hand_cards, card = Player.pop_card hand_idx (Player.get_hand player) in
-  (* Printf.printf "updat'ed_hand_cards %d" (List.length updated_hand_cards); *)
+  Printf.printf "updated_hand_cards %d" (List.length updated_hand_cards);
   let updated_player = update_hand updated_hand_cards player in
   let updated_state = update_player state updated_player in 
   update_era_cards (update_era state card) updated_state

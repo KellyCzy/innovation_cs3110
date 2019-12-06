@@ -1,4 +1,4 @@
-MODULES=dogma card player state game authors main timer
+MODULES=dogma card player state game authors main
 OBJECTS=$(MODULES:=.cmo)
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)
@@ -14,7 +14,7 @@ build:
 	$(OCAMLBUILD) $(OBJECTS)
 
 # test:
-#  	$(OCAMLBUILD) -tag 'debug' $(TEST) && ./$(TEST)
+# 	$(OCAMLBUILD) -tag 'debug' $(TEST) && ./$(TEST)
 
 play:
 	$(OCAMLBUILD) $(MAIN) && ./$(MAIN)

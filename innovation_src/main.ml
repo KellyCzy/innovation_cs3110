@@ -5,7 +5,6 @@ open Dogma
 open Command
 open Printf
 open Frontend
-open Ai
 
 let total_era = 1
 
@@ -62,20 +61,6 @@ let execute_dogmas state dogmas =
   | x :: y :: [] -> let state_after_x = go_through_effects state x in 
     go_through_effects state_after_x y
   | _ -> failwith "impossible"
-
-let check_win state = 
-  let cards = state.era_cards in
-  let win = List.for_all (fun lst -> List.length lst = 0) cards in
-  if win then
-    let rec get_max_score = function
-      | p::ps -> let (prev_id, prev_score) = get_max_score ps in
-        let new_score = Player.get_score p in
-        if new_score > prev_score then (Player.get_id p, new_score)
-        else (prev_id, prev_score)
-      | [] -> (-1, -1) in
-    get_max_score (State.get_players state)
-  else (-1, -1)
-
 
 (** Helper function *)
 let rec run_game_1 state = 
@@ -182,47 +167,19 @@ let rec play_game state =
   printf "It's player %d's first turn!\n" (State.get_current_player state);
   let state_after_1 = run_game_1 state in
   Frontend.display state_after_1;
-  let winner1 = state_after_1 |> check_win in
-  if fst winner1 > 0 then let () = Printf.printf "The game's winner is player %d and the score is %d" (fst winner1) (snd winner1) in (Stdlib.exit 0)
-  else
-    print_string "\n\n";
-  printf "It's player %d's second turn!\n" (State.get_current_player state_after_1);
-  let state_after_2 = run_game_2 state_after_1 in
-  let winner2 = state_after_2 |> check_win in
-  if fst winner2 > 0 then let () = Printf.printf "The game's winner is player %d and the score is %d" (fst winner2) (snd winner2) in (Stdlib.exit 0)
-  else
-    let next_player_state = State.next_player state_after_2 in
-    play_game next_player_state
-
-let rec play_game_ai state = 
-  Frontend.display state;
-  print_string "\n\n";
-  printf "It's player %d's first turn!\n" (State.get_current_player state);
-  let state_after_1 = run_game_1 state in
-  Frontend.display state_after_1;
   print_string "\n\n";
   printf "It's player %d's second turn!\n" (State.get_current_player state_after_1);
   let state_after_2 = run_game_2 state_after_1 in
   let next_player_state = State.next_player state_after_2 in
-  let state_after_ai = (Ai.ai_play 1 next_player_state) in 
-  play_game state_after_ai
-
+  play_game next_player_state
 
 (** [main ()] prompts for the game to play, then starts it. *)
 let main () =
   ANSITerminal.(print_string [red]
                   "\n\nWelcome to the Innovation engine.\n");
-  print_string "Do you want to play with AI? (y/n)";
-  match read_line() with
-  | "y" -> 
-    ANSITerminal.(print_string [green]
-                    "\n\nInstructions:\n'draw x' to draw a card from card pile x\n'meld x' to meld your xth hand card\n'achieve x' to take the achievement of era x \n\n");
-    "innov.json" |> game_init |> play_game_ai
-  | "n" -> 
-    ANSITerminal.(print_string [green]
-                    "\n\nInstructions:\n'draw x' to draw a card from card pile x\n'meld x' to meld your xth hand card\n'achieve x' to take the achievement of era x \n\n");
-    "innov.json" |> game_init |> play_game
-  | _ -> ()
+  ANSITerminal.(print_string [green]
+                  "\n\nInstructions:\n'draw x' to draw a card from card pile x\n'meld x' to meld your xth hand card\n'achieve x' to take the achievement of era x \n\n");
+  "innov.json" |> game_init |> play_game
 
 (* Execute the game engine. *)
 let () = main ()

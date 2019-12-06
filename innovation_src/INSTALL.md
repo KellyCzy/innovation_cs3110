@@ -47,11 +47,10 @@ Five achievements cards could be achieved anytime when satisfied the requirement
 ## One Example of How to Play
 * `make play`
 * `innov.json`
-* `draw 0` to draw an card from era 1
+* `draw 1` to draw an card from era 1
 * `hand 0` to display the handcard of player 0
-* `meld 0` to meld the frist card from hand
+* `meld 1` to meld the frist card from hand
 * `board 0` to display the handcard of player 0
-* `draw 0`
-* `meld 0`
-* `dogma yellow` if there's a yellow card on player's board
+* `draw 1`
+* `meld 1`
 * ...
