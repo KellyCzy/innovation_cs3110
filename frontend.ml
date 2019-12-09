@@ -28,6 +28,17 @@ let hand state id =
 let score state id = 
   State.get_score_by_id state id
 
+let era_num state i=
+  let era_cards = State.get_era_cards state in 
+  List.length (List.nth era_cards i)
+
+let card_num_dis st i = 
+  let num = era_num st i in
+  let str1 = if num < 10
+    then  "0" ^ (string_of_int num)
+    else (string_of_int num) in
+  "Era" ^ (string_of_int (i + 1)) ^ ": " ^ str1
+
 let display state = 
   let current_id = State.get_current_player state in
   let player2 = (current_id + 1) mod 4 in 
@@ -35,7 +46,7 @@ let display state =
   let player4 = (current_id + 3)  mod 4 in
   (* print_bytes "U+1F7EA"; *)
   print_string " \n---------------------------------------------------------------------- \n";
-  print_string ("|            " ^ "player: " ^ (string_of_int player3) ^ "                                                 | \n");
+  print_string ("|            " ^ "player: " ^ (string_of_int player3) ^ "                              " ^ (card_num_dis state 0) ^ "           | \n");
   print_string ("|            " ^ "score: " ^ (string_of_int (score state player3)) ^ "                                                  | \n");
   print_string ("|            " ^ "hand: " ^ (string_of_int (hand state player3)) ^ "                                                   | \n");
   print_string ("|            " ^ "board: "); print_blist (get_stack state player3); print_string ("                                         | \n");

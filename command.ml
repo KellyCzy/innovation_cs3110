@@ -98,7 +98,8 @@ let parse str =
     (if a = "help" || a = "Help" then Help
      else if a = "hand" || a = "Hand" then Hand
      else if a = "score" || a = "Score" then Score
-     else try Number (int_of_string a) with | _ -> raise (Malformed "No such command! \n You can only Meld/Draw/Dogma/Achieve \n"))
+     else try Number (int_of_string a) with | _ -> 
+       raise (Malformed  (a ^ " is not an index!\n")))
   | a :: b :: [] ->
     if a = "meld" ||  a = "Meld" then 
       Meld (int_of_b b)

@@ -129,8 +129,8 @@ let rec ai_play_deterministic id strategy state =
   print_string "\n";
   match strategy with 
   | 0 -> state |> strategy1 id |> player_or_ai_deterministic id strategy
-  | 1 -> state |> strategy2 id |> player_or_ai_deterministic id strategy
-  | 2 -> state |> strategy3 id |> player_or_ai_deterministic id strategy
+  | 1 -> state |> strategy3 id |> player_or_ai_deterministic id strategy
+  | 2 -> state |> strategy2 id |> player_or_ai_deterministic id strategy
   | _ -> failwith "Impossible"
 
 and player_or_ai_deterministic id strategy state =

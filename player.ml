@@ -8,7 +8,7 @@ type stack = {
 }
 
 let get_top_card stack = 
-  List.hd stack.cards
+  try List.hd stack.cards with _ -> failwith "Do not have this color on board."
 
 type t = {
   id : int;
@@ -39,7 +39,12 @@ let map_color_to_int = function
   | Dogma.Green -> 3
   | Dogma.Yellow -> 4
 
-(* let map_int_to_color = function *)
+let map_color_to_string = function
+  | Dogma.Red -> "Red"
+  | Dogma.Purple -> "Purple"
+  | Dogma.Blue -> "Blue"
+  | Dogma.Green -> "Green"
+  | Dogma.Yellow -> "Yellow"
 
 let get_stack_color stack =
   stack.color
@@ -128,14 +133,14 @@ let add_hand player card =
   update_hand (card::player.hand) player
 
 let get_ith_hand player i = 
-  List.nth player.hand i
+  try (List.nth player.hand i) with _ -> failwith ((string_of_int i) ^ "is not a valid index")
 
 let get_color_stack (player: t) (c: Dogma.stack_color) : stack = 
   get_ith_stack player (map_color_to_int c)
 
 (* update the ith stack with [new_s] in the stack list**)
 let update_stack_list s_lst i new_s = 
-  let ith = List.nth s_lst i in
+  let ith = try (List.nth s_lst i) with _ -> failwith ((string_of_int i) ^ "is not a valid index") in
   let rec update' acc = function
     | [] -> failwith "ith stack not in the list"
     | x::xs -> begin match compare_stack ith x with
@@ -144,16 +149,16 @@ let update_stack_list s_lst i new_s =
       end in 
   update' [] s_lst |> List.sort compare_stack
 
-
 let pop_card i lst = 
   match lst with
   | [] -> failwith "cannot pop element from empty list"
   | x::xs -> 
-    try let ith = List.nth lst i  in
+    try let ith = try (List.nth lst i) with _ -> failwith ((string_of_int i) ^ " is not a valid index") in
       (List.filter (fun x -> not (Card.equal x ith)) lst), ith
-
-    with _ -> print_endline "This card list has no i^th element. 
-    Popped 0^th card by default.\n"; lst, List.hd lst
+    with _ -> 
+      print_endline "This card list has no i^th element. 
+    Popped 0^th card by default.\n"; 
+      lst, List.hd lst
 
 let pop_stack i stack = 
   let cards = stack.cards in
@@ -162,7 +167,7 @@ let pop_stack i stack =
   else
     match cards with
     | [] -> failwith "cannot pop element from empty stack"
-    | x::xs -> try let ith = List.nth cards i  in
+    | x::xs -> try let ith =  try (List.nth cards i) with _ -> failwith ((string_of_int i) ^ " is not a valid index") in
         let updated_cards, ele = (List.filter 
                                     (fun x -> Card.equal x ith) cards), 
                                  ith in
@@ -211,6 +216,7 @@ let transfer_card_to_stack (card_list: Card.t list)
   if Card.get_color card <> stack.color 
   then failwith "cannot transfer card of a different color"
   else begin 
+    ANSITerminal.(print_string [green] ("\nYou just transferred a card [" ^ (Card.get_title card) ^ "]\n"));
     let updated_stack = push_stack card stack top in
     updated_card_list, updated_stack 
   end
@@ -219,6 +225,7 @@ let transfer_stack_to_card (stack: stack) (card_list: Card.t list) =
   (* Printf.printf "stack length before %d\n" (List.length (stack.cards)); *)
   let updated_stack, card = pop_stack 0 stack in
   (* Printf.printf "stack length after %d\n" (List.length (updated_stack.cards)); *)
+  ANSITerminal.(print_string [green] ("\nYou just transferred a card [" ^ (Card.get_title card) ^ "]\n"));
   let updated_card_list = push_card card card_list in
   updated_stack, updated_card_list
 
@@ -226,6 +233,7 @@ let transfer_stack_to_card (stack: stack) (card_list: Card.t list) =
 let transfer_card_to_card (card_list1: Card.t list) 
     (card_list2: Card.t list) (idx:int) =
   let updated_card_list1, card = pop_card idx card_list1 in 
+  ANSITerminal.(print_string [green] ("\nYou just transferred a card [" ^ (Card.get_title card) ^ "]\n"));
   let updated_card_list2 = push_card card card_list2 in
   updated_card_list1, updated_card_list2
 
@@ -235,6 +243,7 @@ let transfer_stack_to_stack (stack1: stack) (stack2: stack) (top: bool) =
   then failwith "cannot transfer card of a different color"
   else begin 
     let updated_stack1, card = pop_stack 0 stack1 in
+    ANSITerminal.(print_string [green] ("\nYou just transferred a card [" ^ (Card.get_title card) ^ "]\n"));
     let updated_stack2 = push_stack card stack2 top in
     updated_stack1, updated_stack2
   end

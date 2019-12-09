@@ -56,6 +56,11 @@ let old_state_draw_innov = (get_all_cards innov) |> State.init_state
 let new_state_draw_innov = State.draw old_state_draw_innov 
     (old_state_draw_innov|> current_player) 0
 
+let old_state_draw_test1 = (get_all_cards test1) |> State.init_state
+let new_state_draw = 
+  State.draw old_state_draw_test1 
+    (old_state_draw_test1|>current_player) 0
+
 let new_state_draw_two = 
   (* print_int(let x = State.draw new_state_draw 
                 (new_state_draw|>current_player) 0 in get_hand_size_by_id x 0); *)
@@ -71,7 +76,6 @@ let make_before_draw_test
       (* Printf.printf "%s/n" str; *)
       assert_equal expected_output str
     )
-
 
 let make_after_draw_test 
     (name : string) 
@@ -386,8 +390,10 @@ let test_tests =
     make_init_state_test "start player test1" test1 0;
     make_init_state_test "start player innov" innov 0;
 
+    make_player_test "player2" innov 0 0;
     make_player_test "player1" test 1 1;
-    make_player_test "player1" test1 2 2;
+    make_player_test "player2" test1 2 2;
+    make_player_test "player2" test1 3 3;
 
     make_before_draw_test "before draw card (test file)" 
       old_state_draw "";

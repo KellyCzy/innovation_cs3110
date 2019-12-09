@@ -1,23 +1,24 @@
 {
     "Era1": [
         {
-            "title": "Archery",
-            "description": "You can score the first card in your hand.",
+            "title": "The Wheel",
+            "description": "You can draw two cards from Era 1.",
             "value": 0,
             "dogmas": {
                 "effect1": [
-                    "Score 0"
+                    "Tuck -1",
+                    "Splay Green,Left"
                 ],
                 "effect2": []
             },
             "dogmas_icon": "Castle",
             "icons": [
-                "Castle",
-                "Lightbulb",
                 "Pattern",
+                "Castle",
+                "Castle",
                 "Castle"
             ],
-            "color": "Red"
+            "color": "Yellow"
         }
     ]
 }

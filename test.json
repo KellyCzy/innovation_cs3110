@@ -2,7 +2,7 @@
     "Era1": [
         {
             "title": "Archery",
-            "description": "You can score the first card in your hand.",
+            "description": "You can draw a card from Era 1 and transfer a card from the next player's hand to your hand.",
             "value": 0,
             "dogmas": {
                 "effect1": [
@@ -21,7 +21,7 @@
         },
         {
             "title": "Oars",
-            "description": "You can score the first card in your hand.",
+            "description": "You can transfer a card from next player's hand to your hand. Draw a card from Era 1 and return a card in your hand.",
             "value": 0,
             "dogmas": {
                 "effect1": [

@@ -11,7 +11,7 @@ let total_era = 1
 
 let game_init f =
   let json = f |> Yojson.Basic.from_file in 
-  (Game.all_cards json total_era)|> State.init_state 
+  List.rev (Game.all_cards json total_era)|> State.init_state 
 
 (* let win (state: State.t): bool = 
    if (List.length (List.nth state.players state.current_player |> 
@@ -24,7 +24,7 @@ let input_number act =
   let str = read_line () in
   match Command.parse str with
   | Number int -> int
-  | _ -> failwith "unimplemented"
+  | _ -> print_endline("This is not a number. It's automatically set to 0"); 0
 
 let rec rec_return state = 
   try 
@@ -48,7 +48,9 @@ let dogma_effect (state: State.t) (dogma : Dogma.effect) : State.t =
     else 
       State.tuck state (State.current_player state) x
   | Return x -> if (x<0) then let i = input_number " return" in
-      State.return state (State.current_player state) i
+      let temp = State.return state (State.current_player state) i in
+      temp
+
     else 
       State.return state (State.current_player state) x
   | Score x -> if (x<0) then let i = input_number " score" in
@@ -149,10 +151,14 @@ let rec run_game_1 state =
         let card = Player.get_top_card stack in
         let dogma = Card.get_dogma card in
         execute_dogmas state dogma 
+
       | _ -> print_string "You didn't type in any command! \n";
         run_game_1 state
     with 
     | Empty_list str -> print_string (str ^ "\n"); 
+      run_game_1 state
+    | Malformed str -> 
+      print_string str;
       run_game_1 state
     | Failure str -> print_string (str ^ "\n"); 
       run_game_1 state
@@ -211,6 +217,9 @@ let rec run_game_2 state =
     with 
     | Empty_list str -> print_string (str ^ "\n"); 
       run_game_2 state
+    | Malformed str -> 
+      print_string str;
+      run_game_2 state
     | Failure str -> print_string (str ^ "\n"); 
       run_game_2 state
 
@@ -266,6 +275,7 @@ let rec play_game_ai state =
           Printf.printf "Player %d wins" id;
           print_string "\n"; exit 0)
     else (print_string ("Game ends! No one Wins! \n");)
+  | Empty_list s -> print_endline(s)
   | Failure s -> print_endline(s)
 
 (** [main ()] prompts for the game to play, then starts it. *)

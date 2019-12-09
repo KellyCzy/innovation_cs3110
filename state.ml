@@ -162,12 +162,12 @@ let update_era_list e_lst i new_e =
   in update' [] 0 e_lst
 
 let draw (state: t) (player: Player.t) (era: int): t = 
-  let era_num = (max state.lowest_era era)  in
-  (* Printf.printf "line 145 length %d" (List.length state.era_cards);
-     Printf.printf "index %d\n" era_num; *)
-  let era_to_remove = List.nth state.era_cards era_num in
+  let era_num = (max state.lowest_era era) in 
+  let era_to_remove = try List.nth state.era_cards era_num  
+    with _ -> raise (Empty_list "There is no card in this ear.") in
   if List.length era_to_remove != 0 then 
     let updated_era, card_to_draw = Player.pop_card 0 era_to_remove in
+    ANSITerminal.(print_string [green] ("\nYou just drew a card [" ^ (Card.get_title card_to_draw) ^ "]\n"));
     let updated_player = Player.add_hand player card_to_draw in
     (* Player.print_player updated_player; *)
     let state_with_updated_player = update_player state updated_player in
@@ -179,11 +179,14 @@ let draw (state: t) (player: Player.t) (era: int): t =
    state *)
 
 let meld (state: t) (player: Player.t) (hand_idx: int): t = 
+  let melded = Player.get_ith_hand player hand_idx in
+  ANSITerminal.(print_string [green] ("\nYou just melded a card [" ^ (Card.get_title melded) ^ "]\n"));
   let updated_player = Player.add_stack player hand_idx true in
   update_player state updated_player
 
 (** No Test *)
 let tuck (state: t) (player: Player.t) (hand_idx:int):t = 
+  ANSITerminal.(print_string [green] ("\nYou just tucked a card [" ^ (Card.get_title (Player.get_ith_hand player hand_idx)) ^ "]\n"));
   let updated_player = Player.add_stack player hand_idx false in
   update_player state updated_player
 
@@ -207,16 +210,13 @@ let update_era state card: Card.t list list =
   update_era_list state.era_cards era (era_cards@[card])
 
 let return (state: t) (player: Player.t) (hand_idx: int): t = 
-  Printf.printf "player hand card %d\n" (List.length (Player.get_hand player));
   let updated_hand_cards, card = Player.pop_card hand_idx 
       (Player.get_hand player) in
-  Printf.printf "updated_hand_cards %d\n" (List.length updated_hand_cards);
+  ANSITerminal.(print_string [green] ("\nYou just returned a card [" ^ (Card.get_title card) ^ "]\n"));
   let updated_player = update_hand updated_hand_cards player in
-  Player.print_player updated_player;
   let updated_state = update_player state updated_player in 
-  let temp = update_era_cards (update_era state card) updated_state in
-  Printf.printf "player 0 hand in updated state %d\n" (List.length (Player.get_hand (get_player temp 0)));
-  temp
+  update_era_cards (update_era state card) updated_state
+
 let match_card_pile (card_pile: Dogma.card_pile) 
     (myself: Player.t) (other: Player.t) = 
   match card_pile with 
@@ -235,6 +235,13 @@ let match_card_pile (card_pile: Dogma.card_pile)
   | Self_stack c ->  
     None, Some (Player.get_color_stack myself c)
   | Other_stack c -> None, Some (Player.get_color_stack other c)
+
+let is_other card_pile1 = 
+  match card_pile1 with 
+  | Dogma.Other_hand _ -> true
+  | Dogma.Other_score _ -> true
+  | Dogma.Other_stack _ -> true
+  | _ -> false
 
 let match_update_card_pile (myself: Player.t) (other: Player.t) 
     (card_pile: Dogma.card_pile) (updated_card_list: Card.t list) 
@@ -267,46 +274,72 @@ let procress_cl1_cl2
     cl1 cl2 card_pile1 card_pile2 fake_stack myself other idx top = 
   let updated_cl1, updated_cl2 = Player.transfer_card_to_card 
       cl1 cl2 idx in 
-  (* Printf.printf "updated_cl1 length %d\n" (List.length updated_cl1);
-     Printf.printf "updated_cl2 length %d\n" (List.length updated_cl2); *)
+  if (is_other card_pile1) then
+    let _, updated_pl1 = match_update_card_pile 
+        myself other card_pile1 updated_cl1 fake_stack in
+    let updated_pl2, _ = match_update_card_pile 
+        myself other card_pile2 updated_cl2 fake_stack in
+    updated_pl1, updated_pl2
 
-  let updated_pl1, _ = match_update_card_pile 
-      myself other card_pile1 updated_cl1 fake_stack in
-  let _, updated_pl2 = match_update_card_pile 
-      myself other card_pile2 updated_cl2 fake_stack in
-  (* Player.print_player updated_pl1;  
-     Player.print_player updated_pl2;  *)
-  updated_pl1, updated_pl2
+  else
+    let updated_pl1, _ = match_update_card_pile 
+        myself other card_pile1 updated_cl1 fake_stack in
+    let _, updated_pl2 = match_update_card_pile 
+        myself other card_pile2 updated_cl2 fake_stack in
+    updated_pl1, updated_pl2
 
 let process_cl1_s2 cl1 s2 card_pile1 card_pile2 
     fake_stack fake_card_list myself other idx top = 
   let updated_cl1, updated_s2 = Player.transfer_card_to_stack cl1 
       s2 idx top in
-  let updated_pl1, _ = match_update_card_pile 
-      myself other card_pile1 updated_cl1 fake_stack in
-  let _, updated_pl2 = match_update_card_pile 
-      myself other card_pile2 fake_card_list updated_s2 in
-  updated_pl1, updated_pl2
+  if (is_other card_pile1) then
+    let _, updated_pl1= match_update_card_pile 
+        myself other card_pile1 updated_cl1 fake_stack in
+    let updated_pl2, _ = match_update_card_pile 
+        myself other card_pile2 fake_card_list updated_s2 in
+    updated_pl1, updated_pl2
+
+  else
+    let updated_pl1, _ = match_update_card_pile 
+        myself other card_pile1 updated_cl1 fake_stack in
+    let _, updated_pl2 = match_update_card_pile 
+        myself other card_pile2 fake_card_list updated_s2 in
+    updated_pl1, updated_pl2
 
 let process_s1_s2 s1 s2 card_pile1 card_pile2 
     fake_stack fake_card_list myself other idx top = 
   let updated_s1, updated_s2 = Player.transfer_stack_to_stack 
       s1 s2 top in
-  let updated_pl1, _ = match_update_card_pile
-      myself other card_pile1 fake_card_list updated_s1 in
-  let _, updated_pl2 = match_update_card_pile 
-      myself other card_pile2 fake_card_list updated_s2 in
-  updated_pl1, updated_pl2
+  if (is_other card_pile1) then
+    let _, updated_pl1= match_update_card_pile
+        myself other card_pile1 fake_card_list updated_s1 in
+    let updated_pl2, _ = match_update_card_pile 
+        myself other card_pile2 fake_card_list updated_s2 in
+    updated_pl1, updated_pl2
+  else
+    let updated_pl1, _ = match_update_card_pile
+        myself other card_pile1 fake_card_list updated_s1 in
+    let _, updated_pl2 = match_update_card_pile 
+        myself other card_pile2 fake_card_list updated_s2 in
+    updated_pl1, updated_pl2
 
 let process_s1_cl2 s1 cl2 card_pile1 card_pile2 
     fake_stack fake_card_list myself other idx top = 
   let updated_s1, updated_cl2 = Player.transfer_stack_to_card 
       s1 cl2 in
-  let updated_pl1, _ = match_update_card_pile myself 
-      other card_pile1 fake_card_list updated_s1 in
-  let _, updated_pl2 = match_update_card_pile myself 
-      other card_pile2 updated_cl2 fake_stack in
-  updated_pl1, updated_pl2 
+  if (is_other card_pile1) then
+    let _, updated_pl1= match_update_card_pile myself 
+        other card_pile1 fake_card_list updated_s1 in
+    let updated_pl2, _ = match_update_card_pile myself 
+        other card_pile2 updated_cl2 fake_stack in
+    updated_pl1, updated_pl2 
+
+  else
+    let updated_pl1, _ = match_update_card_pile myself 
+        other card_pile1 fake_card_list updated_s1 in
+    let _, updated_pl2 = match_update_card_pile myself 
+        other card_pile2 updated_cl2 fake_stack in
+    updated_pl1, updated_pl2 
 
 let get_fields (state: t) (myself: Player.t) (other: Player.t) 
     (card_pile1: Dogma.card_pile) (card_pile2: Dogma.card_pile) = 
@@ -352,22 +385,19 @@ let match_fields myself other card_pile1 card_pile2
         myself other idx top
   | _, _, _, _ -> failwith "fail to match card list or stack"
 
-let match_card_pile1 card_pile1 = 
-  match card_pile1 with 
-  | Dogma.Other_hand _ -> true
-  | Dogma.Other_score _ -> true
-  | Dogma.Other_stack _ -> true
-  | _ -> false
+
 
 let transfer (state: t) (myself': Player.t) (other': Player.t) 
     (card_pile1: Dogma.card_pile) (card_pile2: Dogma.card_pile) 
     (idx: int) (top: bool): t =
-  (* if (match_card_pile1 card_pile1) then let myself = other' and  other = myself' in
-     let card_list1, stack1,  card_list2, stack2, fake_stack, fake_card_list = get_fields state myself other card_pile1 card_pile2 in
+  (* if (match_card_pile card_pile1) then let myself = other' and  other = myself' in
+     let card_list1, stack1, card_list2, stack2, fake_stack, 
+        fake_card_list = get_fields state myself 
+        other card_pile1 card_pile2 in
      let updated_player1, updated_player2 =
-      match_fields myself other card_pile1 card_pile2 fake_stack fake_card_list card_list1 stack1 card_list2 stack2 idx top  
+      match_fields myself other card_pile1 card_pile2 
+        fake_stack fake_card_list card_list1 stack1 card_list2 stack2 idx top  
      in
-
      update_player (update_player state updated_player1) updated_player2
      else  *)
   let myself = myself' and other = other' in
@@ -395,7 +425,7 @@ let print_player_board (state: t) (index: int): string =
   try (
     let player = get_player state index in 
     Player.print_board player)
-  with _ -> "wrong!"
+  with _ -> "wrong! That player doesn't exist."
 
 let rec search_color board : Dogma.stack_color =
   match board with 

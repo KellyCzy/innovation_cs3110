@@ -1,32 +1,33 @@
 {
   "Era1": [
     {
-      "title": "Agriculture",
-      "description": "You can score the first card in your hand.",
+      "title": "The Wheel",
+      "description": "You tuck a card from your hand and splay your green stack left.",
       "value": 0,
       "dogmas": {
         "effect1": [
-          "Return -1",
-          "Draw 0"
+          "Tuck -1",
+          "Splay Green,Left"
         ],
         "effect2": []
       },
-      "dogmas_icon": "Leaf",
+      "dogmas_icon": "Castle",
       "icons": [
         "Pattern",
-        "Leaf",
-        "Leaf",
-        "Leaf"
+        "Castle",
+        "Castle",
+        "Castle"
       ],
-      "color": "Yellow"
+      "color": "Green"
     },
     {
       "title": "Archery",
-      "description": "You can score the first card in your hand.",
+      "description": "You can draw a card from Era 1 and transfer a card from the next player's hand to your hand.",
       "value": 0,
       "dogmas": {
         "effect1": [
-          "Score 0"
+          "Draw 0",
+          "Transfer Other_hand=-1,Self_hand=-1"
         ],
         "effect2": []
       },
@@ -41,7 +42,7 @@
     },
     {
       "title": "Oars",
-      "description": "You can score the first card in your hand.",
+      "description": "You can transfer a card from next player's hand to your hand. Draw a card from Era 1 and return a card in your hand.",
       "value": 0,
       "dogmas": {
         "effect1": [
@@ -63,7 +64,7 @@
     },
     {
       "title": "Agriculture",
-      "description": "You can score the first card in your hand.",
+      "description": "You can return a card from your hand, and then draw two card from Era 1.",
       "value": 0,
       "dogmas": {
         "effect1": [
@@ -83,7 +84,7 @@
     },
     {
       "title": "Tools",
-      "description": "You can score the first card in your hand.",
+      "description": "You can draw a card from Era 1 and score card from your hand.",
       "value": 0,
       "dogmas": {
         "effect1": [
@@ -103,7 +104,7 @@
     },
     {
       "title": "Masonry",
-      "description": "You can score the first card in your hand.",
+      "description": "You can draw a cards from Era 1 and transfer a card from your board to your hand.",
       "value": 0,
       "dogmas": {
         "effect1": [
@@ -122,28 +123,8 @@
       "color": "Yellow"
     },
     {
-      "title": "The Wheel",
-      "description": "You can score the first card in your hand.",
-      "value": 0,
-      "dogmas": {
-        "effect1": [
-          "Tuck -1",
-          "Splay Green,Left"
-        ],
-        "effect2": []
-      },
-      "dogmas_icon": "Castle",
-      "icons": [
-        "Pattern",
-        "Castle",
-        "Castle",
-        "Castle"
-      ],
-      "color": "Yellow"
-    },
-    {
       "title": "Mysticism",
-      "description": "You can score the first card in your hand.",
+      "description": "You can draw and meld a card from Era 1",
       "value": 0,
       "dogmas": {
         "effect1": [
@@ -163,7 +144,7 @@
     },
     {
       "title": "Domestication",
-      "description": "You can score the first card in your hand.",
+      "description": "You can meld your first card and draw a card.",
       "value": 0,
       "dogmas": {
         "effect1": [
@@ -183,7 +164,7 @@
     },
     {
       "title": "Metalworking",
-      "description": "You can score the first card in your hand.",
+      "description": "You can draw a card from Era 2",
       "value": 0,
       "dogmas": {
         "effect1": [
@@ -202,7 +183,7 @@
     },
     {
       "title": "Clothing",
-      "description": "You can score the first card in your hand.",
+      "description": "You can meld a card from your hand and then draw and score from Era 1.",
       "value": 0,
       "dogmas": {
         "effect1": [
@@ -222,7 +203,7 @@
     },
     {
       "title": "Pottery",
-      "description": "You can score the first card in your hand.",
+      "description": "You can return a card from your hand and then draw a card from Era 2",
       "value": 0,
       "dogmas": {
         "effect1": [
@@ -243,7 +224,7 @@
     },
     {
       "title": "Agriculture",
-      "description": "You can score the first card in your hand.",
+      "description": "You can score a card in your hand.",
       "value": 0,
       "dogmas": {
         "effect1": [
