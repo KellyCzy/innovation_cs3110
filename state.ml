@@ -93,6 +93,9 @@ let get_player (state: t) (id: int) : Player.t =
 let get_era_cards state = 
   state.era_cards
 
+let get_era_cards_top state=
+  List.hd (List.hd state.era_cards)
+
 let get_score_by_id (state: t) (id: int) : int = 
   let player = get_player state id in 
   Player.get_score player

@@ -47,19 +47,23 @@ let make_player_test
          |> Player.get_id)
     )
 
+
 let old_state_draw = (get_all_cards test)|>State.init_state
+
 let new_state_draw = 
   State.draw old_state_draw 
     (old_state_draw|>current_player) 0
 
+
 let old_state_draw_innov = (get_all_cards innov) |> State.init_state
+let first_card = Card.get_title (State.get_era_cards_top old_state_draw_innov)
 let new_state_draw_innov = State.draw old_state_draw_innov 
     (old_state_draw_innov|> current_player) 0
 
-let old_state_draw_test1 = (get_all_cards test1) |> State.init_state
-let new_state_draw = 
-  State.draw old_state_draw_test1 
-    (old_state_draw_test1|>current_player) 0
+(* let old_state_draw_test1 = (get_all_cards test1) |> State.init_state
+   let new_state_draw = 
+   State.draw old_state_draw_test1 
+    (old_state_draw_test1|>current_player) 0 *)
 
 let new_state_draw_two = 
   (* print_int(let x = State.draw new_state_draw 
@@ -83,6 +87,8 @@ let make_after_draw_test
     (expected_output : string) : test = 
   name >:: (fun _ -> 
       let card = (Player.get_ith_hand (state|>current_player) 0) in 
+      (* print_endline "------------------------------------------------------\n"; *)
+      (* print_endline (Card.get_title card); *)
       (* Printf.printf "%s/n" str; *)
       assert_equal expected_output (card|>Card.get_title)
     )
@@ -403,10 +409,10 @@ let test_tests =
     make_after_draw_test "after draw card (test file)" 
       new_state_draw "Archery";
     make_after_draw_test "after draw card (innov file)" 
-      new_state_draw_innov "Archery";
+      new_state_draw_innov first_card;
 
     make_after_meld_test "after meld card (test file)" 
-      old_state_meld "Archery";
+      new_state_meld "Archery";
     make_after_meld_test "after meld card (innov file)" 
       new_state_meld_innov "Archery"; 
 
