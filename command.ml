@@ -77,7 +77,7 @@ let parse str =
           List.hd (string_list str) = "Score" then 
     Score
   else if List.hd (string_list str) = "help" || 
-          List.hd (string_list str) = "help" then 
+          List.hd (string_list str) = "Help" then 
     Help
   else
     (match string_list str with 

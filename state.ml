@@ -37,7 +37,8 @@ let swap_player (new_player: Player.t)
   let index = Player.get_id new_player in
   let rec swap acc = function
     | [] -> failwith "player_list is empty"
-    | x::xs -> if (Player.get_id x) = index then (acc @ [new_player] @ xs)
+    | x::xs -> if (Player.get_id x) = index 
+      then (acc @ [new_player] @ xs)
       else swap (acc@[x]) xs in
   swap [] player_list
 
@@ -164,12 +165,14 @@ let draw (state: t) (player: Player.t) (era: int): t =
   if List.length era_to_remove != 0 then 
     let updated_era, card_to_draw = Player.pop_card 0 era_to_remove in
     let updated_player = Player.add_hand player card_to_draw in
+    (* Player.print_player updated_player; *)
     let state_with_updated_player = update_player state updated_player in
     let updated_eras = update_era_list state.era_cards era_num 
         updated_era in
     state_with_updated_player |> update_era_cards updated_eras 
-  else let () = print_string "There is no more card to draw" in
-    state
+  else raise (Win "There is no more card to draw")
+(* else let () = print_string "There is no more card to draw" in
+   state *)
 
 let meld (state: t) (player: Player.t) (hand_idx: int): t = 
   let updated_player = Player.add_stack player hand_idx true in
@@ -211,11 +214,20 @@ let return (state: t) (player: Player.t) (hand_idx: int): t =
 let match_card_pile (card_pile: Dogma.card_pile) 
     (myself: Player.t) (other: Player.t) = 
   match card_pile with 
-  | Self_hand _ -> Some (Player.get_hand myself), None
-  | Other_hand _ -> Some (Player.get_hand other), None
-  | Self_score _ -> Some (Player.get_score_cards myself), None
-  | Other_score _ -> Some (Player.get_score_cards other), None
-  | Self_stack c ->  None, Some (Player.get_color_stack myself c)
+  | Self_hand _ ->
+    (* print_endline "self_hand"; *)
+    Some (Player.get_hand myself), None
+  | Other_hand _ -> 
+    (* print_endline "Other_hand"; *)
+    Some (Player.get_hand other), None
+  | Self_score _ -> 
+    (* print_endline "self_score"; *)
+    Some (Player.get_score_cards myself), None
+  | Other_score _ -> 
+    (* print_endline "Other_score"; *)
+    Some (Player.get_score_cards other), None
+  | Self_stack c ->  
+    None, Some (Player.get_color_stack myself c)
   | Other_stack c -> None, Some (Player.get_color_stack other c)
 
 let match_update_card_pile (myself: Player.t) (other: Player.t) 
@@ -228,7 +240,8 @@ let match_update_card_pile (myself: Player.t) (other: Player.t)
     (* print_endline "self score:"; *)
     (* Player.print_player (Player.update_score myself updated_card_list); *)
     Player.update_score myself updated_card_list, other
-  | Other_score _ -> let temp = Player.update_score other updated_card_list in
+  | Other_score _ -> let temp = Player.update_score 
+                         other updated_card_list in
     (* Printf.printf "temp score length %d\n" (List.length (Player.get_score_cards temp));
        print_endline "other score:"; 
        Player.print_player temp; *)
@@ -248,72 +261,114 @@ let procress_cl1_cl2
     cl1 cl2 card_pile1 card_pile2 fake_stack myself other idx top = 
   let updated_cl1, updated_cl2 = Player.transfer_card_to_card 
       cl1 cl2 idx in 
-  (* Printf.printf "updated_cl1 length %d\n" (List.length updated_cl1); *)
-  (* Printf.printf "updated_cl2 length %d\n" (List.length updated_cl2); *)
+  (* Printf.printf "updated_cl1 length %d\n" (List.length updated_cl1);
+     Printf.printf "updated_cl2 length %d\n" (List.length updated_cl2); *)
 
   let updated_pl1, _ = match_update_card_pile 
       myself other card_pile1 updated_cl1 fake_stack in
   let _, updated_pl2 = match_update_card_pile 
       myself other card_pile2 updated_cl2 fake_stack in
-  (* Player.print_player updated_pl1;  *)
-  (* Player.print_player updated_pl2;  *)
+  (* Player.print_player updated_pl1;  
+     Player.print_player updated_pl2;  *)
   updated_pl1, updated_pl2
 
 let process_cl1_s2 cl1 s2 card_pile1 card_pile2 
     fake_stack fake_card_list myself other idx top = 
   let updated_cl1, updated_s2 = Player.transfer_card_to_stack cl1 
       s2 idx top in
-  let updated_pl1, _ = match_update_card_pile myself 
-      other card_pile1 updated_cl1 fake_stack in
-  let _, updated_pl2 = match_update_card_pile myself 
-      other card_pile2 fake_card_list updated_s2 in
+  let updated_pl1, _ = match_update_card_pile 
+      myself other card_pile1 updated_cl1 fake_stack in
+  let _, updated_pl2 = match_update_card_pile 
+      myself other card_pile2 fake_card_list updated_s2 in
   updated_pl1, updated_pl2
 
 let process_s1_s2 s1 s2 card_pile1 card_pile2 
     fake_stack fake_card_list myself other idx top = 
-  let updated_s1, updated_s2 = Player.transfer_stack_to_stack s1 s2 top in
-  let updated_pl1, _ = match_update_card_pile myself 
-      other card_pile1 fake_card_list updated_s1 in
-  let _, updated_pl2 = match_update_card_pile myself 
-      other card_pile2 fake_card_list updated_s2 in
-
+  let updated_s1, updated_s2 = Player.transfer_stack_to_stack 
+      s1 s2 top in
+  let updated_pl1, _ = match_update_card_pile
+      myself other card_pile1 fake_card_list updated_s1 in
+  let _, updated_pl2 = match_update_card_pile 
+      myself other card_pile2 fake_card_list updated_s2 in
   updated_pl1, updated_pl2
 
 let process_s1_cl2 s1 cl2 card_pile1 card_pile2 
     fake_stack fake_card_list myself other idx top = 
-  let updated_s1, updated_cl2 = Player.transfer_stack_to_card s1 cl2 in
+  let updated_s1, updated_cl2 = Player.transfer_stack_to_card 
+      s1 cl2 in
   let updated_pl1, _ = match_update_card_pile myself 
       other card_pile1 fake_card_list updated_s1 in
   let _, updated_pl2 = match_update_card_pile myself 
       other card_pile2 updated_cl2 fake_stack in
   updated_pl1, updated_pl2 
 
-let transfer (state: t) (myself: Player.t) (other: Player.t) 
-    (card_pile1: Dogma.card_pile) (card_pile2: Dogma.card_pile) 
-    (idx: int) (top: bool): t =
+let get_fields (state: t) (myself: Player.t) (other: Player.t) 
+    (card_pile1: Dogma.card_pile) (card_pile2: Dogma.card_pile) = 
   let card_list1, stack1 = match_card_pile card_pile1 myself other in
   let card_list2, stack2 = match_card_pile card_pile2 myself other in
+
   let fake_stack = Player.init_stack Red and fake_card_list = [] in
-  let updated_player1, updated_player2 =
-    match card_list1, stack1, card_list2, stack2 with 
-    | Some cl1, None, Some cl2, None -> 
+  card_list1, stack1, card_list2, stack2, fake_stack, 
+  fake_card_list
+
+let match_fields myself other card_pile1 card_pile2 
+    fake_stack fake_card_list card_list1 stack1 card_list2 
+    stack2 idx top = 
+  match card_list1, stack1, card_list2, stack2 with 
+  | Some cl1, None, Some cl2, None -> 
+    if (List.length cl1 == 0) then myself, other
+    else 
+      (* Printf.printf "cl1 length %d\n" (List.length cl1);
+         Printf.printf "cl2 length %d\n" (List.length cl2); *)
       procress_cl1_cl2 
         cl1 cl2 card_pile1 card_pile2 fake_stack myself other idx top
-    | Some cl1, None, None, Some s2 -> 
+  | Some cl1, None, None, Some s2 -> 
+    if (List.length cl1 == 0) then myself, other
+    else 
       process_cl1_s2
         cl1 s2 card_pile1 card_pile2 fake_stack fake_card_list 
         myself other idx top
-    | None, Some s1, None, Some s2 ->
+  | None, Some s1, None, Some s2 ->
+    if (List.length (Player.get_stack_cards s1) == 0) then myself, other
+    else 
       process_s1_s2
         s1 s2 card_pile1 card_pile2 fake_stack fake_card_list 
         myself other idx top
-    | None, Some s1, Some cl2, None -> 
+  | None, Some s1, Some cl2, None -> 
+    if List.length (Player.get_stack_cards s1) == 0 then myself, other
+    else  
       process_s1_cl2 
         s1 cl2 card_pile1 card_pile2 fake_stack fake_card_list 
         myself other idx top
-    | _, _, _, _ -> failwith "fail to match card list or stack" in
-  update_player (update_player state updated_player1) updated_player2
+  | _, _, _, _ -> failwith "fail to match card list or stack"
 
+let match_card_pile1 card_pile1 = 
+  match card_pile1 with 
+  | Dogma.Other_hand _ -> true
+  | Dogma.Other_score _ -> true
+  | Dogma.Other_stack _ -> true
+  | _ -> false
+
+let transfer (state: t) (myself': Player.t) (other': Player.t) 
+    (card_pile1: Dogma.card_pile) (card_pile2: Dogma.card_pile) 
+    (idx: int) (top: bool): t =
+  (* if (match_card_pile1 card_pile1) then let myself = other' and  other = myself' in
+     let card_list1, stack1,  card_list2, stack2, fake_stack, fake_card_list = get_fields state myself other card_pile1 card_pile2 in
+     let updated_player1, updated_player2 =
+      match_fields myself other card_pile1 card_pile2 fake_stack fake_card_list card_list1 stack1 card_list2 stack2 idx top  
+     in
+
+     update_player (update_player state updated_player1) updated_player2
+     else  *)
+  let myself = myself' and other = other' in
+  let card_list1, stack1, card_list2, stack2, fake_stack, 
+      fake_card_list = get_fields state myself 
+      other card_pile1 card_pile2 in
+  let updated_player1, updated_player2 =
+    match_fields myself other card_pile1 card_pile2 
+      fake_stack fake_card_list card_list1 stack1 card_list2 stack2 idx top  
+  in
+  update_player (update_player state updated_player1) updated_player2
 
 let score (state : t) (player : Player.t) (hand_idx : int) : t = 
   if hand_idx > (List.length (Player.get_hand player)) 
@@ -327,8 +382,34 @@ let achieve (state: t) (player: Player.t) : t =
   update_player (delete_one_achievement state) updated_player 
 
 let print_player_board (state: t) (index: int): string = 
-  let player = get_player state index in 
-  Player.print_board player
+  try (
+    let player = get_player state index in 
+    Player.print_board player)
+  with _ -> "wrong!"
+
+let rec search_color board : Dogma.stack_color =
+  match board with 
+  | x :: t -> let lst = Player.get_stack_cards x in
+    if lst = [] then search_color t
+    else Player.get_stack_color x
+  | _ -> failwith "impossible"
+
+let give_color_to_dogma id state : Dogma.stack_color = 
+  let player = get_player state id in
+  let board = Player.get_board player in 
+  search_color board 
+
+let rec search_color_exist board : bool = 
+  match board with 
+  | x :: t -> let lst = Player.get_stack_cards x in
+    if lst = [] then search_color_exist t
+    else true
+  | [] -> false
+
+let check_color_to_dogma_exist id state : bool = 
+  let player = get_player state id in
+  let board = Player.get_board player in 
+  search_color_exist board
 
 let next_player (state : t) : t = 
   {

@@ -2,6 +2,7 @@
   "Era1": [
     {
       "title": "Archery",
+      "description": "You can score the first card in your hand.",
       "value": 0,
       "dogmas": {
         "effect1": [
@@ -20,6 +21,7 @@
     },
     {
       "title": "Oars",
+      "description": "You can score the first card in your hand.",
       "value": 0,
       "dogmas": {
         "effect1": [
@@ -41,6 +43,7 @@
     },
     {
       "title": "Agriculture",
+      "description": "You can score the first card in your hand.",
       "value": 0,
       "dogmas": {
         "effect1": [
@@ -60,6 +63,7 @@
     },
     {
       "title": "Tools",
+      "description": "You can score the first card in your hand.",
       "value": 0,
       "dogmas": {
         "effect1": [
@@ -79,6 +83,7 @@
     },
     {
       "title": "Masonry",
+      "description": "You can score the first card in your hand.",
       "value": 0,
       "dogmas": {
         "effect1": [
@@ -98,11 +103,12 @@
     },
     {
       "title": "The Wheel",
+      "description": "You can score the first card in your hand.",
       "value": 0,
       "dogmas": {
         "effect1": [
           "Tuck -1",
-          "Splay Left"
+          "Splay Green,Left"
         ],
         "effect2": []
       },
@@ -117,6 +123,7 @@
     },
     {
       "title": "Mysticism",
+      "description": "You can score the first card in your hand.",
       "value": 0,
       "dogmas": {
         "effect1": [
@@ -136,6 +143,7 @@
     },
     {
       "title": "Domestication",
+      "description": "You can score the first card in your hand.",
       "value": 0,
       "dogmas": {
         "effect1": [
@@ -155,6 +163,7 @@
     },
     {
       "title": "Metalworking",
+      "description": "You can score the first card in your hand.",
       "value": 0,
       "dogmas": {
         "effect1": [
@@ -173,6 +182,7 @@
     },
     {
       "title": "Clothing",
+      "description": "You can score the first card in your hand.",
       "value": 0,
       "dogmas": {
         "effect1": [
@@ -192,6 +202,7 @@
     },
     {
       "title": "Pottery",
+      "description": "You can score the first card in your hand.",
       "value": 0,
       "dogmas": {
         "effect1": [
@@ -212,6 +223,7 @@
     },
     {
       "title": "Agriculture",
+      "description": "You can score the first card in your hand.",
       "value": 0,
       "dogmas": {
         "effect1": [
@@ -226,24 +238,6 @@
         "Leaf",
         "Leaf",
         "Leaf"
-      ],
-      "color": "Yellow"
-    },
-    {
-      "title": "City States",
-      "value": 0,
-      "dogmas": {
-        "effect1": [
-          "Demand Transfer:Self_stack=Purple,Other_stack=Purple;Draw:1"
-        ],
-        "effect2": []
-      },
-      "dogmas_icon": "Crown",
-      "icons": [
-        "Pattern",
-        "Crown",
-        "Crown",
-        "Castle"
       ],
       "color": "Yellow"
     }

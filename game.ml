@@ -41,8 +41,10 @@ let string_to_icon str : Card.icon =
            and effects are connected with ";"
 *)
 let json_to_dogmas (json : Yojson.Basic.t) : Dogma.t list = 
-  let eff1_lst = json |> member "effect1" |> to_list |> List.map to_string in
-  let eff2_lst = json |> member "effect2" |> to_list |> List.map to_string in 
+  let eff1_lst = json |> member "effect1" |> to_list 
+                 |> List.map to_string in
+  let eff2_lst = json |> member "effect2" |> to_list 
+                 |> List.map to_string in 
   let rec matching st = 
     (match st |> String.split_on_char ' ' with 
      | eff :: content :: [] -> 
@@ -53,11 +55,16 @@ let json_to_dogmas (json : Yojson.Basic.t) : Dogma.t list =
         | "Return" -> Dogma.Return (int_of_string content)
         | "Score" -> Dogma.Score (int_of_string content)
         | "Splay" -> 
-          let dir = match content with
-            | "Up" -> Dogma.Up
-            | "Left" -> Dogma.Left
-            | "Right" -> Dogma.Right 
-            | _ -> raise (Invalid_json_format content) in Dogma.Splay dir
+          let pair = content |> String.split_on_char ',' in 
+          let dir = match pair with
+            | _ :: "Up"::[] -> Dogma.Up
+            | _ ::"Left"::[] -> Dogma.Left
+            | _ ::"Right"::[] -> Dogma.Right 
+            | _ -> raise (Invalid_json_format content) in 
+          let color = match pair with 
+            | a::b::[] -> string_to_color a 
+            | _ -> raise (Invalid_json_format content) in
+          Dogma.Splay (dir,color)
         | "Transfer" ->  
           (let piles = content |> String.split_on_char ',' in
            let helper2 str =  match str |> String.split_on_char '=' with
@@ -71,12 +78,12 @@ let json_to_dogmas (json : Yojson.Basic.t) : Dogma.t list =
                  | _ -> raise (Invalid_json_format pile)) 
              | _ -> raise (Invalid_json_format str) in
            match piles with 
-           | a :: b :: [] -> Dogma.Transfer (helper2 a, helper2 a, -1)
+           | a :: b :: [] -> Dogma.Transfer (helper2 a, helper2 b, -1)
            | _ -> raise (Invalid_json_format content) )
-        | "Demand" -> 
-          let efs = content |> String.split_on_char ';' in
-          let ef e = e |> String.split_on_char ':' |> String.concat " " in
-          Dogma.Demand (efs |> List.map ef |> List.map matching)
+        (* | "Demand" -> 
+           let efs = content |> String.split_on_char ';' in
+           let ef e = e |> String.split_on_char ':' |> String.concat " " in
+           Dogma.Demand (efs |> List.map ef |> List.map matching) *)
         | _ -> raise (Invalid_json_format eff))
      | _ -> raise (Invalid_json_format st)) in
   (eff1_lst |> List.map matching) :: (eff2_lst |> List.map matching) :: []
@@ -84,9 +91,11 @@ let json_to_dogmas (json : Yojson.Basic.t) : Dogma.t list =
 let single_card (json : Yojson.Basic.t) : Card.t = 
   {
     title = json |> member "title" |> to_string;
+    description = json |> member "description" |> to_string;
     value = json |> member "value" |> to_int;
     dogmas = json |> member "dogmas" |> json_to_dogmas;
-    dogmas_icon = json |> member "dogmas_icon" |> to_string |> string_to_icon;
+    dogmas_icon = json |> member "dogmas_icon" |> to_string 
+                  |> string_to_icon;
     icons = json |> member "icons" |> to_list
             |> List.map to_string |> List.map string_to_icon;
     color = json |> member "color" |> to_string |> string_to_color
@@ -99,10 +108,12 @@ let shuffle clist =
   clist
 (* QCheck.Gen.(generate1 (shuffle_l clist)) *)
 
-let rec all_cards (json : Yojson.Basic.t) (eras : int) : Card.t list list = 
+let rec all_cards (json : Yojson.Basic.t) (eras : int) : 
+  Card.t list list = 
   match eras with 
   | 0 -> []
-  | a -> (shuffle (era_cards json ("Era" ^ string_of_int a))) :: (all_cards json (a - 1))
+  | a -> (shuffle (era_cards json ("Era" ^ string_of_int a))) 
+         :: (all_cards json (a - 1))
 
 
 

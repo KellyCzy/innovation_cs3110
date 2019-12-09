@@ -44,11 +44,15 @@ let map_color_to_int = function
 let get_stack_color stack =
   stack.color
 
+let get_stack_cards stack = 
+  stack.cards
+
 let compare_player player1 player2 = 
   Stdlib.compare player1.id player2.id
 
 let compare_stack stack1 stack2 = 
-  Stdlib.compare (map_color_to_int stack1.color) (map_color_to_int stack2.color)
+  Stdlib.compare (map_color_to_int stack1.color) 
+    (map_color_to_int stack2.color)
 
 let update_hand hand player = {
   id = player.id;
@@ -66,7 +70,8 @@ let update_board board player= {
   achievements = player.achievements;
 }
 
-let update_splay_direction (stack: stack) (direction: Dogma.splay_direction) = {
+let update_splay_direction (stack: stack) 
+    (direction: Dogma.splay_direction) = {
   color = stack.color;
   splay = direction;
   cards = stack.cards;
@@ -102,14 +107,19 @@ let get_top_card_name player index =
     (List.nth stack.cards 0)|>Card.get_title
   with Failure _ ->  "empty stack"
 
+let get_board_total_length player = 
+  let board = player.board in
+  List.fold_left (fun acc b -> acc + List.length b.cards) 0 board
 
 let print_board player =
-  String.concat "\n" 
-    ["Red: " ^ get_stack_top player 0 ^ "\n";
-     "Purple: " ^ get_stack_top player 1 ^ "\n";
-     "Blue: " ^ get_stack_top player 2 ^ "\n";
-     "Green: " ^ get_stack_top player 3 ^ "\n";
-     "Yellow: " ^ get_stack_top player 4 ^ "\n"]
+  try (
+    String.concat "\n" 
+      ["Red: " ^ get_stack_top player 0 ^ "\n";
+       "Purple: " ^ get_stack_top player 1 ^ "\n";
+       "Blue: " ^ get_stack_top player 2 ^ "\n";
+       "Green: " ^ get_stack_top player 3 ^ "\n";
+       "Yellow: " ^ get_stack_top player 4 ^ "\n"]
+  ) with _ -> "wrong!"
 
 let get_board player =
   player.board
@@ -146,7 +156,9 @@ let pop_stack i stack =
   match cards with
   | [] -> failwith "cannot pop element from empty stack"
   | x::xs -> let ith = List.nth cards i  in
-    let updated_cards, ele = (List.filter (fun x -> Card.equal x ith) cards), ith in
+    let updated_cards, ele = (List.filter 
+                                (fun x -> Card.equal x ith) cards), 
+                             ith in
     (update_stack_cards stack updated_cards), ith
 
 (** Remove the [i]th hand card. *)
@@ -168,8 +180,10 @@ let add_stack (player: t) (hand_idx: int) (top: bool): t =
   let updated_hand, card_to_add = pop_card hand_idx player.hand  in
   let color = card_to_add |> Card.get_color in
   let card_c_idx = color |> map_color_to_int in
-  let stack_to_update = push_stack card_to_add (List.nth player.board card_c_idx) top in
-  let updated_stack_list = update_stack_list player.board card_c_idx stack_to_update in
+  let stack_to_update = push_stack card_to_add 
+      (List.nth player.board card_c_idx) top in
+  let updated_stack_list = update_stack_list 
+      player.board card_c_idx stack_to_update in
   player |> update_hand updated_hand |> update_board updated_stack_list
 
 
@@ -177,13 +191,16 @@ let add_stack (player: t) (hand_idx: int) (top: bool): t =
 let remove_stack player color = 
   let int_of_color = color |> map_color_to_int in
   let rest, ele = int_of_color |> get_ith_stack player |> pop_stack 0 in 
-  let updated_board = rest |> update_stack_list player.board int_of_color in
+  let updated_board = rest |> update_stack_list player.board 
+                        int_of_color in
   (update_board updated_board player), ele
 
 (*transfer one card from card_list to stack, return updated card list and updated stack*)
-let transfer_card_to_stack (card_list: Card.t list) (stack: stack) (idx: int) (top: bool)= 
+let transfer_card_to_stack (card_list: Card.t list) 
+    (stack: stack) (idx: int) (top: bool)= 
   let updated_card_list, card = pop_card idx card_list in 
-  if Card.get_color card <> stack.color then failwith "cannot transfer card of a different color"
+  if Card.get_color card <> stack.color 
+  then failwith "cannot transfer card of a different color"
   else begin 
     let updated_stack = push_stack card stack top in
     updated_card_list, updated_stack 
@@ -195,14 +212,16 @@ let transfer_stack_to_card (stack: stack) (card_list: Card.t list) =
   updated_stack, updated_card_list
 
 (*transfer card at position [idx] from card_list1 to card_list2*)
-let transfer_card_to_card (card_list1: Card.t list) (card_list2: Card.t list) (idx:int) =
+let transfer_card_to_card (card_list1: Card.t list) 
+    (card_list2: Card.t list) (idx:int) =
   let updated_card_list1, card = pop_card idx card_list1 in 
   let updated_card_list2 = push_card card card_list2 in
   updated_card_list1, updated_card_list2
 
 (* transfer one card from stack1 to stack2*)
 let transfer_stack_to_stack (stack1: stack) (stack2: stack) (top: bool) =
-  if stack1.color <> stack2.color then failwith "cannot transfer card of a different color"
+  if stack1.color <> stack2.color 
+  then failwith "cannot transfer card of a different color"
   else begin 
     let updated_stack1, card = pop_stack 0 stack1 in
     let updated_stack2 = push_stack card stack2 top in
@@ -211,11 +230,13 @@ let transfer_stack_to_stack (stack1: stack) (stack2: stack) (top: bool) =
 
 
 (* splay the player's *)
-let splay (player: t) (color: Dogma.stack_color) (direction: Dogma.splay_direction) : t =
+let splay (player: t) (color: Dogma.stack_color) 
+    (direction: Dogma.splay_direction) : t =
   let color_idx = map_color_to_int color in 
   let stack = get_ith_stack player color_idx in
   let updated_stack = update_splay_direction stack direction in
-  let updated_stack_list = update_stack_list player.board color_idx updated_stack in
+  let updated_stack_list = update_stack_list 
+      player.board color_idx updated_stack in
   player |> update_board updated_stack_list
 
 (* get player's score cards *)
@@ -224,7 +245,8 @@ let get_score_cards player =
 
 (* get the sum of player's scores*)
 let get_score player =
-  List.fold_left (fun acc ele -> (Card.get_value ele) + acc) 0 player.score
+  List.fold_left (fun acc ele -> (Card.get_value ele) 
+                                 + acc + 1) 0 player.score
 
 (** get the value of idx th card in player's hand *)
 let get_value (player:t) (idx:int) : int= 

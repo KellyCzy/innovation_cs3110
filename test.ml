@@ -15,6 +15,7 @@ let test1 = Yojson.Basic.from_file "test1.json"
 
 let get_all_cards json = Game.all_cards json 1
 let init_state json = State.init_state (get_all_cards json)
+
 let player0 json = State.get_player (init_state json) 0
 let player1 json = State.get_player (init_state json) 1
 let player2 json = State.get_player (init_state json) 2
@@ -100,21 +101,6 @@ let make_after_meld_test
       assert_equal expected_output card_name
     )
 
-(* let new_state_dogma = 
-   let stack = Player.get_ith_stack (new_state_meld|>current_player) 0 in
-   let card = Player.get_top_card stack in
-   Main.execute_dogmas new_state_meld (card|>Card.get_dogma) *)
-
-(* let make_after_dogma_test
-    (name : string) 
-    (state: State.t)
-    (expected_output : string) : test = 
-   name >:: (fun _ -> 
-      (* let card = (Player.get_ith_stack (state|>current_player) 0) in  *)
-      (* Printf.printf "%s/n" str; *)
-      let card = Player.get_ith_hand (state|>current_player) 0 in
-      assert_equal expected_output (card|>Card.get_title)
-    ) *)
 
 let make_transfer_test
     (name : string)
@@ -128,69 +114,114 @@ let make_transfer_test
     (expected_output : State.t) : test = 
   name >:: (fun _ -> 
       let state_after_transfer = 
-        State.transfer state myself other card_pile1 card_pile2 idx top in
+        State.transfer state myself other card_pile1 
+          card_pile2 idx top in
       assert_equal expected_output (state_after_transfer)
     )
 
-(** hand to hand start *)
-let init_state_hh = init_state test1
-let init_player0_hh = player0 test1
-let input_state_hh = State.draw init_state_hh init_player0_hh 0
-let myself_hh = State.get_player input_state_hh 0
-let other_hh = State.get_player input_state_hh 1
-let card_pile1_hh = Dogma.Self_hand 0
-let card_pile2_hh = Dogma.Other_hand 1
-let idx_hh = 0
-let top_hh = false
-let expected_output_hh = State.draw init_state_hh other_hh 0
-(** hand to hand end*)
+let make_transfer_test_hh
+    (name : string)
+    (state : State.t)
+    (myself_id : int)
+    (other_id : int)
+    (card_pile1: Dogma.card_pile) 
+    (card_pile2: Dogma.card_pile) 
+    (idx: int) 
+    (top: bool)
+    (expected_output : (int * int)) : test = 
+  name >:: (fun _ -> 
+      let myself = State.get_player state myself_id in
+      let other = State.get_player state other_id in
+      (* 
+      Player.print_player myself; *)
 
-(** hand to board start *)
-let init_state_hb = init_state test1
-let init_player0_hb = player0 test1
-let input_state_hb = State.draw init_state_hb init_player0_hb 0
-let myself_hb = State.get_player input_state_hb 0
-let other_hb = State.get_player input_state_hb 1
-let card_pile1_hb = Dogma.Self_hand 0
-let card_pile2_hb = Dogma.Other_stack Red
-let idx_hb = 0
-let top_hb = true
-let middle_state = State.draw init_state_hb other_hb 0
-let player1_for_output = State.get_player middle_state 1
-let expected_output_hb = State.meld middle_state player1_for_output 0
-(** hand to board end*)
+      (* Printf.printf "hh before %d %d\n" myself_hand_length other_hand_length; *)
+      let state_after_transfer = 
+        State.transfer state myself other card_pile1 
+          card_pile2 idx top in
 
-(** board to hand start *)
-(* let init_state_bh = init_state test1
-   let init_player0_bh = player0 test1
-   let init_player1_bh = player1 test1
-   let middle_state = State.draw init_state_bh init_player0_bh 0
-   let input_state_bh = State.meld middle_state init_player0_bh 0
+      let myself_updated = State.get_player state_after_transfer 
+          myself_id in
+      let other_updated = State.get_player state_after_transfer 
+          other_id in
 
-   let myself_bh = State.get_player input_state_bh 0
-   let other_bh = State.get_player input_state_bh 1
-   let card_pile1_bh = Dogma.Self_stack Red
-   let card_pile2_bh = Dogma.Other_hand 0
-   let idx_bh = 0
-   let top_bh = false
+      let myself_updated_hand_length = List.length 
+          (Player.get_hand myself_updated) in
+      let other_updated_hand_length = List.length 
+          (Player.get_hand other_updated) in
 
-   let expected_output_bh = State.draw init_state_bh init_player1_bh 0 *)
-(** board to hand end*)
+      (* Printf.printf "hh %d %d\n" myself_updated_hand_length other_updated_hand_length; *)
+      (assert_equal (myself_updated_hand_length, 
+                     other_updated_hand_length) expected_output) 
+    )
 
-(** hand to board start *)
-(* let init_state_hb = init_state test1
-   let init_player0_hb = player0 test1
-   let input_state_hb = State.draw init_state_hb init_player0_hb 0
-   let myself_hb = State.get_player input_state_hb 0
-   let other_hb = State.get_player input_state_hb 1
-   let card_pile1_hb = Dogma.Self_hand 0
-   let card_pile2_hb = Dogma.Other_stack Red
-   let idx_hb = 0
-   let top_hb = true
-   let middle_state = State.draw init_state_hb other_hb 0
-   let player1_for_output = State.get_player middle_state 1
-   let expected_output_hb = State.meld middle_state player1_for_output 0 *)
-(** hand to board end*)
+let make_transfer_test_hb
+    (name : string)
+    (state : State.t)
+    (myself_id : int)
+    (other_id : int)
+    (card_pile1: Dogma.card_pile) 
+    (card_pile2: Dogma.card_pile) 
+    (idx: int) 
+    (top: bool)
+    (expected_output : (int * int)) : test = 
+  name >:: (fun _ -> 
+      let myself = State.get_player state myself_id in
+      let other = State.get_player state other_id in
+
+
+
+      let state_after_transfer = 
+        State.transfer state myself other card_pile1 card_pile2 idx top in
+
+      let myself_updated = State.get_player state_after_transfer myself_id in
+      let other_updated = State.get_player state_after_transfer other_id in
+
+      let myself_updated_hand_length = 
+        List.length (Player.get_hand myself_updated) in
+      let other_updated_hand_length =
+        Player.get_board_total_length other_updated in
+
+
+      (assert_equal (myself_updated_hand_length, 
+                     other_updated_hand_length) expected_output) 
+    )
+
+let make_transfer_test_bh
+    (name : string)
+    (state : State.t)
+    (myself_id : int)
+    (other_id : int)
+    (card_pile1: Dogma.card_pile) 
+    (card_pile2: Dogma.card_pile) 
+    (idx: int) 
+    (top: bool)
+    (expected_output : (int * int)) : test = 
+  name >:: (fun _ -> 
+      let myself = State.get_player state myself_id in
+      let other = State.get_player state other_id in
+
+      (* let myself_hand_length = List.length (Player.get_hand myself) in
+         let other_hand_length =Player.get_board_total_length other in *)
+      (* Printf.printf "bh before %d %d" myself_hand_length other_hand_length; *)
+
+      let state_after_transfer = 
+        State.transfer state myself other card_pile1 
+          card_pile2 idx top in
+      let myself_updated = State.get_player 
+          state_after_transfer myself_id in
+      let other_updated = State.get_player 
+          state_after_transfer other_id in
+      (* Printf.printf "ids %d %d" myself_id other_id; *)
+      let self_updated_length =
+        Player.get_board_total_length myself_updated in
+      let other_updated_length = 
+        List.length (Player.get_hand other_updated) in
+
+      (assert_equal (self_updated_length, 
+                     other_updated_length) expected_output) 
+    )
+
 
 let make_return_test
     (name: string)
@@ -223,7 +254,50 @@ let make_score_test
       assert_equal expected_output 
         (State.get_score_by_id (new_state) 0)
     )
+(* let make_tuck_test 
+    (name : string)
+    (st: State.t) *)
 
+(** hand to hand start *)
+let init_state_hh = init_state test1
+let myself_id_hh = 0
+let other_id_hh = 1
+let init_player0_hh = State.get_player init_state_hh myself_id_hh 
+let input_state_hh = State.draw init_state_hh (init_player0_hh) 0
+(* let () = Player.print_player (State.get_player input_state_hh 0) *)
+
+let card_pile1_hh = Dogma.Self_hand 0
+let card_pile2_hh = Dogma.Other_hand 0
+let idx_hh = 0
+let top_hh = false
+let expected_output_hh = (0,1)
+
+
+(** hand to board start *)
+let init_state_hb = init_state test1
+let myself_id_hb = 1
+let other_id_hb = 2
+let init_player0_hb = State.get_player init_state_hb myself_id_hb
+let input_state_hb = State.draw init_state_hb init_player0_hb 0
+
+let card_pile1_hb = Dogma.Self_hand 0
+let card_pile2_hb = Dogma.Other_stack Red
+let idx_hb = 0
+let top_hb = true
+let expected_output_hb = (0,1)
+
+
+let init_state_bh = init_state test1
+let myself_id_bh = 2
+let other_id_bh = 3
+let init_player0_bh = State.get_player init_state_bh myself_id_bh
+let input_state_bh = State.draw init_state_bh init_player0_bh 0
+
+let card_pile1_bh = Dogma.Self_hand 0
+let card_pile2_bh = Dogma.Other_stack Red
+let idx_bh = 0
+let top_bh = true
+let expected_output_bh = (0,1)
 
 let test_tests = 
   [
@@ -241,11 +315,22 @@ let test_tests =
 
     (* make_after_dogma_test "after dogma" new_state_dogma "Masonry"; *)
 
-    make_transfer_test "hand to hand" input_state_hh myself_hh other_hh card_pile1_hh card_pile2_hh idx_hh top_hh expected_output_hh; 
 
-    make_transfer_test "hand to board" input_state_hb myself_hb other_hb card_pile1_hb card_pile2_hb idx_hb top_hb expected_output_hb;
 
-    (* make_return_test "return one" input_state_ro player_ro hand_idx_ro expected_output_ro; *)
+    make_transfer_test_hh "hand to hand" input_state_hh 
+      myself_id_hh other_id_hh card_pile1_hh card_pile2_hh 
+      idx_hh top_hh expected_output_hh; 
+
+    make_transfer_test_hb "hand to board" input_state_hb 
+      myself_id_hb other_id_hb card_pile1_hb card_pile2_hb 
+      idx_hb top_hb expected_output_hb; 
+
+    make_transfer_test_hb "board to hand" input_state_bh 
+      myself_id_bh other_id_bh card_pile1_bh card_pile2_bh
+      idx_bh top_bh expected_output_bh; 
+
+    make_return_test "return one" input_state_ro player_ro 
+      hand_idx_ro expected_output_ro;
 
     make_score_test "score" new_state_draw 0 1;
   ]
@@ -254,6 +339,5 @@ let suite =
   "test suite for final project"  >::: List.flatten [
     test_tests;
   ]
-
 
 let _ = run_test_tt_main suite

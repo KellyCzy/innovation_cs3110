@@ -15,11 +15,12 @@ type effect =
   | Draw of int
   | Meld of int 
   | Tuck of int
-  | Splay of splay_direction
+  | Splay of splay_direction * stack_color
   | Return of int
   | Score of int
   | Transfer of card_pile * card_pile * int
   | Demand of effect list
+
 
 type t = effect list
 

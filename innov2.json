@@ -2,11 +2,12 @@
     "Era1": [
         {
             "title": "Archery",
+            "description": "You can score a card in your hand.",
             "value": 0,
             "dogmas": {
                 "effect1": [
                     "Draw 0",
-                    "Transfer Self_hand=-1,Other_hand=-1"
+                    "Transfer Other_hand=-1,Self_hand=-1"
                 ],
                 "effect2": []
             },
@@ -21,14 +22,15 @@
         },
         {
             "title": "Oars",
+            "description": "You can transfer a card from next player's hand to your hand. Draw a card from Era 1 and return a card in your hand.",
             "value": 0,
             "dogmas": {
                 "effect1": [
-                    "Transfer Self_hand=-1,Other_score=-1",
+                    "Transfer Other_hand=-1,Self_score=-1",
                     "Draw 0"
                 ],
                 "effect2": [
-                    "Draw 0"
+                    "Return -1"
                 ]
             },
             "dogmas_icon": "Castle",
@@ -42,10 +44,12 @@
         },
         {
             "title": "Agriculture",
+            "description": "You can return a card from your hand, and then draw two card from Era 1.",
             "value": 0,
             "dogmas": {
                 "effect1": [
                     "Return -1",
+                    "Draw 0",
                     "Draw 0"
                 ],
                 "effect2": []
@@ -61,11 +65,12 @@
         },
         {
             "title": "Tools",
+            "description": "You can draw a card from Era 1 and score and card from your hand.",
             "value": 0,
             "dogmas": {
                 "effect1": [
                     "Draw 0",
-                    "Return -1"
+                    "Score -1"
                 ],
                 "effect2": []
             },
@@ -80,11 +85,12 @@
         },
         {
             "title": "Masonry",
+            "description": "You can draw a cards from Era 1 and transfer a card from your board to your hand.",
             "value": 0,
             "dogmas": {
                 "effect1": [
                     "Draw 0",
-                    "Draw 0"
+                    "Transfer Self_board=-1,Self_hand=-1"
                 ],
                 "effect2": []
             },
@@ -99,6 +105,7 @@
         },
         {
             "title": "The Wheel",
+            "description": "You can draw two cards from Era 1.",
             "value": 0,
             "dogmas": {
                 "effect1": [
@@ -118,6 +125,7 @@
         },
         {
             "title": "Mysticism",
+            "description": "You can draw and meld a card from Era 1",
             "value": 0,
             "dogmas": {
                 "effect1": [
@@ -137,6 +145,7 @@
         },
         {
             "title": "Domestication",
+            "description": "You can meld your first card and draw a card.",
             "value": 0,
             "dogmas": {
                 "effect1": [
@@ -156,10 +165,11 @@
         },
         {
             "title": "Metalworking",
+            "description": "You can draw a card from Era 2",
             "value": 0,
             "dogmas": {
                 "effect1": [
-                    "Draw 0"
+                    "Draw 1"
                 ],
                 "effect2": []
             },
@@ -174,6 +184,7 @@
         },
         {
             "title": "Clothing",
+            "description": "You can meld a card from your hand and then draw and score from Era 1.",
             "value": 0,
             "dogmas": {
                 "effect1": [
@@ -195,13 +206,14 @@
         },
         {
             "title": "Pottery",
+            "description": "You can return a card from your hand and then draw a card from Era 2",
             "value": 0,
             "dogmas": {
                 "effect1": [
                     "Return -1"
                 ],
                 "effect2": [
-                    "Draw 0"
+                    "Draw 1"
                 ]
             },
             "dogmas_icon": "Leaf",
@@ -215,11 +227,11 @@
         },
         {
             "title": "Agriculture",
+            "description": "You can score a card in your hand.",
             "value": 0,
             "dogmas": {
                 "effect1": [
-                    "Return -1",
-                    "Draw 0"
+                    "Score -1"
                 ],
                 "effect2": []
             },
@@ -234,15 +246,16 @@
         },
         {
             "title": "Code of Law",
+            "description": "You tuck a card from your hand and splay your green stack left.",
             "value": 0,
             "dogmas": {
                 "effect1": [
                     "Tuck -1",
-                    "Splay Left"
+                    "Splay Green,Left"
                 ],
                 "effect2": []
             },
-            "dogma_icon": "Crown",
+            "dogmas_icon": "Crown",
             "icons": [
                 "Pattern",
                 "Crown",
@@ -253,6 +266,7 @@
         },
         {
             "title": "Sailing",
+            "description": "You can draw and meld a card from Era 1.",
             "value": 0,
             "dogmas": {
                 "effect1": [
@@ -261,7 +275,7 @@
                 ],
                 "effect2": []
             },
-            "dogma_icon": "Crown",
+            "dogmas_icon": "Crown",
             "icons": [
                 "Crown",
                 "Crown",
@@ -272,6 +286,7 @@
         },
         {
             "title": "Writing",
+            "description": "You can draw a card from Era 2.",
             "value": 0,
             "dogmas": {
                 "effect1": [
@@ -279,7 +294,7 @@
                 ],
                 "effect2": []
             },
-            "dogma_icon": "Lightbulb",
+            "dogmas_icon": "Lightbulb",
             "icons": [
                 "Pattern",
                 "Lightbulb",
@@ -292,16 +307,17 @@
     "Era2": [
         {
             "title": "Construction",
+            "description": "You can tranfer a card from the next play's hand to your hand.\n Then transfer and card from your hand to others hand.\n And draw a card from Era 2.",
             "value": 1,
             "dogmas": {
                 "effect1": [
-                    "Transfer Self_hand=-1,Other_hand=-1",
+                    "Transfer Other_hand=-1,Self_hand=-1",
                     "Transfer Self_hand=-1,Other_hand=-1",
                     "Draw 1"
                 ],
                 "effect2": []
             },
-            "dogma_icon": "Castle",
+            "dogmas_icon": "Castle",
             "icons": [
                 "Castle",
                 "Pattern",
@@ -312,17 +328,17 @@
         },
         {
             "title": "Road Building",
+            "description": "You can meld a hand from your hand. \nTransfer a red card from your board to other's board.\n And transfer a green card from other's board to your board.",
             "value": 1,
             "dogmas": {
                 "effect1": [
                     "Meld -1",
-                    "Meld -1",
                     "Transfer Self_stack=Red,Other_stack=Red",
-                    "Transfer Self_stack=Green,Other_stack=Green",
+                    "Transfer Other_stack=Green,Self_stack=Green"
                 ],
                 "effect2": []
             },
-            "dogma_icon": "Castle",
+            "dogmas_icon": "Castle",
             "icons": [
                 "Castle",
                 "Castle",
@@ -333,15 +349,16 @@
         },
         {
             "title": "Philosophy",
+            "description": "You can splay your green card left and then score a card from your hand.",
             "value": 1,
             "dogmas": {
                 "effect1": [
-                    "Splay Left",
+                    "Splay Green,Left",
                     "Socre -1"
                 ],
                 "effect2": []
             },
-            "dogma_icon": "Lightbulb",
+            "dogmas_icon": "Lightbulb",
             "icons": [
                 "Pattern",
                 "Lightbulb",
@@ -352,17 +369,19 @@
         },
         {
             "title": "Monothesim",
+            "description": "You can transfer a purple card from other's borad to your hand and tuck it.",
             "value": 1,
             "dogmas": {
                 "effect1": [
-                    "Transfer Self_stack=-1,Other_stack=-1"
+                    "Transfer Other_stack=Purple,Self_hand=-1",
+                    "Tuck 0"
                 ],
                 "effect2": [
                     "Draw 0",
                     "Tuck 0"
                 ]
             },
-            "dogma_icon": "Castle",
+            "dogmas_icon": "Castle",
             "icons": [
                 "Pattern",
                 "Castle",
@@ -373,6 +392,7 @@
         },
         {
             "title": "Fermenting",
+            "description": "You can draw and score a card from era 2.",
             "value": 1,
             "dogmas": {
                 "effect1": [
@@ -381,7 +401,7 @@
                 ],
                 "effect2": []
             },
-            "dogma_icon": "Leaf",
+            "dogmas_icon": "Leaf",
             "icons": [
                 "Leaf",
                 "Leaf",
@@ -392,15 +412,16 @@
         },
         {
             "title": "Canal Building",
+            "description": "You can transfer a card from other's score pile to your hand\n and then transfer a card from your hand to other's score.",
             "value": 1,
             "dogmas": {
                 "effect1": [
-                    "Transfer Self_score=-1,Self_hand=-1",
-                    "Transfer Self_hand=-1,Slef_score=-1"
+                    "Transfer Other_score=-1,Self_hand=-1",
+                    "Transfer Self_hand=-1,Other_score=-1"
                 ],
                 "effect2": []
             },
-            "dogma_icon": "Crown",
+            "dogmas_icon": "Crown",
             "icons": [
                 "Pattern",
                 "Crown",
@@ -411,6 +432,7 @@
         },
         {
             "title": "Calendar",
+            "description": "You can draw 2 cards from era 2",
             "value": 1,
             "dogmas": {
                 "effect1": [
@@ -419,7 +441,7 @@
                 ],
                 "effect2": []
             },
-            "dogma_icon": "Leaf",
+            "dogmas_icon": "Leaf",
             "icons": [
                 "Pattern",
                 "Leaf",
@@ -430,6 +452,7 @@
         },
         {
             "title": "Mathematics",
+            "description": "You can return a card from your hand and then draw and meld a card from Era 2.",
             "value": 1,
             "dogmas": {
                 "effect1": [
@@ -440,7 +463,7 @@
                     "Meld 1"
                 ]
             },
-            "dogma_icon": "Lightbulb",
+            "dogmas_icon": "Lightbulb",
             "icons": [
                 "Pattern",
                 "Lightbulb",
@@ -451,9 +474,11 @@
         },
         {
             "title": "Currency",
+            "description": "You can return two cards from your hand and draw and score a card from Era 2.",
             "value": 1,
             "dogmas": {
                 "effect1": [
+                    "Return -1",
                     "Return -1"
                 ],
                 "effect2": [
@@ -461,7 +486,7 @@
                     "Score 0"
                 ]
             },
-            "dogma_icon": "Crown",
+            "dogmas_icon": "Crown",
             "icons": [
                 "Leaf",
                 "Crown",
@@ -472,17 +497,17 @@
         },
         {
             "title": "Mapmaking",
+            "description": "You can transfer a card from other's card pile to your pile. And then transfer a green card to the next player.",
             "value": 1,
             "dogmas": {
                 "effect1": [
                     "Transfer Other_score=-1,Self_score=-1"
                 ],
                 "effect2": [
-                    "Draw 0",
-                    "Score 0"
+                    "Transfer Self_stack=Green,Other_stack=Green"
                 ]
             },
-            "dogma_icon": "Crown",
+            "dogmas_icon": "Crown",
             "icons": [
                 "Pattern",
                 "Crown",

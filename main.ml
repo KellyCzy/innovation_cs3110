@@ -32,23 +32,31 @@ let rec rec_return state =
     State.return state (State.current_player state) i
   with _ -> rec_return state
 
-let dogma_effect (state: State.t) (dogma : Dogma.effect) :State.t = 
+
+let dogma_effect (state: State.t) (dogma : Dogma.effect) : State.t = 
   match dogma with
   | Draw x -> if (x<0) then let i = input_number () in
       State.draw state (State.current_player state) i
     else 
       State.draw state (State.current_player state) x 
   | Meld x -> State.meld state (State.current_player state) x 
-  | Tuck x -> State.tuck state (State.current_player state) x 
-  (* | Splay dir -> let new_state = State.splay state state.current_player col *)
+  | Tuck x -> if (x<0) then let i = input_number () in
+      State.tuck state (State.current_player state) i 
+    else 
+      State.tuck state (State.current_player state) x
   | Return x -> if (x<0) then let i = input_number () in
       State.return state (State.current_player state) i
     else 
       State.return state (State.current_player state) x
-  | Score x -> State.score state (State.current_player state) x 
+  | Score x -> if (x<0) then let i = input_number () in
+      State.score state (State.current_player state) i 
+    else
+      State.score state (State.current_player state) x 
   | Transfer (cp1, cp2, id) -> let other = State.get_player state id in
     let myself = State.current_player state in 
     State.transfer state myself other cp1 cp2 0 true
+  | Splay (dir,color) -> 
+    State.splay state (State.current_player state) color dir
   | _ -> print_string "Need to be completed \n"; state
 
 let rec go_through_effects (state: State.t) (dogma: Dogma.t) : State.t =
@@ -101,21 +109,21 @@ let rec run_game_1 state =
         State.achieve state (State.current_player state) 
       | Hand ->
         let str = State.print_hand state in
-        printf "Hand: %s\n" str;
         Frontend.display state;
+        printf "Hand: %s\n" str;
         run_game_1 state
       | Board x ->
         let str = State.print_player_board state x in
+        Frontend.display state;
         printf "Board of player #%d:\n %s" x str;
         print_string "\n";
-        Frontend.display state;
         run_game_1 state
       | Score -> 
         let score = State.get_current_player_score state in
         printf "Score: %d\n" score;
         run_game_1 state
       | Help -> Printf.printf "    You are player %d.\n
-      Now you're at your first round.\n
+      Now it's your turn.\n
       Here're a few possible commands you could try.\n
       🌟 draw [era_num]: draw a card from era [era_num], starting from 0.\n
       🌟 meld [hand_idx]: meld a card with index [hand_idx] from your hand cards, 
@@ -132,7 +140,8 @@ let rec run_game_1 state =
         run_game_1 state
       | Dogma col -> 
         let num = Player.map_color_to_int col in
-        let stack = Player.get_ith_stack (State.current_player state) num in
+        let stack = Player.get_ith_stack (State.current_player state) 
+            num in
         let card = Player.get_top_card stack in
         let dogma = Card.get_dogma card in
         execute_dogmas state dogma 
@@ -183,14 +192,14 @@ let rec run_game_2 state =
       run_game_2 state
     | Dogma col -> 
       let num = Player.map_color_to_int col in
-      let stack = Player.get_ith_stack (State.current_player state) num in
+      let stack = Player.get_ith_stack (State.current_player state) 
+          num in
       let card = Player.get_top_card stack in
       let dogma = Card.get_dogma card in
       (* effect list list *)
       execute_dogmas state dogma
     | _ -> print_string "You didn't type in any command! \n";
       run_game_2 state
-
     with 
     | Failure str -> print_string (str ^ "\n"); 
       run_game_2 state
@@ -200,23 +209,29 @@ let rec play_game state =
   print_string "\n\n";
   printf "It's player %d's first turn!\n" (State.get_current_player state);
   let state_after_1 = run_game_1 state in
-  Frontend.display state_after_1;
+  if state_after_1 = state then print_string ("\n"; exit 0)
+  else
+    Frontend.display state_after_1;
   let winner1 = state_after_1 |> check_win in
   if fst winner1 > 0 
-  then let () = Printf.printf "The game's winner is player %d and the score is %d" 
+  then let () = Printf.printf 
+           "The game's winner is player %d and the score is %d" 
            (fst winner1) (snd winner1) in (Stdlib.exit 0)
   else
     print_string "\n\n";
   printf "It's player %d's second turn!\n" 
     (State.get_current_player state_after_1);
   let state_after_2 = run_game_2 state_after_1 in
-  let winner2 = state_after_2 |> check_win in
-  if fst winner2 > 0 
-  then let () = Printf.printf "The game's winner is player %d and the score is %d" 
-           (fst winner2) (snd winner2) in (Stdlib.exit 0)
-  else
-    let next_player_state = State.next_player state_after_2 in
-    play_game next_player_state
+  if state_after_1 = state then print_string ("\n"; exit 0)
+  else 
+    let winner2 = state_after_2 |> check_win in
+    if fst winner2 > 0 
+    then let () = Printf.printf 
+             "The game's winner is player %d and the score is %d" 
+             (fst winner2) (snd winner2) in (Stdlib.exit 0)
+    else
+      let next_player_state = State.next_player state_after_2 in
+      play_game next_player_state
 
 let rec play_game_ai state = 
   Frontend.display state;
@@ -230,7 +245,7 @@ let rec play_game_ai state =
   let state_after_2 = run_game_2 state_after_1 in
   let next_player_state = State.next_player state_after_2 in
   let state_after_ai = (Ai.ai_play 1 next_player_state) in 
-  play_game state_after_ai
+  play_game_ai state_after_ai
 
 
 (** [main ()] prompts for the game to play, then starts it. *)
@@ -241,17 +256,39 @@ let main () =
   match read_line() with
   | "y" -> 
     ANSITerminal.(print_string [green]
-                    "\n\nInstructions:\n
-                    'draw x' to draw a card from card pile x\n
-                    'meld x' to meld your xth hand card\n
-                    'achieve x' to take the achievement of era x \n\n");
+                    "Game Rules:\n
+                    Meld: put card from your hand to your board, on top of the stack of matching color. 
+                    Continue a spaly if one is present.\n
+                    Draw: Take a card of value equal to your highest top card from the supply piels. 
+                    If empty, draw from the next higher pile.\n
+                    Achieve: To claim, must have a score of at least 5x age number in points, 
+                    and a top card of equal or higher value. Points are not spent, you keep them.\n
+                    Dogma/take action: Pick a top card on your board, and execute each effect on it in order. 
+                    Effects are mandatory unless “You may” precedes them.\n
+                    I Demand effects are executed by each player with fewer of the features icon than you, 
+                    going clockwise. Read the effect out loud to them.\n
+                    Opponents execute non-demand effects before you, 
+                    if they have as many or more of the featured icon, going clockwise.\n
+                    If any opponent shared a non-demand effect, and anything happened, 
+                    take a single free Draw action at the conclusion of your Dogma action.\n");
     "innov.json" |> game_init |> play_game_ai
   | "n" -> 
     ANSITerminal.(print_string [green]
-                    "\n\nInstructions:\n
-                    'draw x' to draw a card from card pile x\n
-                    'meld x' to meld your xth hand card\n
-                    'achieve x' to take the achievement of era x \n\n");
+                    "Game Rules:\n
+    Meld: put card from your hand to your board, on top of the stack of matching color. 
+    Continue a spaly if one is present.\n
+    Draw: Take a card of value equal to your highest top card from the supply piels. 
+    If empty, draw from the next higher pile.\n
+    Achieve: To claim, must have a score of at least 5x age number in points, 
+    and a top card of equal or higher value. Points are not spent, you keep them.\n
+    Dogma/take action: Pick a top card on your board, and execute each effect on it in order. 
+    Effects are mandatory unless “You may” precedes them.\n
+    I Demand effects are executed by each player with fewer of the features icon than you, 
+    going clockwise. Read the effect out loud to them.\n
+    Opponents execute non-demand effects before you, 
+    if they have as many or more of the featured icon, going clockwise.\n
+    If any opponent shared a non-demand effect, and anything happened, 
+    take a single free Draw action at the conclusion of your Dogma action.\n");
     "innov.json" |> game_init |> play_game
   | _ -> ()
 
