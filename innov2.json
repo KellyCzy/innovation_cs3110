@@ -2,7 +2,7 @@
     "Era1": [
         {
             "title": "Archery",
-            "description": "You can score a card in your hand.",
+            "description": "You can draw a card from Era 1 and transfer a card from the next player's hand to your hand.",
             "value": 0,
             "dogmas": {
                 "effect1": [
@@ -90,7 +90,7 @@
             "dogmas": {
                 "effect1": [
                     "Draw 0",
-                    "Transfer Self_board=-1,Self_hand=-1"
+                    "Transfer Self_stack=Blue,Self_hand=-1"
                 ],
                 "effect2": []
             },

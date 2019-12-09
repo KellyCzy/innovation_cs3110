@@ -293,7 +293,7 @@ let main () =
                     if they have as many or more of the featured icon, going clockwise.\n
                     If any opponent shared a non-demand effect, and anything happened, 
                     take a single free Draw action at the conclusion of your Dogma action.\n");
-    "innov.json" |> game_init |> play_game_ai
+    "innov2.json" |> game_init |> play_game_ai
   | "n" -> 
     ANSITerminal.(print_string [green]
                     "Game Rules:\n
@@ -311,7 +311,7 @@ let main () =
     if they have as many or more of the featured icon, going clockwise.\n
     If any opponent shared a non-demand effect, and anything happened, 
     take a single free Draw action at the conclusion of your Dogma action.\n");
-    "innov.json" |> game_init |> play_game
+    "innov2.json" |> game_init |> play_game
   | _ -> ()
 
 (* Execute the game engine. *)
