@@ -5,8 +5,7 @@
       "value": 0,
       "dogmas": {
         "effect1": [
-          "Draw 0",
-          "Transfer Self_hand=-1,Other_hand=-1"
+          "Score 0"
         ],
         "effect2": []
       },
@@ -96,25 +95,6 @@
         "Castle"
       ],
       "color": "Yellow"
-    },
-    {
-      "title": "City States",
-      "value": 0,
-      "dogmas": {
-        "effect1": [
-          "Transfer Self_stack=Purple,Other_stack=Purple",
-          "Draw 0"
-        ],
-        "effect2": []
-      },
-      "dogmas_icon": "Lightbulb",
-      "icons": [
-        "Pattern",
-        "Lightbulb",
-        "Lightbulb",
-        "Crown"
-      ],
-      "color": "Blue"
     },
     {
       "title": "The Wheel",
@@ -231,26 +211,6 @@
       "color": "Blue"
     },
     {
-      "title": "Oars",
-      "value": 0,
-      "dogmas": {
-        "effect1": [
-          "Demand Transfer:Self_hand=-1,Other_score=-1;Draw:1"
-        ],
-        "effect2": [
-          "Draw 0"
-        ]
-      },
-      "dogmas_icon": "Castle",
-      "icons": [
-        "Castle",
-        "Crown",
-        "Pattern",
-        "Castle"
-      ],
-      "color": "Red"
-    },
-    {
       "title": "Agriculture",
       "value": 0,
       "dogmas": {
@@ -268,25 +228,6 @@
         "Leaf"
       ],
       "color": "Yellow"
-    },
-    {
-      "title": "Archery",
-      "value": 0,
-      "dogmas": {
-        "effect1": [
-          "Demand Draw:0",
-          "Transfer Self_hand=-1,Other_hand=-1"
-        ],
-        "effect2": []
-      },
-      "dogmas_icon": "Castle",
-      "icons": [
-        "Castle",
-        "Lightbulb",
-        "Pattern",
-        "Castle"
-      ],
-      "color": "Red"
     },
     {
       "title": "City States",

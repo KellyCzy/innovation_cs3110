@@ -224,7 +224,7 @@ let get_score_cards player =
 
 (* get the sum of player's scores*)
 let get_score player =
-  List.fold_left (fun acc ele -> Card.get_value ele) 0 player.score
+  List.fold_left (fun acc ele -> (Card.get_value ele) + acc) 0 player.score
 
 (** get the value of idx th card in player's hand *)
 let get_value (player:t) (idx:int) : int= 
@@ -253,9 +253,14 @@ let add_score player score_card =
 let get_achievements player = 
   player.achievements
 
-
 let add_achievement (player: t) (era: int) = 
   if (get_score player < era*5) then failwith "not enough score to achieve"
   else era::player.achievements |> update_achievements player
+
+let print_player player = 
+  Printf.printf "id %d\n" player.id;
+  Printf.printf "hand length %d\n" (List.length (get_hand player));
+  Printf.printf "score %d\n" (get_score player);
+
 
 

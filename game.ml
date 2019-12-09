@@ -87,7 +87,8 @@ let single_card (json : Yojson.Basic.t) : Card.t =
     value = json |> member "value" |> to_int;
     dogmas = json |> member "dogmas" |> json_to_dogmas;
     dogmas_icon = json |> member "dogmas_icon" |> to_string |> string_to_icon;
-    icons = json |> member "icons" |> to_list |> List.map to_string |> List.map string_to_icon;
+    icons = json |> member "icons" |> to_list
+            |> List.map to_string |> List.map string_to_icon;
     color = json |> member "color" |> to_string |> string_to_color
   }
 

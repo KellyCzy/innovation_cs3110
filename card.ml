@@ -24,15 +24,9 @@ let get_color card =
 
 let get_title (card : t) : string = card.title
 
-let get_value card = card.value
+let get_value card = card.value + 1
 
 let get_dogma card =  card.dogmas
-(* match card.dogmas with
-   | x::y::xs -> 
-   (* print_effects x;print_effects y;  *)
-
-   | _ -> (); card.dogmas *)
-
 
 let get_dogmas_icon card = card.dogmas_icon
 

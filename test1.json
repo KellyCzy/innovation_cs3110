@@ -1,0 +1,23 @@
+{
+    "Era1": [
+        {
+            "title": "Archery",
+            "value": 0,
+            "dogmas": {
+                "effect1": [
+                    "Draw 0",
+                    "Transfer Self_hand=-1,Other_hand=-1"
+                ],
+                "effect2": []
+            },
+            "dogmas_icon": "Castle",
+            "icons": [
+                "Castle",
+                "Lightbulb",
+                "Pattern",
+                "Castle"
+            ],
+            "color": "Red"
+        }
+    ]
+}

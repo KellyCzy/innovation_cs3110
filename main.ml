@@ -76,7 +76,6 @@ let check_win state =
     get_max_score (State.get_players state)
   else (-1, -1)
 
-
 (** Helper function *)
 let rec run_game_1 state = 
   if state |> win then (print_string ("Game ends!"); 
@@ -114,6 +113,22 @@ let rec run_game_1 state =
       | Score -> 
         let score = State.get_current_player_score state in
         printf "Score: %d\n" score;
+        run_game_1 state
+      | Help -> Printf.printf "    You are player %d.\n
+      Now you're at your first round.\n
+      Here're a few possible commands you could try.\n
+      🌟 draw [era_num]: draw a card from era [era_num], starting from 0.\n
+      🌟 meld [hand_idx]: meld a card with index [hand_idx] from your hand cards, 
+      starting from 0.\n
+      🌟 board [player_idx]: display the player [player_idx]'s board cards, 
+      [player_idx] ranges from 0 to 3.\n
+      🌟 hand [player_idx]: display the player [player_idx]'s hand cards, 
+      [player_idx] ranges from 0 to 3.\n
+      🌟 score [player_idx]: display the player [player_idx]'s scores, 
+      [player_idx] ranges from 0 to 3.\n
+      🌟 dogma [color]: use the dogma effect on stack with color [color]. 
+      Colors are red, purple, blue, green, yellow.\n" 
+                  (State.get_current_player state);
         run_game_1 state
       | Dogma col -> 
         let num = Player.map_color_to_int col in
@@ -187,13 +202,18 @@ let rec play_game state =
   let state_after_1 = run_game_1 state in
   Frontend.display state_after_1;
   let winner1 = state_after_1 |> check_win in
-  if fst winner1 > 0 then let () = Printf.printf "The game's winner is player %d and the score is %d" (fst winner1) (snd winner1) in (Stdlib.exit 0)
+  if fst winner1 > 0 
+  then let () = Printf.printf "The game's winner is player %d and the score is %d" 
+           (fst winner1) (snd winner1) in (Stdlib.exit 0)
   else
     print_string "\n\n";
-  printf "It's player %d's second turn!\n" (State.get_current_player state_after_1);
+  printf "It's player %d's second turn!\n" 
+    (State.get_current_player state_after_1);
   let state_after_2 = run_game_2 state_after_1 in
   let winner2 = state_after_2 |> check_win in
-  if fst winner2 > 0 then let () = Printf.printf "The game's winner is player %d and the score is %d" (fst winner2) (snd winner2) in (Stdlib.exit 0)
+  if fst winner2 > 0 
+  then let () = Printf.printf "The game's winner is player %d and the score is %d" 
+           (fst winner2) (snd winner2) in (Stdlib.exit 0)
   else
     let next_player_state = State.next_player state_after_2 in
     play_game next_player_state
@@ -205,7 +225,8 @@ let rec play_game_ai state =
   let state_after_1 = run_game_1 state in
   Frontend.display state_after_1;
   print_string "\n\n";
-  printf "It's player %d's second turn!\n" (State.get_current_player state_after_1);
+  printf "It's player %d's second turn!\n" 
+    (State.get_current_player state_after_1);
   let state_after_2 = run_game_2 state_after_1 in
   let next_player_state = State.next_player state_after_2 in
   let state_after_ai = (Ai.ai_play 1 next_player_state) in 
@@ -220,11 +241,17 @@ let main () =
   match read_line() with
   | "y" -> 
     ANSITerminal.(print_string [green]
-                    "\n\nInstructions:\n'draw x' to draw a card from card pile x\n'meld x' to meld your xth hand card\n'achieve x' to take the achievement of era x \n\n");
+                    "\n\nInstructions:\n
+                    'draw x' to draw a card from card pile x\n
+                    'meld x' to meld your xth hand card\n
+                    'achieve x' to take the achievement of era x \n\n");
     "innov.json" |> game_init |> play_game_ai
   | "n" -> 
     ANSITerminal.(print_string [green]
-                    "\n\nInstructions:\n'draw x' to draw a card from card pile x\n'meld x' to meld your xth hand card\n'achieve x' to take the achievement of era x \n\n");
+                    "\n\nInstructions:\n
+                    'draw x' to draw a card from card pile x\n
+                    'meld x' to meld your xth hand card\n
+                    'achieve x' to take the achievement of era x \n\n");
     "innov.json" |> game_init |> play_game
   | _ -> ()
 

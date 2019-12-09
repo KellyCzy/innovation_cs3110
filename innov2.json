@@ -1,0 +1,495 @@
+{
+    "Era1": [
+        {
+            "title": "Archery",
+            "value": 0,
+            "dogmas": {
+                "effect1": [
+                    "Draw 0",
+                    "Transfer Self_hand=-1,Other_hand=-1"
+                ],
+                "effect2": []
+            },
+            "dogmas_icon": "Castle",
+            "icons": [
+                "Castle",
+                "Lightbulb",
+                "Pattern",
+                "Castle"
+            ],
+            "color": "Red"
+        },
+        {
+            "title": "Oars",
+            "value": 0,
+            "dogmas": {
+                "effect1": [
+                    "Transfer Self_hand=-1,Other_score=-1",
+                    "Draw 0"
+                ],
+                "effect2": [
+                    "Draw 0"
+                ]
+            },
+            "dogmas_icon": "Castle",
+            "icons": [
+                "Castle",
+                "Crown",
+                "Pattern",
+                "Castle"
+            ],
+            "color": "Red"
+        },
+        {
+            "title": "Agriculture",
+            "value": 0,
+            "dogmas": {
+                "effect1": [
+                    "Return -1",
+                    "Draw 0"
+                ],
+                "effect2": []
+            },
+            "dogmas_icon": "Leaf",
+            "icons": [
+                "Pattern",
+                "Leaf",
+                "Leaf",
+                "Leaf"
+            ],
+            "color": "Yellow"
+        },
+        {
+            "title": "Tools",
+            "value": 0,
+            "dogmas": {
+                "effect1": [
+                    "Draw 0",
+                    "Return -1"
+                ],
+                "effect2": []
+            },
+            "dogmas_icon": "Lightbulb",
+            "icons": [
+                "Pattern",
+                "Lightbulb",
+                "Lightbulb",
+                "Castle"
+            ],
+            "color": "Blue"
+        },
+        {
+            "title": "Masonry",
+            "value": 0,
+            "dogmas": {
+                "effect1": [
+                    "Draw 0",
+                    "Draw 0"
+                ],
+                "effect2": []
+            },
+            "dogmas_icon": "Castle",
+            "icons": [
+                "Castle",
+                "Pattern",
+                "Castle",
+                "Castle"
+            ],
+            "color": "Yellow"
+        },
+        {
+            "title": "The Wheel",
+            "value": 0,
+            "dogmas": {
+                "effect1": [
+                    "Draw 0",
+                    "Draw 0"
+                ],
+                "effect2": []
+            },
+            "dogmas_icon": "Castle",
+            "icons": [
+                "Pattern",
+                "Castle",
+                "Castle",
+                "Castle"
+            ],
+            "color": "Yellow"
+        },
+        {
+            "title": "Mysticism",
+            "value": 0,
+            "dogmas": {
+                "effect1": [
+                    "Draw 0",
+                    "Meld 0"
+                ],
+                "effect2": []
+            },
+            "dogmas_icon": "Castle",
+            "icons": [
+                "Pattern",
+                "Castle",
+                "Castle",
+                "Castle"
+            ],
+            "color": "Purple"
+        },
+        {
+            "title": "Domestication",
+            "value": 0,
+            "dogmas": {
+                "effect1": [
+                    "Meld 0",
+                    "Draw 0"
+                ],
+                "effect2": []
+            },
+            "dogmas_icon": "Castle",
+            "icons": [
+                "Castle",
+                "Crown",
+                "Pattern",
+                "Castle"
+            ],
+            "color": "Yellow"
+        },
+        {
+            "title": "Metalworking",
+            "value": 0,
+            "dogmas": {
+                "effect1": [
+                    "Draw 0"
+                ],
+                "effect2": []
+            },
+            "dogmas_icon": "Castle",
+            "icons": [
+                "Castle",
+                "Castle",
+                "Pattern",
+                "Castle"
+            ],
+            "color": "Red"
+        },
+        {
+            "title": "Clothing",
+            "value": 0,
+            "dogmas": {
+                "effect1": [
+                    "Meld -1"
+                ],
+                "effect2": [
+                    "Draw 0",
+                    "Score 0"
+                ]
+            },
+            "dogmas_icon": "Leaf",
+            "icons": [
+                "Pattern",
+                "Crown",
+                "Leaf",
+                "Leaf"
+            ],
+            "color": "Green"
+        },
+        {
+            "title": "Pottery",
+            "value": 0,
+            "dogmas": {
+                "effect1": [
+                    "Return -1"
+                ],
+                "effect2": [
+                    "Draw 0"
+                ]
+            },
+            "dogmas_icon": "Leaf",
+            "icons": [
+                "Pattern",
+                "Leaf",
+                "Leaf",
+                "Leaf"
+            ],
+            "color": "Blue"
+        },
+        {
+            "title": "Agriculture",
+            "value": 0,
+            "dogmas": {
+                "effect1": [
+                    "Return -1",
+                    "Draw 0"
+                ],
+                "effect2": []
+            },
+            "dogmas_icon": "Leaf",
+            "icons": [
+                "Pattern",
+                "Leaf",
+                "Leaf",
+                "Leaf"
+            ],
+            "color": "Yellow"
+        },
+        {
+            "title": "Code of Law",
+            "value": 0,
+            "dogmas": {
+                "effect1": [
+                    "Tuck -1",
+                    "Splay Left"
+                ],
+                "effect2": []
+            },
+            "dogma_icon": "Crown",
+            "icons": [
+                "Pattern",
+                "Crown",
+                "Crown",
+                "Leaf"
+            ],
+            "color": "Green"
+        },
+        {
+            "title": "Sailing",
+            "value": 0,
+            "dogmas": {
+                "effect1": [
+                    "Draw 0",
+                    "Meld 0"
+                ],
+                "effect2": []
+            },
+            "dogma_icon": "Crown",
+            "icons": [
+                "Crown",
+                "Crown",
+                "Pattern",
+                "Leaf"
+            ],
+            "color": "Green"
+        },
+        {
+            "title": "Writing",
+            "value": 0,
+            "dogmas": {
+                "effect1": [
+                    "Draw 1"
+                ],
+                "effect2": []
+            },
+            "dogma_icon": "Lightbulb",
+            "icons": [
+                "Pattern",
+                "Lightbulb",
+                "Lightbulb",
+                "Castle"
+            ],
+            "color": "Blue"
+        }
+    ],
+    "Era2": [
+        {
+            "title": "Construction",
+            "value": 1,
+            "dogmas": {
+                "effect1": [
+                    "Transfer Self_hand=-1,Other_hand=-1",
+                    "Transfer Self_hand=-1,Other_hand=-1",
+                    "Draw 1"
+                ],
+                "effect2": []
+            },
+            "dogma_icon": "Castle",
+            "icons": [
+                "Castle",
+                "Pattern",
+                "Castle",
+                "Castle"
+            ],
+            "color": "Red"
+        },
+        {
+            "title": "Road Building",
+            "value": 1,
+            "dogmas": {
+                "effect1": [
+                    "Meld -1",
+                    "Meld -1",
+                    "Transfer Self_stack=Red,Other_stack=Red",
+                    "Transfer Self_stack=Green,Other_stack=Green",
+                ],
+                "effect2": []
+            },
+            "dogma_icon": "Castle",
+            "icons": [
+                "Castle",
+                "Castle",
+                "Pattern",
+                "Castle"
+            ],
+            "color": "Red"
+        },
+        {
+            "title": "Philosophy",
+            "value": 1,
+            "dogmas": {
+                "effect1": [
+                    "Splay Left",
+                    "Socre -1"
+                ],
+                "effect2": []
+            },
+            "dogma_icon": "Lightbulb",
+            "icons": [
+                "Pattern",
+                "Lightbulb",
+                "Lightbulb",
+                "Lightbulb"
+            ],
+            "color": "Purple"
+        },
+        {
+            "title": "Monothesim",
+            "value": 1,
+            "dogmas": {
+                "effect1": [
+                    "Transfer Self_stack=-1,Other_stack=-1"
+                ],
+                "effect2": [
+                    "Draw 0",
+                    "Tuck 0"
+                ]
+            },
+            "dogma_icon": "Castle",
+            "icons": [
+                "Pattern",
+                "Castle",
+                "Castle",
+                "Castle"
+            ],
+            "color": "Purple"
+        },
+        {
+            "title": "Fermenting",
+            "value": 1,
+            "dogmas": {
+                "effect1": [
+                    "Draw 1",
+                    "Socre 0"
+                ],
+                "effect2": []
+            },
+            "dogma_icon": "Leaf",
+            "icons": [
+                "Leaf",
+                "Leaf",
+                "Pattern",
+                "Castle"
+            ],
+            "color": "Yellow"
+        },
+        {
+            "title": "Canal Building",
+            "value": 1,
+            "dogmas": {
+                "effect1": [
+                    "Transfer Self_score=-1,Self_hand=-1",
+                    "Transfer Self_hand=-1,Slef_score=-1"
+                ],
+                "effect2": []
+            },
+            "dogma_icon": "Crown",
+            "icons": [
+                "Pattern",
+                "Crown",
+                "Leaf",
+                "Crown"
+            ],
+            "color": "Yellow"
+        },
+        {
+            "title": "Calendar",
+            "value": 1,
+            "dogmas": {
+                "effect1": [
+                    "Draw 1",
+                    "Draw 1"
+                ],
+                "effect2": []
+            },
+            "dogma_icon": "Leaf",
+            "icons": [
+                "Pattern",
+                "Leaf",
+                "Leaf",
+                "Lightbulb"
+            ],
+            "color": "Blue"
+        },
+        {
+            "title": "Mathematics",
+            "value": 1,
+            "dogmas": {
+                "effect1": [
+                    "Retern -1"
+                ],
+                "effect2": [
+                    "Draw 1",
+                    "Meld 1"
+                ]
+            },
+            "dogma_icon": "Lightbulb",
+            "icons": [
+                "Pattern",
+                "Lightbulb",
+                "Crown",
+                "Lightbulb"
+            ],
+            "color": "Blue"
+        },
+        {
+            "title": "Currency",
+            "value": 1,
+            "dogmas": {
+                "effect1": [
+                    "Return -1"
+                ],
+                "effect2": [
+                    "Draw 1",
+                    "Score 0"
+                ]
+            },
+            "dogma_icon": "Crown",
+            "icons": [
+                "Leaf",
+                "Crown",
+                "Pattern",
+                "Crown"
+            ],
+            "color": "Green"
+        },
+        {
+            "title": "Mapmaking",
+            "value": 1,
+            "dogmas": {
+                "effect1": [
+                    "Transfer Other_score=-1,Self_score=-1"
+                ],
+                "effect2": [
+                    "Draw 0",
+                    "Score 0"
+                ]
+            },
+            "dogma_icon": "Crown",
+            "icons": [
+                "Pattern",
+                "Crown",
+                "Crown",
+                "Castle"
+            ],
+            "color": "Green"
+        }
+    ]
+}
