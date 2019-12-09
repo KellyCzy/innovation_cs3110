@@ -102,9 +102,8 @@ let rec run_game_1 state =
       | exception Empty -> 
         print_string "You didn't type in any command! \n";
         run_game_1 state
-      | exception Malformed -> 
-        print_string "No such command! \n";
-        print_string "You can only Meld/Draw/Dogma/Achieve \n";
+      | exception Malformed str -> 
+        print_string str;
         run_game_1 state
       | Meld x -> 
         State.meld state (State.current_player state) x 
@@ -174,9 +173,8 @@ let rec run_game_2 state =
     | exception Empty -> 
       print_string "You didn't type in any command! \n";
       run_game_2 state
-    | exception Malformed -> 
-      print_string "No such command! \n";
-      print_string "You can only Meld/Draw/Dogma/Achieve \n";
+    | exception Malformed str -> 
+      print_string str;
       run_game_2 state
     | Meld x -> 
       State.meld state (State.current_player state) x 
