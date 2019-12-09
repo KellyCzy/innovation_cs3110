@@ -35,23 +35,23 @@ let rec rec_return state =
 
 let dogma_effect (state: State.t) (dogma : Dogma.effect) : State.t = 
   match dogma with
-  | Draw x -> if (x<0) then let i = input_number "draw" in
+  | Draw x -> if (x<0) then let i = input_number " draw" in
       State.draw state (State.current_player state) i
     else 
       State.draw state (State.current_player state) x 
-  | Meld x -> if (x<0) then let i = input_number "meld" in
+  | Meld x -> if (x<0) then let i = input_number " meld" in
       State.meld state (State.current_player state) i
     else
       State.meld state (State.current_player state) x 
-  | Tuck x -> if (x<0) then let i = input_number "tuck"  in
+  | Tuck x -> if (x<0) then let i = input_number " tuck"  in
       State.tuck state (State.current_player state) i 
     else 
       State.tuck state (State.current_player state) x
-  | Return x -> if (x<0) then let i = input_number "return" in
+  | Return x -> if (x<0) then let i = input_number " return" in
       State.return state (State.current_player state) i
     else 
       State.return state (State.current_player state) x
-  | Score x -> if (x<0) then let i = input_number "score" in
+  | Score x -> if (x<0) then let i = input_number " score" in
       State.score state (State.current_player state) i 
     else
       State.score state (State.current_player state) x 
@@ -257,7 +257,7 @@ let rec play_game_ai state =
       (State.get_current_player state_after_1);
     let state_after_2 = run_game_2 state_after_1 in
     let next_player_state = State.next_player state_after_2 in
-    let state_after_ai = (Ai.ai_play 1 next_player_state) in 
+    let state_after_ai = (Ai.ai_play_deterministic 1 0 next_player_state) in 
     play_game_ai state_after_ai
   )
   with 
@@ -293,7 +293,7 @@ let main () =
                     if they have as many or more of the featured icon, going clockwise.\n
                     If any opponent shared a non-demand effect, and anything happened, 
                     take a single free Draw action at the conclusion of your Dogma action.\n");
-    "innov2.json" |> game_init |> play_game_ai
+    "innov.json" |> game_init |> play_game_ai
   | "n" -> 
     ANSITerminal.(print_string [green]
                     "Game Rules:\n
@@ -311,7 +311,7 @@ let main () =
     if they have as many or more of the featured icon, going clockwise.\n
     If any opponent shared a non-demand effect, and anything happened, 
     take a single free Draw action at the conclusion of your Dogma action.\n");
-    "innov2.json" |> game_init |> play_game
+    "innov.json" |> game_init |> play_game
   | _ -> ()
 
 (* Execute the game engine. *)

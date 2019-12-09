@@ -207,14 +207,16 @@ let update_era state card: Card.t list list =
   update_era_list state.era_cards era (era_cards@[card])
 
 let return (state: t) (player: Player.t) (hand_idx: int): t = 
-  (* Printf.printf "player hand card %d" (List.length (Player.get_hand player)); *)
+  Printf.printf "player hand card %d\n" (List.length (Player.get_hand player));
   let updated_hand_cards, card = Player.pop_card hand_idx 
       (Player.get_hand player) in
-  (* Printf.printf "updat'ed_hand_cards %d" (List.length updated_hand_cards); *)
+  Printf.printf "updated_hand_cards %d\n" (List.length updated_hand_cards);
   let updated_player = update_hand updated_hand_cards player in
+  Player.print_player updated_player;
   let updated_state = update_player state updated_player in 
-  update_era_cards (update_era state card) updated_state
-
+  let temp = update_era_cards (update_era state card) updated_state in
+  Printf.printf "player 0 hand in updated state %d\n" (List.length (Player.get_hand (get_player temp 0)));
+  temp
 let match_card_pile (card_pile: Dogma.card_pile) 
     (myself: Player.t) (other: Player.t) = 
   match card_pile with 
@@ -320,14 +322,18 @@ let match_fields myself other card_pile1 card_pile2
     stack2 idx top = 
   match card_list1, stack1, card_list2, stack2 with 
   | Some cl1, None, Some cl2, None -> 
-    if (List.length cl1 == 0) then raise (Empty_list "The card list to remove from is empty")
+    if (List.length cl1 == 0) then raise (Empty_list "The card list to remove from is empty.
+     Please consider drawing a card, use another command, etc.
+     Enter the command again.")
     else 
       (* Printf.printf "cl1 length %d\n" (List.length cl1);
          Printf.printf "cl2 length %d\n" (List.length cl2); *)
       procress_cl1_cl2 
         cl1 cl2 card_pile1 card_pile2 fake_stack myself other idx top
   | Some cl1, None, None, Some s2 -> 
-    if (List.length cl1 == 0) then raise (Empty_list "The card list to remove from is empty")
+    if (List.length cl1 == 0) then raise (Empty_list "The card list to remove from is empty.
+    Please consider drawing a card, use another command, etc.
+     Enter the command again.")
     else 
       process_cl1_s2
         cl1 s2 card_pile1 card_pile2 fake_stack fake_card_list 

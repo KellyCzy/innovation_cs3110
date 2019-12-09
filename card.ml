@@ -14,6 +14,9 @@ type t = {
   color : color;
 }
 let equal card1 card2 = 
+  (* print_endline card1.title;
+     print_endline card2.title;
+     Printf.printf "is_equal %B\n" (card1.title = card2.title); *)
   card1.title = card2.title
 
 let compare card1 card2 = 

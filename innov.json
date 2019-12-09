@@ -1,6 +1,26 @@
 {
   "Era1": [
     {
+      "title": "Agriculture",
+      "description": "You can score the first card in your hand.",
+      "value": 0,
+      "dogmas": {
+        "effect1": [
+          "Return -1",
+          "Draw 0"
+        ],
+        "effect2": []
+      },
+      "dogmas_icon": "Leaf",
+      "icons": [
+        "Pattern",
+        "Leaf",
+        "Leaf",
+        "Leaf"
+      ],
+      "color": "Yellow"
+    },
+    {
       "title": "Archery",
       "description": "You can score the first card in your hand.",
       "value": 0,

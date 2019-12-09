@@ -111,16 +111,28 @@ let rec get_max_index lst value index : int =
     if x > value then get_max_index t x (index + 1)
     else get_max_index t value index
 
-let rec ai_play id state = 
+let rec ai_play_nondeterministic id state = 
   print_string "\n";
   let lst = rnd_list 3 in
   let max_index = get_max_index lst 0 0 in 
   match max_index with 
-  | 0 -> state |> strategy1 id |> player_or_ai id
-  | 1 -> state |> strategy2 id |> player_or_ai id
-  | 2 -> state |> strategy3 id |> player_or_ai id
+  | 0 -> state |> strategy1 id |> player_or_ai_nondeterministic id
+  | 1 -> state |> strategy2 id |> player_or_ai_nondeterministic id
+  | 2 -> state |> strategy3 id |> player_or_ai_nondeterministic id
   | _ -> failwith "Impossible"
 
-and player_or_ai id state = 
+and player_or_ai_nondeterministic id state = 
   if id = 3 then state
-  else ai_play (id + 1) state
+  else ai_play_nondeterministic (id + 1) state
+
+let rec ai_play_deterministic id strategy state = 
+  print_string "\n";
+  match strategy with 
+  | 0 -> state |> strategy1 id |> player_or_ai_deterministic id strategy
+  | 1 -> state |> strategy2 id |> player_or_ai_deterministic id strategy
+  | 2 -> state |> strategy3 id |> player_or_ai_deterministic id strategy
+  | _ -> failwith "Impossible"
+
+and player_or_ai_deterministic id strategy state =
+  if id = 3 then state 
+  else state |> ai_play_deterministic (id + 1) (strategy + 1)

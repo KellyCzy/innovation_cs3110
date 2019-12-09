@@ -148,8 +148,12 @@ let update_stack_list s_lst i new_s =
 let pop_card i lst = 
   match lst with
   | [] -> failwith "cannot pop element from empty list"
-  | x::xs -> let ith = List.nth lst i  in
-    (List.filter (fun x -> not (Card.equal x ith)) lst), ith
+  | x::xs -> 
+    try let ith = List.nth lst i  in
+      (List.filter (fun x -> not (Card.equal x ith)) lst), ith
+
+    with _ -> print_endline "This card list has no i^th element. 
+    Popped 0^th card by default.\n"; lst, List.hd lst
 
 let pop_stack i stack = 
   let cards = stack.cards in
@@ -163,7 +167,8 @@ let pop_stack i stack =
                                     (fun x -> Card.equal x ith) cards), 
                                  ith in
         (update_stack_cards stack updated_cards), ith
-      with _ -> print_endline "The stack doesn't have i^th element"; stack, List.hd cards
+      with _ -> print_endline "The stack doesn't have i^th element.
+      Popped 0^th card by default.\n"; stack, List.hd cards
 
 (** Remove the [i]th hand card. *)
 let remove_hand player i = 
