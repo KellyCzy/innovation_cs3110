@@ -72,7 +72,9 @@ let parse str =
     Hand 
   else if List.hd (string_list str) = "board" || 
           List.hd (string_list str) = "board" then 
-    Board (int_of_string (List.hd (List.tl (string_list str))))
+    try
+      Board (int_of_string (List.hd (List.tl (string_list str))))
+    with _ -> print_endline("String parse is not integer"); Board 0
   else if List.hd (string_list str) = "score" || 
           List.hd (string_list str) = "Score" then 
     Score

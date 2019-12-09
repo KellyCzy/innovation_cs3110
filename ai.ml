@@ -12,17 +12,27 @@ let dogma_effect_ai (state: State.t) (dogma : Dogma.effect) : State.t =
       State.draw state (State.current_player state) 0
     else 
       State.draw state (State.current_player state) x 
-  | Meld x -> State.meld state (State.current_player state) x 
-  | Tuck x -> State.tuck state (State.current_player state) x 
-  (* | Splay dir -> let new_state = State.splay state state.current_player col *)
-  | Return x -> if (x<0) then 
+  | Meld x -> if (x<0) then
+      State.meld state (State.current_player state) 0
+    else
+      State.meld state (State.current_player state) x 
+  | Tuck x -> if (x<0) then
+      State.tuck state (State.current_player state) 0
+    else 
+      State.tuck state (State.current_player state) x
+  | Return x -> if (x<0) then
       State.return state (State.current_player state) 0
     else 
       State.return state (State.current_player state) x
-  | Score x -> State.score state (State.current_player state) x 
+  | Score x -> if (x<0) then
+      State.score state (State.current_player state) 0
+    else
+      State.score state (State.current_player state) x 
   | Transfer (cp1, cp2, id) -> let other = State.get_player state id in
     let myself = State.current_player state in 
     State.transfer state myself other cp1 cp2 0 true
+  | Splay (dir,color) -> 
+    State.splay state (State.current_player state) color dir
   | _ -> print_string "Need to be completed \n"; state
 
 let rec go_through_effects (state: State.t) (dogma: Dogma.t) : State.t =
@@ -39,62 +49,59 @@ let execute_dogmas state dogmas =
 
 (** Draw and draw *)
 let strategy1 id state = 
-  try (
-    let state_drawn_first = 
-      State.draw state (State.current_player state) 0 in 
-    print_string ("......\n");
-    print_string ("Player" ^ string_of_int id 
-                  ^ "(AI) has just drawn a card.\n");
-    let state_drawn_second = 
-      State.draw state_drawn_first 
-        (State.current_player state_drawn_first) 0 in
-    print_string ("......\n");
-    print_string ("Player" ^ string_of_int id 
-                  ^ "(AI) has just drawn another card.\n\n");
-    State.next_player state_drawn_second)
-  with Win s -> print_endline(s); exit 0
+  let state_drawn_first = 
+    State.draw state (State.current_player state) 0 in 
+  print_string ("......\n");
+  print_string ("Player" ^ string_of_int id 
+                ^ "(AI) has just drawn a card.\n");
+  let state_drawn_second = 
+    State.draw state_drawn_first 
+      (State.current_player state_drawn_first) 0 in
+  print_string ("......\n");
+  print_string ("Player" ^ string_of_int id 
+                ^ "(AI) has just drawn another card.\n\n");
+  State.next_player state_drawn_second
+
 
 (** Draw and meld *)
 let strategy2 id state = 
-  try (
-    let state_drawn_first = 
-      State.draw state (State.current_player state) 0 in 
-    print_string ("......\n");
-    print_string ("Player" ^ string_of_int id 
-                  ^ "(AI) has just drawn a card.\n");
-    let state_melded_second = State.meld state_drawn_first 
-        (State.current_player state_drawn_first) 0 in
-    print_string ("......\n");
-    print_string ("Player" ^ string_of_int id 
-                  ^ "(AI) has just melded a card.\n\n");
-    State.next_player state_melded_second)
-  with Win s -> print_endline(s); exit 0
+  let state_drawn_first = 
+    State.draw state (State.current_player state) 0 in 
+  print_string ("......\n");
+  print_string ("Player" ^ string_of_int id 
+                ^ "(AI) has just drawn a card.\n");
+  let state_melded_second = State.meld state_drawn_first 
+      (State.current_player state_drawn_first) 0 in
+  print_string ("......\n");
+  print_string ("Player" ^ string_of_int id 
+                ^ "(AI) has just melded a card.\n\n");
+  State.next_player state_melded_second
+
 
 (** Draw and dogma *)
 let strategy3 id state = 
-  try (
-    let exist = State.check_color_to_dogma_exist id state in 
-    match exist with 
-    | true -> 
-      let state_drawn_first = State.draw state 
-          (State.current_player state) 0 in 
-      print_string ("......\n");
-      print_string ("Player" ^ string_of_int id 
-                    ^ "(AI) has just drawn a card.\n");
-      let color = State.give_color_to_dogma id state_drawn_first in 
-      let num = Player.map_color_to_int color in
-      let stack = Player.get_ith_stack 
-          (State.current_player state_drawn_first) num in
-      let card = Player.get_top_card stack in
-      let dogma = Card.get_dogma card in 
-      let state_dogmaed_second = execute_dogmas 
-          state_drawn_first dogma in
-      print_string ("......\n");
-      print_string ("Player" ^ string_of_int id 
-                    ^ "(AI) has just excecuted the dogma of a card.\n\n");
-      State.next_player state_dogmaed_second
-    | false -> strategy2 id state)
-  with Win s -> print_endline(s); exit 0
+  let exist = State.check_color_to_dogma_exist id state in 
+  match exist with 
+  | true -> 
+    let state_drawn_first = State.draw state 
+        (State.current_player state) 0 in 
+    print_string ("......\n");
+    print_string ("Player" ^ string_of_int id 
+                  ^ "(AI) has just drawn a card.\n");
+    let color = State.give_color_to_dogma id state_drawn_first in 
+    let num = Player.map_color_to_int color in
+    let stack = Player.get_ith_stack 
+        (State.current_player state_drawn_first) num in
+    let card = Player.get_top_card stack in
+    let dogma = Card.get_dogma card in 
+    let state_dogmaed_second = execute_dogmas 
+        state_drawn_first dogma in
+    print_string ("......\n");
+    print_string ("Player" ^ string_of_int id 
+                  ^ "(AI) has just excecuted the dogma of a card.\n\n");
+    State.next_player state_dogmaed_second
+  | false -> strategy2 id state
+
 
 (** Return the index of the entry with maximum value *)
 let rec get_max_index lst value index : int = 

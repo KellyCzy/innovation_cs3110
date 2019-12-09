@@ -26,7 +26,7 @@
             "value": 0,
             "dogmas": {
                 "effect1": [
-                    "Transfer Other_hand=-1,Self_score=-1",
+                    "Transfer Other_hand=-1,Self_hand=-1",
                     "Draw 0"
                 ],
                 "effect2": [

@@ -153,13 +153,17 @@ let pop_card i lst =
 
 let pop_stack i stack = 
   let cards = stack.cards in
-  match cards with
-  | [] -> failwith "cannot pop element from empty stack"
-  | x::xs -> let ith = List.nth cards i  in
-    let updated_cards, ele = (List.filter 
-                                (fun x -> Card.equal x ith) cards), 
-                             ith in
-    (update_stack_cards stack updated_cards), ith
+  if i = 0 then 
+    (update_stack_cards stack (List.tl cards)), List.hd cards
+  else
+    match cards with
+    | [] -> failwith "cannot pop element from empty stack"
+    | x::xs -> try let ith = List.nth cards i  in
+        let updated_cards, ele = (List.filter 
+                                    (fun x -> Card.equal x ith) cards), 
+                                 ith in
+        (update_stack_cards stack updated_cards), ith
+      with _ -> print_endline "The stack doesn't have i^th element"; stack, List.hd cards
 
 (** Remove the [i]th hand card. *)
 let remove_hand player i = 
@@ -207,7 +211,9 @@ let transfer_card_to_stack (card_list: Card.t list)
   end
 
 let transfer_stack_to_card (stack: stack) (card_list: Card.t list) =
+  (* Printf.printf "stack length before %d\n" (List.length (stack.cards)); *)
   let updated_stack, card = pop_stack 0 stack in
+  (* Printf.printf "stack length after %d\n" (List.length (updated_stack.cards)); *)
   let updated_card_list = push_card card card_list in
   updated_stack, updated_card_list
 

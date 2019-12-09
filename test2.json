@@ -1,0 +1,25 @@
+{
+    "Era1": [
+        {
+            "title": "Agriculture",
+            "description": "You can return a card from your hand, and then draw two card from Era 1.",
+            "value": 0,
+            "dogmas": {
+                "effect1": [
+                    "Return -1",
+                    "Draw 0",
+                    "Draw 0"
+                ],
+                "effect2": []
+            },
+            "dogmas_icon": "Leaf",
+            "icons": [
+                "Pattern",
+                "Leaf",
+                "Leaf",
+                "Leaf"
+            ],
+            "color": "Yellow"
+        }
+    ]
+}

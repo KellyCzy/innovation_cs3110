@@ -4,6 +4,7 @@ open Command
 open Printf
 
 exception Win of string
+exception Empty_list of string
 
 type t = {
   players: Player.t list;
@@ -88,6 +89,9 @@ let get_player (state: t) (id: int) : Player.t =
     else List.nth state.players id 
   with f -> Printf.printf 
               "The index of player you're looking for is %d\n" id; raise f
+
+let get_era_cards state = 
+  state.era_cards
 
 let get_score_by_id (state: t) (id: int) : int = 
   let player = get_player state id in 
@@ -316,26 +320,26 @@ let match_fields myself other card_pile1 card_pile2
     stack2 idx top = 
   match card_list1, stack1, card_list2, stack2 with 
   | Some cl1, None, Some cl2, None -> 
-    if (List.length cl1 == 0) then myself, other
+    if (List.length cl1 == 0) then raise (Empty_list "The card list to remove from is empty")
     else 
       (* Printf.printf "cl1 length %d\n" (List.length cl1);
          Printf.printf "cl2 length %d\n" (List.length cl2); *)
       procress_cl1_cl2 
         cl1 cl2 card_pile1 card_pile2 fake_stack myself other idx top
   | Some cl1, None, None, Some s2 -> 
-    if (List.length cl1 == 0) then myself, other
+    if (List.length cl1 == 0) then raise (Empty_list "The card list to remove from is empty")
     else 
       process_cl1_s2
         cl1 s2 card_pile1 card_pile2 fake_stack fake_card_list 
         myself other idx top
   | None, Some s1, None, Some s2 ->
-    if (List.length (Player.get_stack_cards s1) == 0) then myself, other
+    if (List.length (Player.get_stack_cards s1) == 0) then raise (Empty_list "The stack to remove from is empty")
     else 
       process_s1_s2
         s1 s2 card_pile1 card_pile2 fake_stack fake_card_list 
         myself other idx top
   | None, Some s1, Some cl2, None -> 
-    if List.length (Player.get_stack_cards s1) == 0 then myself, other
+    if List.length (Player.get_stack_cards s1) == 0 then raise (Empty_list "The stack to remove from is empty")
     else  
       process_s1_cl2 
         s1 cl2 card_pile1 card_pile2 fake_stack fake_card_list 

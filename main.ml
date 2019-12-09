@@ -13,13 +13,13 @@ let game_init f =
   let json = f |> Yojson.Basic.from_file in 
   (Game.all_cards json total_era)|> State.init_state 
 
-let win (state: State.t): bool = 
-  if (List.length (List.nth state.players state.current_player |> 
+(* let win (state: State.t): bool = 
+   if (List.length (List.nth state.players state.current_player |> 
                    Player.get_achievements) >= total_era +1)
-  then true else false
+   then true else false *)
 
-let input_number () = 
-  print_endline "Please enter the index of the card. \n";
+let input_number act = 
+  print_endline ("Please enter the index of the card you want to" ^ act ^ ". \n");
   print_endline ">";
   let str = read_line () in
   match Command.parse str with
@@ -28,27 +28,30 @@ let input_number () =
 
 let rec rec_return state = 
   try 
-    let i = input_number () in
+    let i = input_number "" in
     State.return state (State.current_player state) i
   with _ -> rec_return state
 
 
 let dogma_effect (state: State.t) (dogma : Dogma.effect) : State.t = 
   match dogma with
-  | Draw x -> if (x<0) then let i = input_number () in
+  | Draw x -> if (x<0) then let i = input_number "draw" in
       State.draw state (State.current_player state) i
     else 
       State.draw state (State.current_player state) x 
-  | Meld x -> State.meld state (State.current_player state) x 
-  | Tuck x -> if (x<0) then let i = input_number () in
+  | Meld x -> if (x<0) then let i = input_number "meld" in
+      State.meld state (State.current_player state) i
+    else
+      State.meld state (State.current_player state) x 
+  | Tuck x -> if (x<0) then let i = input_number "tuck"  in
       State.tuck state (State.current_player state) i 
     else 
       State.tuck state (State.current_player state) x
-  | Return x -> if (x<0) then let i = input_number () in
+  | Return x -> if (x<0) then let i = input_number "return" in
       State.return state (State.current_player state) i
     else 
       State.return state (State.current_player state) x
-  | Score x -> if (x<0) then let i = input_number () in
+  | Score x -> if (x<0) then let i = input_number "score" in
       State.score state (State.current_player state) i 
     else
       State.score state (State.current_player state) x 
@@ -86,8 +89,10 @@ let check_win state =
 
 (** Helper function *)
 let rec run_game_1 state = 
-  if state |> win then (print_string ("Game ends!"); 
-                        print_string "\n"; exit 0)
+  let (id,score) = state |> check_win in
+  if (id <> -1) && (score <> -1) then (print_string ("Game ends!"); 
+                                       Printf.printf "Player %d wins" id;
+                                       print_string "\n"; exit 0)
   else
     print_string "> ";
   match read_line () with
@@ -148,14 +153,19 @@ let rec run_game_1 state =
       | _ -> print_string "You didn't type in any command! \n";
         run_game_1 state
     with 
+    | Empty_list str -> print_string (str ^ "\n"); 
+      run_game_1 state
     | Failure str -> print_string (str ^ "\n"); 
       run_game_1 state
     | _ -> run_game_1 state
 
+
 (** Helper function *)
 let rec run_game_2 state = 
-  if state |> win then (print_string ("Game ends!"); 
-                        print_string "\n"; exit 0)
+  let (id,score) = state |> check_win in
+  if (id <> -1) && (score <> -1) then (print_string ("Game ends!"); 
+                                       Printf.printf "Player %d wins" id;
+                                       print_string "\n"; exit 0)
   else
     print_string "> ";
   match read_line () with
@@ -201,6 +211,8 @@ let rec run_game_2 state =
     | _ -> print_string "You didn't type in any command! \n";
       run_game_2 state
     with 
+    | Empty_list str -> print_string (str ^ "\n"); 
+      run_game_2 state
     | Failure str -> print_string (str ^ "\n"); 
       run_game_2 state
 
@@ -209,7 +221,7 @@ let rec play_game state =
   print_string "\n\n";
   printf "It's player %d's first turn!\n" (State.get_current_player state);
   let state_after_1 = run_game_1 state in
-  if state_after_1 = state then print_string ("\n"; exit 0)
+  if state_after_1 = state then (print_string " \n"; exit 0)
   else
     Frontend.display state_after_1;
   let winner1 = state_after_1 |> check_win in
@@ -222,7 +234,7 @@ let rec play_game state =
   printf "It's player %d's second turn!\n" 
     (State.get_current_player state_after_1);
   let state_after_2 = run_game_2 state_after_1 in
-  if state_after_1 = state then print_string ("\n"; exit 0)
+  if state_after_1 = state then (print_string " \n"; exit 0)
   else 
     let winner2 = state_after_2 |> check_win in
     if fst winner2 > 0 
@@ -234,19 +246,29 @@ let rec play_game state =
       play_game next_player_state
 
 let rec play_game_ai state = 
-  Frontend.display state;
-  print_string "\n\n";
-  printf "It's player %d's first turn!\n" (State.get_current_player state);
-  let state_after_1 = run_game_1 state in
-  Frontend.display state_after_1;
-  print_string "\n\n";
-  printf "It's player %d's second turn!\n" 
-    (State.get_current_player state_after_1);
-  let state_after_2 = run_game_2 state_after_1 in
-  let next_player_state = State.next_player state_after_2 in
-  let state_after_ai = (Ai.ai_play 1 next_player_state) in 
-  play_game_ai state_after_ai
-
+  try (
+    Frontend.display state;
+    print_string "\n\n";
+    printf "It's player %d's first turn!\n" (State.get_current_player state);
+    let state_after_1 = run_game_1 state in
+    Frontend.display state_after_1;
+    print_string "\n\n";
+    printf "It's player %d's second turn!\n" 
+      (State.get_current_player state_after_1);
+    let state_after_2 = run_game_2 state_after_1 in
+    let next_player_state = State.next_player state_after_2 in
+    let state_after_ai = (Ai.ai_play 1 next_player_state) in 
+    play_game_ai state_after_ai
+  )
+  with 
+  | Win s -> print_endline(s); 
+    let (id,score) = state |> check_win in
+    if (id <> -1) && (score <> -1) 
+    then (print_string ("Game ends!"); 
+          Printf.printf "Player %d wins" id;
+          print_string "\n"; exit 0)
+    else (print_string ("Game ends! No one Wins! \n");)
+  | Failure s -> print_endline(s)
 
 (** [main ()] prompts for the game to play, then starts it. *)
 let main () =
