@@ -1,84 +1,122 @@
+open Dogma
+open Card 
 
 type stack
+
+val get_dir : stack -> Dogma.splay_direction
+
+val get_top_card : stack -> Card.t
 
 type t
 
 val init_stack : Dogma.stack_color -> stack
 
-let update_stack_cards stack cards
-
-let init_player id
+val init_player : int -> t
 
 val map_color_to_int : Dogma.stack_color -> int
 
-let compare_player player1 player2
+val map_color_to_string : Dogma.stack_color -> string
 
-let compare_stack stack1 stack2
+val get_stack_color : stack -> Dogma.stack_color
 
-(** [get_hand t] is the list of hand cards of [t]. *)
+val get_stack_cards : stack -> Card.t list
+
+val get_stack_length : stack -> int
+
+val compare_player : t -> t -> int
+
+val compare_stack : stack -> stack -> int
+
+val update_hand : Card.t list -> t -> t
+
+val update_board : stack list -> t -> t
+
+val update_splay_direction : stack -> Dogma.splay_direction -> stack
+
+val update_stack_cards : stack -> Card.t list -> stack
+
+val get_id : t -> int
+
 val get_hand : t -> Card.t list
 
-(** [add_hand t c] is the new player with the list of hand cards of [t] 
-    after adding [c]. *)
+val get_hand_length : t -> int
+
+val print_hand : t -> string
+
+val get_ith_stack : t -> int -> stack
+
+val get_stack_top : t -> int -> string
+
+val get_top_card_name : t -> int -> string
+
+val get_board_total_length : t -> int
+
+val print_board : t -> int
+
+val get_board : t -> stack list
+
 val add_hand : t -> Card.t -> t
 
-(** [remove_hand t i] is the new player with the list of hand cards of [t] 
-    after removing the card with index [i]. *)
+val get_ith_hand : t -> int -> Card.t
+
+val get_color_stack : t -> Dogma.stack_color -> stack
+
+val count_left : Card.t list -> Card.icon -> int -> int
+
+val count_right : Card.t list -> Card.icon -> int -> int
+
+val count_up : Card.t list -> Card.icon -> int -> int
+
+val count_no : Card.t list -> Card.icon -> int -> int
+
+val count_icon : stack list -> Card.icon -> int -> int
+
+val get_icon : t -> Card.icon -> int
+
+val update_stack_list : stack list -> int -> stack -> stack list
+
+val pop_card : int -> Card.t list -> Card.t list * Card.t
+
+val pop_stack : int -> stack -> stack * Card.t
+
 val remove_hand : t -> int -> t
 
-let remove_ith_card lst i
+val push_stack : Card.t -> stack -> bool -> stack
 
-let get_ith_hand player i
+val push_card : Card.t -> Card.t list -> Card.t list
 
-let get_ith_stack player i
+val add_stack : t -> int -> bool -> t
 
-let get_top_card_name player index
+val remove_stack : t -> Dogma.stack_color -> t * Card.t
 
-let get_color_stack (player: t) (c: Dogma.stack_color) : t 
+val transfer_card_to_stack : Card.t list -> stack -> int -> bool -> Card.t list * stack
 
-let update_stack_list s_lst i new_s
+val transfer_stack_to_card : stack -> Card.t list -> stack * Card.t list
 
-let pop_card i lst
+val transfer_card_to_card : Card.t list -> Card.t list -> int -> Card.t list * Card.t list
 
-let pop_stack i lst
+val transfer_stack_to_stack : stack -> stack -> bool -> stack * stack
 
-let add_card_to_stack (card: Card.t) (stack: stack) (top: bool): stack
+val splay : t -> Dogma.stack_color -> Dogma.splay_direction -> t
 
-let get_icon t Card.icon
+val get_score_cards : t -> Card.t list
 
-(** [add_stack t i_h] is the new player with the list of cards of [t]'s
-    stack with the same color as the card with index of 
-    [i_h] from [t]'s hand cards, after adding that card.
-    Create a new stack if there is no such stack. ] *)
-val add_stack : t -> int -> Card.t -> t
-
-(** [remove_stack c i] is the new player with the list of cards of [t]'s
-    stack with color [c] after removing its [n]th 
-    card. *)
-val remove_stack : t -> Dogma.stack_color -> int -> t
-
-let splay (player: t) (color: Dogma.stack_color) (direction: Dogma.splay_direction) : t
-
-let get_score_cards player
-
-(** [get_score t] is the current score of [t]. *)
 val get_score : t -> int
 
-let get_value (player:t) (idx:int) : int
+val get_value : t -> int -> int
 
-(** [add_score t x] is the new player with the current score of [t] after
-    adding [x]. *)
-val add_score : t -> int -> t
+val update_score : t -> Card.t list -> t
 
-(** [get_achievement t] is the list of achievements of [t]. *)
+val update_achievements : t -> int list -> t
+
+val add_score : t -> Card.t -> t
+
 val get_achievements : t -> int list
 
-(** [add_achievement t e] is the new player with the list of achievements of [t]
-    after adding the achievement represented by (in) [e] *)
 val add_achievement : t -> int -> t
 
-let check_achieve player achievement
+val print_player : t -> unit
 
-let transfer_card_to_stack (card_list Card.t list) (stack: stack) (idx: int)
+
 
 
