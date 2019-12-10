@@ -138,6 +138,84 @@ let get_ith_hand player i =
 let get_color_stack (player: t) (c: Dogma.stack_color) : stack = 
   get_ith_stack player (map_color_to_int c)
 
+let rec count_left stack icon acc = 
+  match stack with
+  | [] -> acc
+  | a :: [] -> 
+    let icons = Card.get_icons a in
+    let rec num lst ac =
+      match lst with 
+      | [] -> ac
+      | a :: t -> if a = icon then num t (ac + 1) else num t ac in
+    count_left [] icon (num icons acc)
+  | x :: xs ->
+    let icons = Card.get_icons x in
+    if List.nth icons 3 = icon 
+    then count_left xs icon acc + 1 else count_left xs icon acc
+
+let rec count_right stack icon acc = 
+  match stack with
+  | [] -> acc
+  | a :: [] -> 
+    let icons = Card.get_icons a in
+    let rec num lst ac =
+      match lst with 
+      | [] -> ac
+      | a :: t -> if a = icon then num t (ac + 1) else num t ac in
+    count_right [] icon (num icons acc)
+  | x :: xs ->
+    let icons = Card.get_icons x in
+    let num = if List.nth icons 0 = icon && List.nth icons 1 = icon then acc + 2 
+      else if List.nth icons 1 = icon || List.nth icons 0 = icon then acc + 1
+      else acc in
+    count_right xs icon num 
+
+let rec count_up stack icon acc = 
+  match stack with
+  | [] -> acc
+  | a :: [] -> 
+    let icons = Card.get_icons a in
+    let rec num lst ac =
+      match lst with 
+      | [] -> ac
+      | a :: t -> if a = icon then num t (ac + 1) else num t ac in
+    count_up [] icon (num icons acc)
+  | x :: xs ->
+    let icons = Card.get_icons x in
+    let num = 
+      if List.nth icons 1 = icon && 
+         List.nth icons 2 = icon && List.nth icons 3 = icon then acc + 3
+      else if List.nth icons 1 = icon && List.nth icons 2 = icon then acc + 2 
+      else if List.nth icons 1 = icon && List.nth icons 3 = icon then acc + 2 
+      else if List.nth icons 2 = icon && List.nth icons 3 = icon then acc + 2
+      else if List.nth icons 1 <> icon && 
+              List.nth icons 2 <> icon && List.nth icons 3 <> icon then acc
+      else acc + 1 in count_up xs icon num
+
+let rec count_no stack icon acc = 
+  match stack with
+  | [] -> acc
+  | a :: t -> 
+    let icons = Card.get_icons a in
+    let rec num lst ac =
+      match lst with 
+      | [] -> ac
+      | a :: t -> if a = icon then num t (ac + 1) else num t ac in
+    num icons acc
+
+let rec count_icon board icon acc = 
+  match board with 
+  | [] -> acc
+  | a :: t -> 
+    match (get_dir a) with 
+    | Left -> count_icon t icon (count_left (List.rev a.cards) icon acc)
+    | Right -> count_icon t icon (count_right (List.rev a.cards) icon acc)
+    | No -> count_icon t icon (count_no (List.rev a.cards) icon acc)
+    | Up -> count_icon t icon (count_up (List.rev a.cards) icon acc)
+
+let get_icon (player: t) (icon: Card.icon) = 
+  count_icon player.board icon 0
+
 (* update the ith stack with [new_s] in the stack list**)
 let update_stack_list s_lst i new_s = 
   let ith = try (List.nth s_lst i) with _ -> failwith ((string_of_int i) ^ "is not a valid index") in

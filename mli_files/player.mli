@@ -44,7 +44,7 @@ let pop_stack i lst
 
 let add_card_to_stack (card: Card.t) (stack: stack) (top: bool): stack
 
-
+let get_icon t Card.icon
 
 (** [add_stack t i_h] is the new player with the list of cards of [t]'s
     stack with the same color as the card with index of 

@@ -100,6 +100,10 @@ let get_score_by_id (state: t) (id: int) : int =
   let player = get_player state id in 
   Player.get_score player
 
+let get_icon_by_id (state: t) (id: int) (icon: Card.icon)= 
+  let player = get_player state id in
+  Player.get_icon player icon
+
 let get_hand_size_by_id (state: t) (id: int) : int = 
   let player = get_player state id in 
   Player.get_hand player |> List.length
@@ -393,16 +397,6 @@ let match_fields myself other card_pile1 card_pile2
 let transfer (state: t) (myself': Player.t) (other': Player.t) 
     (card_pile1: Dogma.card_pile) (card_pile2: Dogma.card_pile) 
     (idx: int) (top: bool): t =
-  (* if (match_card_pile card_pile1) then let myself = other' and  other = myself' in
-     let card_list1, stack1, card_list2, stack2, fake_stack, 
-        fake_card_list = get_fields state myself 
-        other card_pile1 card_pile2 in
-     let updated_player1, updated_player2 =
-      match_fields myself other card_pile1 card_pile2 
-        fake_stack fake_card_list card_list1 stack1 card_list2 stack2 idx top  
-     in
-     update_player (update_player state updated_player1) updated_player2
-     else  *)
   let myself = myself' and other = other' in
   let card_list1, stack1, card_list2, stack2, fake_stack, 
       fake_card_list = get_fields state myself 
