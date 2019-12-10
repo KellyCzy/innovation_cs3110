@@ -21,6 +21,27 @@
       "color": "Green"
     },
     {
+      "title": "Conquer*",
+      "description": "You draw a card from the card pile and score your first hand card.",
+      "value": 0,
+      "dogmas": {
+        "effect1": [
+          "Draw 0"
+        ],
+        "effect2": [
+          "Score 0"
+        ]
+      },
+      "dogmas_icon": "Castle",
+      "icons": [
+        "Pattern",
+        "Castle",
+        "Castle",
+        "Lightbulb"
+      ],
+      "color": "Blue"
+    },
+    {
       "title": "Archery",
       "description": "You can draw a card from Era 1 and transfer a card from the next player's hand to your hand.",
       "value": 0,
@@ -61,6 +82,27 @@
         "Castle"
       ],
       "color": "Red"
+    },
+    {
+      "title": "Bro Code*",
+      "description": "You draw a card from the card pile and you score a hand card.",
+      "value": 0,
+      "dogmas": {
+        "effect1": [
+          "Draw 0"
+        ],
+        "effect2": [
+          "Score -1"
+        ]
+      },
+      "dogmas_icon": "Castle",
+      "icons": [
+        "Pattern",
+        "Castle",
+        "Lightbulb",
+        "Castle"
+      ],
+      "color": "Yellow"
     },
     {
       "title": "Agriculture",

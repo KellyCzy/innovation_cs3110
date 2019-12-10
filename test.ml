@@ -57,6 +57,7 @@ let new_state_draw =
 
 let old_state_draw_innov = (get_all_cards innov) |> State.init_state
 let first_card = Card.get_title (State.get_era_cards_top old_state_draw_innov)
+let first_card_index = Card.color_to_int (Card.get_color (State.get_era_cards_top old_state_draw_innov))
 let new_state_draw_innov = State.draw old_state_draw_innov 
     (old_state_draw_innov|> current_player) 0
 
@@ -83,13 +84,14 @@ let make_before_draw_test
 
 let make_after_draw_test 
     (name : string) 
-    (state: State.t)
+    (state_cur: State.t)
     (expected_output : string) : test = 
   name >:: (fun _ -> 
-      let card = (Player.get_ith_hand (state|>current_player) 0) in 
+      let card = (Player.get_ith_hand (state_cur|>current_player) 0) in 
       (* print_endline "------------------------------------------------------\n"; *)
       (* print_endline (Card.get_title card); *)
       (* Printf.printf "%s/n" str; *)
+      Printf.printf "draw:  %s\n" (Card.get_title card);
       assert_equal expected_output (card|>Card.get_title)
     )
 
@@ -117,13 +119,16 @@ let new_state_meld_innov = State.meld old_state_meld_innov
 
 let make_after_meld_test 
     (name : string) 
+    (index:int)
     (state: State.t)
     (expected_output : string) : test = 
   name >:: (fun _ -> 
       (* let card = (Player.get_ith_stack (state|>current_player) 0) in  *)
       (* Printf.printf "%s/n" str; *)
       let card_name = Player.get_top_card_name 
-          (new_state_meld|>State.current_player) 0 in
+          (state|>State.current_player) index in
+      Printf.printf "meld:  %s\n" card_name;
+      (* Printf.printf "player: %d\n" (Player.get_id (state|>State.current_player)); *)
       assert_equal expected_output card_name
     )
 
@@ -369,8 +374,6 @@ let input_state_bh2 = State.meld input_state_bh updated_player0_bh 0
 
 let expected_output_bh2 = (0,1)
 
-
-
 let cards = List.hd (State.get_era_cards (init_state test1))
 let card = List.hd cards
 
@@ -412,9 +415,9 @@ let test_tests =
       new_state_draw_innov first_card;
 
     make_after_meld_test "after meld card (test file)" 
-      new_state_meld "Archery";
+      0 new_state_meld "Archery";
     make_after_meld_test "after meld card (innov file)" 
-      new_state_meld_innov "Archery"; 
+      first_card_index new_state_meld_innov first_card; 
 
 
     make_transfer_test_hh "hand to hand" input_state_hh 
