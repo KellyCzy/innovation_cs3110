@@ -28,7 +28,8 @@ open Yojson.Basic.Util
    pop, remove, push, and count_icon. 
 
    All the test are developed using glass box testing. Based on the code we
-   wrote, we believe testing all these functions using OUnit tests and with 
+   wrote, we developed test cases to ensure the functions that we wrote are 
+   correct. We believe testing all these functions using OUnit tests and with 
    all our manual tests, it is enough to ensure our system is correct, because
    the first part ensures all essential functions in state are correct. If
    these are correct, the function in main is ensured to be correct. The 
