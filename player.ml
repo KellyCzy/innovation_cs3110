@@ -55,6 +55,9 @@ let get_stack_color stack =
 let get_stack_cards stack = 
   stack.cards
 
+let get_stack_length stack = 
+  List.length (stack.cards)
+
 let compare_player player1 player2 = 
   Stdlib.compare player1.id player2.id
 
@@ -249,9 +252,8 @@ let pop_stack i stack =
     match cards with
     | [] -> failwith "cannot pop element from empty stack"
     | x::xs -> try let ith =  try (List.nth cards i) with _ -> failwith ((string_of_int i) ^ " is not a valid index") in
-        let updated_cards, ele = (List.filter 
-                                    (fun x -> Card.equal x ith) cards), 
-                                 ith in
+        let updated_cards = (List.filter 
+                               (fun x -> not (Card.equal x ith)) cards) in
         (update_stack_cards stack updated_cards), ith
       with _ -> print_endline "The stack doesn't have i^th element.
       Popped 0^th card by default.\n"; stack, List.hd cards

@@ -6,7 +6,6 @@ exception Empty
 (** Raised when a malformed command is encountered. *)
 exception Malformed of string
 
-
 (** [erase_space list] erases all leading and trailing white space 
     of every element in the list and delete element 
     that are just white space*)
@@ -24,6 +23,7 @@ let string_list string =
       erase_space (String.split_on_char ' ' trim_string);
   )
 
+(** [command] is the type of command that users input. *)
 type command = 
   | Meld of int
   | Draw of int
@@ -35,6 +35,8 @@ type command =
   | Help
   | Number of int
 
+(** [match_color str] takes in a string and return its corresponding 
+    Dogma color *)
 let match_color str = 
   match str with
   | "Yellow"
@@ -54,44 +56,19 @@ let match_color str =
     -> Dogma.Green
   | _ -> raise Empty
 
-(* let parse str =
-   if List.hd (string_list str) = "meld" || 
-     List.hd (string_list str) = "Meld" then 
-    Meld (int_of_string (List.hd (List.tl (string_list str))))
-   else if List.hd (string_list str) = "draw" || 
-          List.hd (string_list str) = "Draw" then 
-    Draw (int_of_string (List.hd (List.tl (string_list str))))
-   else if List.hd (string_list str) = "achieve" || 
-          List.hd (string_list str) = "Achieve" then 
-    Achieve (int_of_string (List.hd (List.tl (string_list str))))
-   else if List.hd (string_list str) = "dogma" || 
-          List.hd (string_list str) = "Dogma" then 
-    Dogma (match_color (List.hd (List.tl (string_list str))))
-   else if List.hd (string_list str) = "hand" || 
-          List.hd (string_list str) = "Hand" then 
-    Hand 
-   else if List.hd (string_list str) = "board" || 
-          List.hd (string_list str) = "board" then 
-    try
-      Board (int_of_string (List.hd (List.tl (string_list str))))
-    with _ -> print_endline("String parse is not integer"); Board 0
-   else if List.hd (string_list str) = "score" || 
-          List.hd (string_list str) = "Score" then 
-    Score
-   else if List.hd (string_list str) = "help" || 
-          List.hd (string_list str) = "Help" then 
-    Help
-   else
-    (match string_list str with 
-     | a :: [] -> (try Number (int_of_string a) with | _ -> raise Malformed)
-     | _ -> raise Malformed)  *)
-
+(** [int_of_b b] takes in a string and return an int of that string. 
+    It raises Malformed if the string is not a number*)
 let int_of_b b = 
   try int_of_string b with | _ -> raise (Malformed (b ^ " is not a number. \n"))
 
+(** [color_of_b b] takes in a string and return the correspoding dogma color.
+    It raises Malformed if the string is not a color*)
 let color_of_b b = 
   try match_color b with | _ -> raise (Malformed (b ^ " is not a color. \n"))
 
+(** [parse str] takes in a string and return the parsed 
+    command of that input string. If the string is not a command, it returns 
+    Malformed of "no such command" *)
 let parse str =
   match string_list str with
   | a :: [] ->

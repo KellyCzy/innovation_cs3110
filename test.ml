@@ -91,7 +91,7 @@ let make_after_draw_test
       (* print_endline "------------------------------------------------------\n"; *)
       (* print_endline (Card.get_title card); *)
       (* Printf.printf "%s/n" str; *)
-      Printf.printf "draw:  %s\n" (Card.get_title card);
+      (* Printf.printf "draw:  %s\n" (Card.get_title card); *)
       assert_equal expected_output (card|>Card.get_title)
     )
 
@@ -107,16 +107,6 @@ let new_state_meld = State.meld old_state_meld
 let new_state_meld_innov = State.meld old_state_meld_innov 
     (old_state_meld_innov|>current_player) 0
 
-(* let make_before_meld_test 
-    (name : string) 
-    (state: State.t)
-    (expected_output : string) : test = 
-   name >:: (fun _ -> 
-      let str = (Player.print_board (state|>current_player)) in 
-      Printf.printf "%s/n" str;
-      assert_equal expected_output str
-    ) *)
-
 let make_after_meld_test 
     (name : string) 
     (index:int)
@@ -127,198 +117,9 @@ let make_after_meld_test
       (* Printf.printf "%s/n" str; *)
       let card_name = Player.get_top_card_name 
           (state|>State.current_player) index in
-      Printf.printf "meld:  %s\n" card_name;
+      (* Printf.printf "meld:  %s\n" card_name; *)
       (* Printf.printf "player: %d\n" (Player.get_id (state|>State.current_player)); *)
       assert_equal expected_output card_name
-    )
-
-
-let make_transfer_test
-    (name : string)
-    (state : State.t)
-    (myself : Player.t)
-    (other : Player.t)
-    (card_pile1: Dogma.card_pile) 
-    (card_pile2: Dogma.card_pile) 
-    (idx: int) 
-    (top: bool)
-    (expected_output : State.t) : test = 
-  name >:: (fun _ -> 
-      let state_after_transfer = 
-        State.transfer state myself other card_pile1 
-          card_pile2 idx top in
-      assert_equal expected_output (state_after_transfer)
-    )
-
-let make_transfer_test_hh
-    (name : string)
-    (state : State.t)
-    (myself_id : int)
-    (other_id : int)
-    (card_pile1: Dogma.card_pile) 
-    (card_pile2: Dogma.card_pile) 
-    (idx: int) 
-    (top: bool)
-    (expected_output : (int * int)) : test = 
-  name >:: (fun _ -> 
-      let myself = State.get_player state myself_id in
-      let other = State.get_player state other_id in
-      (* 
-      Player.print_player myself; *)
-
-      (* Printf.printf "hh before %d %d\n" myself_hand_length other_hand_length; *)
-      let state_after_transfer = 
-        State.transfer state myself other card_pile1 
-          card_pile2 idx top in
-
-      let myself_updated = State.get_player state_after_transfer 
-          myself_id in
-      let other_updated = State.get_player state_after_transfer 
-          other_id in
-
-      let myself_updated_hand_length = List.length 
-          (Player.get_hand myself_updated) in
-      let other_updated_hand_length = List.length 
-          (Player.get_hand other_updated) in
-
-      (* Printf.printf "hh %d %d\n" myself_updated_hand_length other_updated_hand_length; *)
-      (assert_equal (myself_updated_hand_length, 
-                     other_updated_hand_length) expected_output) 
-    )
-
-let make_transfer_test_hb
-    (name : string)
-    (state : State.t)
-    (myself_id : int)
-    (other_id : int)
-    (card_pile1: Dogma.card_pile) 
-    (card_pile2: Dogma.card_pile) 
-    (idx: int) 
-    (top: bool)
-    (expected_output : (int * int)) : test = 
-  name >:: (fun _ -> 
-      let myself = State.get_player state myself_id in
-      let other = State.get_player state other_id in
-
-      let state_after_transfer = 
-        State.transfer state myself other card_pile1 card_pile2 idx top in
-
-      let myself_updated = State.get_player state_after_transfer myself_id in
-      let other_updated = State.get_player state_after_transfer other_id in
-
-      let myself_updated_hand_length = 
-        List.length (Player.get_hand myself_updated) in
-      let other_updated_hand_length =
-        Player.get_board_total_length other_updated in
-      (assert_equal (myself_updated_hand_length, 
-                     other_updated_hand_length) expected_output) 
-    )
-
-
-let make_transfer_test_bh
-    (name : string)
-    (state : State.t)
-    (myself_id : int)
-    (other_id : int)
-    (card_pile1: Dogma.card_pile) 
-    (card_pile2: Dogma.card_pile) 
-    (idx: int) 
-    (top: bool)
-    (expected_output : (int * int)) : test = 
-  name >:: (fun _ -> 
-      let myself = State.get_player state myself_id in
-      let other = State.get_player state other_id in
-
-      let self_length =
-        Player.get_board_total_length myself in
-      let other_length = 
-        List.length (Player.get_hand other) in
-      Printf.printf "lengths before %d %d\n" self_length other_length;
-
-      let state_after_transfer = 
-        State.transfer state myself other card_pile1 
-          card_pile2 idx top in
-      let myself_updated = State.get_player 
-          state_after_transfer myself_id in
-      let other_updated = State.get_player 
-          state_after_transfer other_id in
-      (* Printf.printf "ids %d %d" myself_id other_id; *)
-      let self_updated_length =
-        Player.get_board_total_length myself_updated in
-      let other_updated_length = 
-        List.length (Player.get_hand other_updated) in
-      Printf.printf "lengths %d %d\n" self_updated_length other_updated_length;
-
-      (assert_equal (self_updated_length, 
-                     other_updated_length) expected_output) 
-    )
-
-let make_transfer_test_bb
-    (name : string)
-    (state : State.t)
-    (myself_id : int)
-    (other_id : int)
-    (card_pile1: Dogma.card_pile) 
-    (card_pile2: Dogma.card_pile) 
-    (idx: int) 
-    (top: bool)
-    (expected_output : (int * int)) : test = 
-  name >:: (fun _ -> 
-      let myself = State.get_player state myself_id in
-      let other = State.get_player state other_id in
-
-      let self_length =
-        Player.get_board_total_length myself in
-      let other_length = 
-        List.length (Player.get_hand other) in
-      Printf.printf "lengths before %d %d\n" self_length other_length;
-
-      let state_after_transfer = 
-        State.transfer state myself other card_pile1 
-          card_pile2 idx top in
-      let myself_updated = State.get_player 
-          state_after_transfer myself_id in
-      let other_updated = State.get_player 
-          state_after_transfer other_id in
-
-      let self_updated_length =
-        Player.get_board_total_length myself_updated in
-      let other_updated_length = 
-        List.length (Player.get_score_cards other_updated) in
-
-      Printf.printf "lengths %d %d\n" self_updated_length other_updated_length;
-
-      (assert_equal (self_updated_length, 
-                     other_updated_length) expected_output) 
-    )
-
-
-let make_transfer_test_hs
-    (name : string)
-    (state : State.t)
-    (myself_id : int)
-    (other_id : int)
-    (card_pile1: Dogma.card_pile) 
-    (card_pile2: Dogma.card_pile) 
-    (idx: int) 
-    (top: bool)
-    (expected_output : (int * int)) : test = 
-  name >:: (fun _ -> 
-      let myself = State.get_player state myself_id in
-      let other = State.get_player state other_id in
-
-      let state_after_transfer = 
-        State.transfer state myself other card_pile1 card_pile2 idx top in
-
-      let myself_updated = State.get_player state_after_transfer myself_id in
-      let other_updated = State.get_player state_after_transfer other_id in
-
-      let myself_updated_hand_length = 
-        List.length (Player.get_hand myself_updated) in
-      let other_updated_hand_length =
-        Player.get_board_total_length other_updated in
-      (assert_equal (myself_updated_hand_length, 
-                     other_updated_hand_length) expected_output) 
     )
 
 let make_return_test
@@ -370,6 +171,42 @@ let top_hh = false
 let expected_output_hh = (0,1)
 
 
+let make_transfer_test_hh
+    (name : string)
+    (state : State.t)
+    (myself_id : int)
+    (other_id : int)
+    (card_pile1: Dogma.card_pile) 
+    (card_pile2: Dogma.card_pile) 
+    (idx: int) 
+    (top: bool)
+    (expected_output : (int * int)) : test = 
+  name >:: (fun _ -> 
+      let myself = State.get_player state myself_id in
+      let other = State.get_player state other_id in
+      (* 
+      Player.print_player myself; *)
+
+      (* Printf.printf "hh before %d %d\n" myself_hand_length other_hand_length; *)
+      let state_after_transfer = 
+        State.transfer state myself other card_pile1 
+          card_pile2 idx top in
+
+      let myself_updated = State.get_player state_after_transfer 
+          myself_id in
+      let other_updated = State.get_player state_after_transfer 
+          other_id in
+
+      let myself_updated_length = List.length 
+          (Player.get_hand myself_updated) in
+      let other_updated_length = List.length 
+          (Player.get_hand other_updated) in
+
+      (* Printf.printf "hh %d %d\n" myself_updated_hand_length other_updated_hand_length; *)
+      (assert_equal (myself_updated_length, 
+                     other_updated_length) expected_output) 
+    )
+
 (** hand to board start *)
 let init_state_hb = init_state test1
 let myself_id_hb = 1
@@ -382,6 +219,35 @@ let card_pile2_hb = Dogma.Other_stack Yellow
 let idx_hb = 0
 let top_hb = true
 let expected_output_hb = (0,1)
+
+
+let make_transfer_test_hb
+    (name : string)
+    (state : State.t)
+    (myself_id : int)
+    (other_id : int)
+    (card_pile1: Dogma.card_pile) 
+    (card_pile2: Dogma.card_pile) 
+    (idx: int) 
+    (top: bool)
+    (expected_output : (int * int)) : test = 
+  name >:: (fun _ -> 
+      let myself = State.get_player state myself_id in
+      let other = State.get_player state other_id in
+
+      let state_after_transfer = 
+        State.transfer state myself other card_pile1 card_pile2 idx top in
+
+      let myself_updated = State.get_player state_after_transfer myself_id in
+      let other_updated = State.get_player state_after_transfer other_id in
+
+      let myself_update_length = 
+        List.length (Player.get_hand myself_updated) in
+      let other_updated_length =
+        Player.get_board_total_length other_updated in
+      (assert_equal (myself_update_length, 
+                     other_updated_length) expected_output) 
+    )
 
 
 let init_state_bh = init_state test1
@@ -401,12 +267,45 @@ let input_state_bh2 = State.meld input_state_bh updated_player0_bh 0
 
 let expected_output_bh2 = (0,1)
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 210f4670c240de5c739cf7c6a955056d1448fdf9
-let cards = List.hd (State.get_era_cards (init_state test1))
-let card = List.hd cards
+let make_transfer_test_bh
+    (name : string)
+    (state : State.t)
+    (myself_id : int)
+    (other_id : int)
+    (card_pile1: Dogma.card_pile) 
+    (card_pile2: Dogma.card_pile) 
+    (idx: int) 
+    (top: bool)
+    (expected_output : (int * int)) : test = 
+  name >:: (fun _ -> 
+      let myself = State.get_player state myself_id in
+      let other = State.get_player state other_id in
+
+      let self_length =
+        Player.get_board_total_length myself in
+      let other_length = 
+        List.length (Player.get_hand other) in
+      (* Printf.printf "lengths before %d %d\n" self_length other_length; *)
+
+      let state_after_transfer = 
+        State.transfer state myself other card_pile1 
+          card_pile2 idx top in
+      let myself_updated = State.get_player 
+          state_after_transfer myself_id in
+      let other_updated = State.get_player 
+          state_after_transfer other_id in
+      (* Printf.printf "ids %d %d" myself_id other_id; *)
+      let self_updated_length =
+        Player.get_board_total_length myself_updated in
+      let other_updated_length = 
+        List.length (Player.get_hand other_updated) in
+      (* Printf.printf "lengths %d %d\n" self_updated_length other_updated_length; *)
+
+      (assert_equal (self_updated_length, 
+                     other_updated_length) expected_output) 
+    )
+
 
 let init_state_bb = init_state test1
 let myself_id_bb = 1
@@ -422,6 +321,46 @@ let idx_bb = 0
 let top_bb = true
 let expected_output_bb = (0,1)
 
+let make_transfer_test_bb
+    (name : string)
+    (state : State.t)
+    (myself_id : int)
+    (other_id : int)
+    (card_pile1: Dogma.card_pile) 
+    (card_pile2: Dogma.card_pile) 
+    (idx: int) 
+    (top: bool)
+    (expected_output : (int * int)) : test = 
+  name >:: (fun _ -> 
+      let myself = State.get_player state myself_id in
+      let other = State.get_player state other_id in
+
+      let self_length =
+        Player.get_board_total_length myself in
+      let other_length = 
+        List.length (Player.get_hand other) in
+      (* Printf.printf "bb lengths before %d %d\n" self_length other_length; *)
+
+      let state_after_transfer = 
+        State.transfer state myself other card_pile1 
+          card_pile2 idx top in
+      let myself_updated = State.get_player 
+          state_after_transfer myself_id in
+      let other_updated = State.get_player 
+          state_after_transfer other_id in
+
+      let self_updated_length =
+        Player.get_board_total_length myself_updated in
+      let other_updated_length =
+        Player.get_board_total_length other_updated in
+
+      (* Printf.printf "bb lengths %d %d\n" self_updated_length other_updated_length; *)
+
+      (assert_equal (self_updated_length, 
+                     other_updated_length) expected_output) 
+    )
+
+
 let init_state_hs = init_state test1
 let myself_id_hs = 0
 let other_id_hs = 1
@@ -433,7 +372,37 @@ let idx_hs = 0
 let top_hs = false
 let expected_output_hs = (0,1)
 
-let test_tests = 
+
+let make_transfer_test_hs
+    (name : string)
+    (state : State.t)
+    (myself_id : int)
+    (other_id : int)
+    (card_pile1: Dogma.card_pile) 
+    (card_pile2: Dogma.card_pile) 
+    (idx: int) 
+    (top: bool)
+    (expected_output : (int * int)) : test = 
+  name >:: (fun _ -> 
+      let myself = State.get_player state myself_id in
+      let other = State.get_player state other_id in
+
+      let state_after_transfer = 
+        State.transfer state myself other card_pile1 card_pile2 idx top in
+
+      let myself_updated = State.get_player state_after_transfer myself_id in
+      let other_updated = State.get_player state_after_transfer other_id in
+
+      let myself_updated_length = 
+        List.length (Player.get_hand myself_updated) in
+      let other_updated_length = 
+        List.length (Player.get_score_cards other_updated) in
+
+      (assert_equal (myself_updated_length, 
+                     other_updated_length) expected_output))
+
+
+let state_tests = 
   [
     make_init_state_test "start player test" test 0;
     make_init_state_test "start player test1" test1 0;
@@ -458,7 +427,6 @@ let test_tests =
       0 new_state_meld "Archery";
     make_after_meld_test "after meld card (innov file)" 
       first_card_index new_state_meld_innov first_card; 
-
 
     make_transfer_test_hh "hand to hand" input_state_hh 
       myself_id_hh other_id_hh card_pile1_hh card_pile2_hh 
@@ -487,9 +455,217 @@ let test_tests =
     make_score_test "score" new_state_draw 0 1;
   ]
 
+let test2 = Yojson.Basic.from_file "test2.json"
+
+let test1_card = List.hd (List.hd (get_all_cards test1))
+
+let test2_card = List.hd (List.hd (get_all_cards test2))
+
+
+let make_card_get_color_test 
+    (name : string) 
+    (card:Card.t)
+    (expected_output : string) : test = 
+  name >:: (fun _ -> 
+      let str = (Card.get_color card |> Card.color_to_string) in 
+      assert_equal expected_output str
+    )
+
+let rec all_card_icon icons = 
+  match icons with
+  | [] -> []
+  | h::t -> (h |> Card.icon_to_string) :: (all_card_icon t)
+
+let make_card_get_icons_test
+    (name : string) 
+    (card: Card.t)
+    (expected_output : string list) : test = 
+  name >:: (fun _ -> 
+      let icons = (Card.get_icons card |> all_card_icon) in 
+      assert_equal expected_output icons
+    )
+
+let make_card_get_dogma_icons_test
+    (name : string) 
+    (card: Card.t)
+    (expected_output : string) : test = 
+  name >:: (fun _ -> 
+      let icon = (Card.get_dogmas_icon card |> Card.icon_to_string) in 
+      assert_equal expected_output icon
+    )
+
+let make_card_get_value_test
+    (name : string) 
+    (card: Card.t)
+    (expected_output : int) : test = 
+  name >:: (fun _ -> 
+      let value = (Card.get_value card) in 
+      assert_equal expected_output value
+    )
+
+
+let card_test = 
+  [
+    make_card_get_color_test "card get color test1" test1_card "Yellow";
+    make_card_get_color_test "card get color test2" test2_card "Yellow";
+
+    make_card_get_icons_test "card get icon test1" 
+      test1_card ["Blank";"Castle";"Castle";"Castle"];
+    make_card_get_icons_test "card get icon test2"
+      test2_card ["Blank";"Leaf";"Leaf";"Leaf"];
+
+    make_card_get_dogma_icons_test "card get dogma icon test1"
+      test1_card "Castle";
+    make_card_get_dogma_icons_test "card get dogma icon test2"
+      test2_card "Leaf";
+
+
+    make_card_get_value_test "card get value test1"
+      test1_card 0;
+    make_card_get_value_test "card get value test2"
+      test2_card 2;
+
+  ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+let state_init = init_state test
+let player0 = State.get_player state_init 0
+let board = Player.get_board player0
+let empty_stack = Player.init_stack Red and fake_card_list = []
+let red = Dogma.Red
+let red_int = 0
+
+let state1 = State.draw state_init player0 0
+let player1 = State.get_player state1 0
+let state2 = State.meld state1 player1 0
+let player2 = State.get_player state2 0
+
+
+let make_get_color_stack_test 
+    (name : string) 
+    (player: Player.t)
+    (c: Dogma.stack_color) 
+    (expected_output : int): test = 
+  name >:: (fun _ -> 
+      let stack = Player.get_color_stack player c in
+      let color = Player.get_stack_color stack in 
+      let color_int = Player.map_color_to_int color in
+      assert_equal color_int expected_output
+    )
+
+let make_update_stack_list_test 
+    (name : string) 
+    (player: Player.t) 
+    (i: int)
+    (new_s: stack) 
+    (expected_output : int): test = 
+  name >:: (fun _ -> 
+      let board = Player.get_board player in
+      let updated_stack_list = Player.update_stack_list board i new_s in
+      let updated_ith = List.nth updated_stack_list i in
+      let get_ith_length = Player.get_stack_length updated_ith in
+      assert_equal get_ith_length expected_output
+    )
+
+let state_init1 = init_state test
+let cards = List.hd (State.get_era_cards state_init1)
+
+
+let make_pop_card_test 
+    (name : string) 
+    (i: int)
+    (cards: Card.t list) 
+    (expected_output : string): test = 
+  name >:: (fun _ -> 
+      let popi, cardi = Player.pop_card i cards in
+      assert_equal (Card.get_title cardi) expected_output
+    )
+let make_pop_card_rest_test 
+    (name : string) 
+    (i: int)
+    (cards: Card.t list) 
+    (expected_output : string): test = 
+  name >:: (fun _ -> 
+      let popi, cardi = Player.pop_card i cards in
+      let rest = List.hd popi in
+      assert_equal (Card.get_title rest) expected_output
+    )
+
+
+let state3 = State.draw state2 player2 0
+let player3 = State.get_player state3 0
+let state4 = State.meld state3 player3 0
+let player4 = State.get_player state4 0
+
+let ith_stack = Player.get_ith_stack player4 0
+
+
+let make_pop_stack_test 
+    (name : string) 
+    (i: int)
+    (stack: stack) 
+    (expected_output : string): test = 
+  name >:: (fun _ -> 
+      let popi, cardi = Player.pop_stack i stack in
+      assert_equal (Card.get_title cardi) expected_output
+    )
+
+let make_pop_stack_rest_test 
+    (name : string) 
+    (i: int)
+    (stack: stack) 
+    (expected_output : string): test = 
+  name >:: (fun _ -> 
+      let popi, cardi = Player.pop_stack i stack in
+      let rest = List.hd (Player.get_stack_cards popi) in
+      assert_equal (Card.get_title rest) expected_output
+    )
+
+let player_test = 
+  [
+    make_get_color_stack_test "get_color_stack" player0 red red_int;
+    make_update_stack_list_test "update_stack_list" player2 0 empty_stack 0;
+    make_pop_card_test "pop_card check popped card" 0 cards "Archery";
+    make_pop_card_rest_test "pop_card check the rest of card 0" 0 cards "Oars";
+    make_pop_card_test "pop_card check popped card" 1 cards "Oars";
+    make_pop_card_rest_test "pop_card check the rest of card 1" 1 cards "Archery";
+
+    make_pop_stack_test "pop_stack check popped stack" 0 ith_stack "Oars";
+    make_pop_stack_rest_test "pop_stack check the rest of stack 0" 0 ith_stack "Archery";
+    make_pop_stack_test "pop_stack check popped stack" 1 ith_stack "Archery";
+    make_pop_stack_rest_test "pop_stack check the rest of stack 1" 1 ith_stack "Oars";
+  ]
+
+
+
 let suite = 
   "test suite for final project"  >::: List.flatten [
-    test_tests;
+    state_tests;
+    card_test;
+    player_test;
   ]
 
 let _ = run_test_tt_main suite

@@ -3,9 +3,14 @@ open Card
 open Command
 open Printf
 
+(** [Win s] is raised when all the era cards are drawn *)
 exception Win of string
+
+(** [Empty_list s] is raised when there is no card in the list anymore *)
 exception Empty_list of string
 
+(** [t] is a type of state. A state includes players, era_cards, 
+    achievements, current_player, and lowest_era *)
 type t = {
   players: Player.t list;
   era_cards: Card.t list list;
@@ -14,17 +19,20 @@ type t = {
   lowest_era: int;
 }
 
-(* the first n natural numbers: [0; n-1] *)
+(** [range n] returns the first n natural numbers: [0; n-1] *)
 let range n = 
   let rec range' acc = function
     | 0 -> acc
     | n -> range' ((n-1)::acc) (n-2)
   in range' [] n
 
+(** [init_some_players acc] returns initialized players *)
 let rec init_some_players acc= function
   | -1 -> acc
   | i -> init_some_players ((Player.init_player i)::acc) (i-1)
 
+(** [init_state cards_list] takes in a cards_list that is read from json and 
+    returns the initial state generated from that cards_list *)
 let init_state (cards_list : Card.t list list) : t = {
   players = init_some_players [] 3;
   era_cards = cards_list;
@@ -32,6 +40,7 @@ let init_state (cards_list : Card.t list list) : t = {
   current_player = 0;
   lowest_era = 0;
 }
+
 
 let swap_player (new_player: Player.t) 
     (player_list: Player.t list) : Player.t list= 
@@ -187,12 +196,13 @@ let draw (state: t) (player: Player.t) (era: int): t =
 
 let meld (state: t) (player: Player.t) (hand_idx: int): t = 
   let melded = Player.get_ith_hand player hand_idx in
-  ANSITerminal.(print_string [green] ("\nYou just melded a card [" ^ (Card.get_title melded) ^ "]\n"));
+  ANSITerminal.(print_string [green] ("\nYou just melded a card [" 
+                                      ^ (Card.get_title melded) ^ "]\n"));
   let updated_player = Player.add_stack player hand_idx true in
   update_player state updated_player
 
 (** No Test *)
-let tuck (state: t) (player: Player.t) (hand_idx:int):t = 
+let tuck (state: t) (player: Player.t) (hand_idx:int): t = 
   ANSITerminal.(print_string [green] ("\nYou just tucked a card [" ^ (Card.get_title (Player.get_ith_hand player hand_idx)) ^ "]\n"));
   let updated_player = Player.add_stack player hand_idx false in
   update_player state updated_player
@@ -219,7 +229,8 @@ let update_era state card: Card.t list list =
 let return (state: t) (player: Player.t) (hand_idx: int): t = 
   let updated_hand_cards, card = Player.pop_card hand_idx 
       (Player.get_hand player) in
-  ANSITerminal.(print_string [green] ("\nYou just returned a card [" ^ (Card.get_title card) ^ "]\n"));
+  ANSITerminal.(print_string [green] ("\nYou just returned a card [" 
+                                      ^ (Card.get_title card) ^ "]\n"));
   let updated_player = update_hand updated_hand_cards player in
   let updated_state = update_player state updated_player in 
   update_era_cards (update_era state card) updated_state
@@ -362,7 +373,8 @@ let match_fields myself other card_pile1 card_pile2
     stack2 idx top = 
   match card_list1, stack1, card_list2, stack2 with 
   | Some cl1, None, Some cl2, None -> 
-    if (List.length cl1 == 0) then raise (Empty_list "The card list to remove from is empty.
+    if (List.length cl1 == 0) 
+    then raise (Empty_list "The card list to remove from is empty.
      Please consider drawing a card, use another command, etc.
      Enter the command again.")
     else 
@@ -371,7 +383,8 @@ let match_fields myself other card_pile1 card_pile2
       procress_cl1_cl2 
         cl1 cl2 card_pile1 card_pile2 fake_stack myself other idx top
   | Some cl1, None, None, Some s2 -> 
-    if (List.length cl1 == 0) then raise (Empty_list "The card list to remove from is empty.
+    if (List.length cl1 == 0) 
+    then raise (Empty_list "The card list to remove from is empty.
     Please consider drawing a card, use another command, etc.
      Enter the command again.")
     else 
@@ -379,13 +392,15 @@ let match_fields myself other card_pile1 card_pile2
         cl1 s2 card_pile1 card_pile2 fake_stack fake_card_list 
         myself other idx top
   | None, Some s1, None, Some s2 ->
-    if (List.length (Player.get_stack_cards s1) == 0) then raise (Empty_list "The stack to remove from is empty")
+    if (List.length (Player.get_stack_cards s1) == 0) 
+    then raise (Empty_list "The stack to remove from is empty")
     else 
       process_s1_s2
         s1 s2 card_pile1 card_pile2 fake_stack fake_card_list 
         myself other idx top
   | None, Some s1, Some cl2, None -> 
-    if List.length (Player.get_stack_cards s1) == 0 then raise (Empty_list "The stack to remove from is empty")
+    if List.length (Player.get_stack_cards s1) == 0 
+    then raise (Empty_list "The stack to remove from is empty")
     else  
       process_s1_cl2 
         s1 cl2 card_pile1 card_pile2 fake_stack fake_card_list 

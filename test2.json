@@ -3,7 +3,7 @@
         {
             "title": "Agriculture",
             "description": "You can return a card from your hand, and then draw two card from Era 1.",
-            "value": 0,
+            "value": 2,
             "dogmas": {
                 "effect1": [
                     "Return -1",

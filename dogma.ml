@@ -1,8 +1,11 @@
 
+(** [splay_direction] is the direction of splaying of a stack on board. *)
 type splay_direction = No | Up | Left | Right
 
+(** [stack_color] is the color of cards and stacks in the game. *)
 type stack_color = Red | Purple | Blue | Green | Yellow
 
+(** [card_pile] is *)
 type card_pile = 
   | Self_hand of int 
   | Other_hand of int 

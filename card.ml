@@ -1,9 +1,12 @@
 open Dogma 
 
+(** [icon] is the type of icons on the cards.*) 
 type icon = Castle | Crown | Factory | Leaf | Clock | Lightbulb | Pattern
 
+(** [color] is the type of color of the cards.*)
 type color = Dogma.stack_color
 
+(** [t] is the type of cards.*)
 type t = {
   title : string;
   description : string;
@@ -13,34 +16,39 @@ type t = {
   icons : icon list;
   color : color;
 }
+
+(** [equal c1 c2] is true if the title of [c1] and [c2] is the same, 
+    otherwise flase.*)
 let equal card1 card2 = 
-  (* print_endline card1.title;
-     print_endline card2.title;
-     Printf.printf "is_equal %B\n" (card1.
-      = card2.title); *)
   card1.title = card2.title
 
+(** [compare c1 c2] is 0 if the title of c1 and c2 is equal, negative if 
+    the title of c1 is less than c2, otherwise positive.*)
 let compare card1 card2 = 
   Stdlib.compare card1.title card2.title
 
-
-let get_color card = 
-  card.color
-
-let get_title (card : t) : string = card.title
-
-let get_value card = card.value 
-
-let get_dogma card =  card.dogmas
-
-let get_dogmas_icon card = card.dogmas_icon
-
-let get_icons card = card.icons
-
+(** [get_color c] is the color of [c].*)
 let get_color card = card.color
 
+(** [get_title c] is the title of [c].*)
+let get_title (card : t) : string = card.title
+
+(** [get_value c] is the value of [c].*)
+let get_value card = card.value 
+
+(** [get_dogma c] is the dogma list of [c].*)
+let get_dogma card =  card.dogmas
+
+(** [get_dogmas_icon c] is the icon of the dogma of [c].*)
+let get_dogmas_icon card = card.dogmas_icon
+
+(** [get_icons c] is the icon list on the card of [c].*)
+let get_icons card = card.icons
+
+(** [get_description c] is the description of [c].*)
 let get_description card = card.description
 
+(** [icon_to_string icon] is the string corresboding to the name of [icon].*)
 let icon_to_string icon : string = 
   match icon with 
   | Castle -> "Castle"
@@ -51,6 +59,7 @@ let icon_to_string icon : string =
   | Lightbulb -> "Lightbulb"
   | Pattern -> "Blank" 
 
+(** [color_to_string color] is the string corresboding to the name of [color]*)
 let color_to_string color : string =
   match color with 
   | Dogma.Red -> "Red"
@@ -59,6 +68,7 @@ let color_to_string color : string =
   | Dogma.Green -> "Green"
   | Dogma.Yellow -> "Yellow" 
 
+(** [color_to_int color] is the index of [color] on the board of the player.*)
 let color_to_int color = 
   match color with
   | Dogma.Red -> 0
@@ -66,44 +76,14 @@ let color_to_int color =
   | Dogma.Blue -> 2
   | Dogma.Green -> 3
   | Dogma.Yellow -> 4
-(* let dogma_to_string = function
-   | Draw _ -> 
-    "Draw: You can use this dogma to draw cards. It counts as one move\n"
-   | Meld _ -> 
-    "Meld: You can use this dogma to meld cards. It counts as one move\n"
-   | Tuck _ -> "Tuck: You can use this dogma to tuck cards. 
-   Tuck means placing a card to the bottom of a color pile\n" 
-   | Splay _ -> 
-    "Splay: You can use this dogma to splay cards of one color pile. 
-   Choose a direction to splay so that you have more icons on the board\n"
-   | Return _ -> "Return: You can use this dogma to return cards. 
-   You can only return cards from your hand. 
-   Cards will be returned to era cards pile"
-   | Score _ -> "Score: You can use this dogma to score cards. 
-   You can only score cards from your hand. 
-   If you score an era 2 card, you get two points. 
-   If you score an era 1 card, you get one point. etc. \n"
-   | Transfer _ -> "Transfer: You can use this dogma to transfer cards.
-   Cards can be transferred either from board to board, from hand to hand or from board to hand."
-   | Demand _ -> "" *)
 
-(* let rec dogmas_to_string dogmas : string = 
-   match dogmas with 
-   | [] -> ""
-   | h::t -> dogma_to_string h ^ "; " ^ (dogmas_to_string t)
-
-   let rec dogmas_to_list dogmas =
-   match dogmas with
-   | [] -> dogmas_to_string []
-   | h::t -> dogmas_to_string h ^ dogmas_to_list t  *)
-
+(** [card_to_string card] is the string representing [card].*)
 let card_to_string card : string =  
   "\n[Card name: " ^ card.title ^ "\n" ^ 
   "Description: " ^ card.description ^ "\n" ^
   "Color: " ^ (color_to_string card.color) ^ "\n" ^
   "Era: " ^ (string_of_int (card.value + 1)) ^ "\n" ^
   "Dogma icon: " ^ (icon_to_string card.dogmas_icon) ^ "\n" ^
-  (* "Dogma effect: " ^ (dogmas_to_list card.dogmas) ^ "\n" ^ *)
   "Icons: " ^ (card.icons |> List.map icon_to_string 
                |> String.concat ", ") ^ "]\n"
 
