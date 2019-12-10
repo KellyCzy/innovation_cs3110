@@ -22,22 +22,22 @@
     },
     {
       "title": "Conquer*",
-      "description": "You draw a card from the card pile and score your first hand card.",
+      "description": "You draw a card and score a hand card.",
       "value": 0,
       "dogmas": {
         "effect1": [
           "Draw 0"
         ],
         "effect2": [
-          "Score 0"
+          "Score -1"
         ]
       },
       "dogmas_icon": "Castle",
       "icons": [
         "Pattern",
         "Castle",
-        "Castle",
-        "Lightbulb"
+        "Lightbulb",
+        "Castle"
       ],
       "color": "Blue"
     },
@@ -84,27 +84,6 @@
       "color": "Red"
     },
     {
-      "title": "Bro Code*",
-      "description": "You draw a card from the card pile and you score a hand card.",
-      "value": 0,
-      "dogmas": {
-        "effect1": [
-          "Draw 0"
-        ],
-        "effect2": [
-          "Score -1"
-        ]
-      },
-      "dogmas_icon": "Castle",
-      "icons": [
-        "Pattern",
-        "Castle",
-        "Lightbulb",
-        "Castle"
-      ],
-      "color": "Yellow"
-    },
-    {
       "title": "Agriculture",
       "description": "You can return a card from your hand, and then draw two card from Era 1.",
       "value": 0,
@@ -143,6 +122,27 @@
         "Castle"
       ],
       "color": "Blue"
+    },
+    {
+      "title": "Bro code1*",
+      "description": "You draw a card and score the first hand card.",
+      "value": 0,
+      "dogmas": {
+        "effect1": [
+          "Draw 0"
+        ],
+        "effect2": [
+          "Score 0"
+        ]
+      },
+      "dogmas_icon": "Castle",
+      "icons": [
+        "Pattern",
+        "Castle",
+        "Lightbulb",
+        "Castle"
+      ],
+      "color": "Yellow"
     },
     {
       "title": "Masonry",
@@ -224,6 +224,27 @@
       "color": "Red"
     },
     {
+      "title": "Bro code2*",
+      "description": "You draw a card and score the first hand card.",
+      "value": 0,
+      "dogmas": {
+        "effect1": [
+          "Draw 0"
+        ],
+        "effect2": [
+          "Score 0"
+        ]
+      },
+      "dogmas_icon": "Castle",
+      "icons": [
+        "Pattern",
+        "Castle",
+        "Lightbulb",
+        "Castle"
+      ],
+      "color": "Green"
+    },
+    {
       "title": "Clothing",
       "description": "You can meld a card from your hand and then draw and score from Era 1.",
       "value": 0,
@@ -283,6 +304,26 @@
         "Leaf"
       ],
       "color": "Yellow"
+    },
+    {
+      "title": "Tools2",
+      "description": "You can draw a card from Era 1 and score card from your hand.",
+      "value": 0,
+      "dogmas": {
+        "effect1": [
+          "Draw 0",
+          "Return -1"
+        ],
+        "effect2": []
+      },
+      "dogmas_icon": "Lightbulb",
+      "icons": [
+        "Pattern",
+        "Lightbulb",
+        "Lightbulb",
+        "Castle"
+      ],
+      "color": "Blue"
     }
   ]
 }
