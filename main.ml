@@ -19,12 +19,14 @@ let game_init f =
    then true else false *)
 
 let input_number act = 
-  print_endline ("Please enter the index of the card you want to" ^ act ^ ". \n");
+  print_endline 
+    ("Please enter the index of the card you want to" ^ act ^ ". \n");
   print_endline ">";
   let str = read_line () in
   match Command.parse str with
   | Number int -> int
-  | _ -> print_endline("This is not a number. It's automatically set to 0"); 0
+  | _ -> print_endline 
+           ("This is not a number. It's automatically set to 0"); 0
 
 let rec rec_return state = 
   try 
@@ -32,6 +34,10 @@ let rec rec_return state =
     State.return state (State.current_player state) i
   with _ -> rec_return state
 
+let transfer_helper state id cp1 cp2= 
+  let other = State.get_player state id in
+  let myself = State.current_player state in 
+  State.transfer state myself other cp1 cp2 0 true
 
 let dogma_effect (state: State.t) (dogma : Dogma.effect) : State.t = 
   match dogma with
@@ -46,14 +52,12 @@ let dogma_effect (state: State.t) (dogma : Dogma.effect) : State.t =
     else State.tuck state (State.current_player state) x
   | Return x -> if (x<0) then let i = input_number " return" in
       let temp = State.return state (State.current_player state) i in
-      temp
-    else State.return state (State.current_player state) x
+      temp else State.return state (State.current_player state) x
   | Score x -> if (x<0) then let i = input_number " score" in
       State.score state (State.current_player state) i 
     else State.score state (State.current_player state) x 
-  | Transfer (cp1, cp2, id) -> let other = State.get_player state id in
-    let myself = State.current_player state in 
-    State.transfer state myself other cp1 cp2 0 true
+  | Transfer (cp1, cp2, id) -> 
+    transfer_helper state id cp1 cp2
   | Splay (dir,color) -> 
     State.splay state (State.current_player state) color dir
   | _ -> print_string "Need to be completed \n"; state
@@ -100,6 +104,8 @@ let print_help state =
       Colors are red, purple, blue, green, yellow.\n" 
     (State.get_current_player state)
 
+
+
 (** Helper function *)
 let rec run_game_1 state = 
   let (id,score) = state |> check_win in
@@ -110,45 +116,7 @@ let rec run_game_1 state =
     print_string "> ";
   match read_line () with
   | exception End_of_file -> state
-  | string -> 
-    try match Command.parse string with
-      | exception Empty -> 
-        print_string "You didn't type in any command! \n";
-        run_game_1 state
-      | exception Malformed str -> 
-        print_string str; run_game_1 state
-      | Meld x -> 
-        State.meld state (State.current_player state) x 
-      | Draw x -> 
-        State.draw state (State.current_player state) x
-      | Achieve _ -> 
-        State.achieve state (State.current_player state) 
-      | Hand ->
-        let str = State.print_hand state in
-        Frontend.display state;
-        printf "Hand: %s\n" str;
-        run_game_1 state
-      | Board x ->
-        let str = State.print_player_board state x in
-        Frontend.display state;
-        printf "Board of player #%d:\n %s" x str;
-        print_string "\n";
-        run_game_1 state
-      | Score -> 
-        let score = State.get_current_player_score state in
-        printf "Score: %d\n" score;
-        run_game_1 state
-      | Help -> print_help state;
-        run_game_1 state
-      | Dogma col -> 
-        let num = Player.map_color_to_int col in
-        let stack = Player.get_ith_stack (State.current_player state) 
-            num in
-        let card = Player.get_top_card stack in
-        let dogma = Card.get_dogma card in
-        execute_dogmas state dogma 
-      | _ -> print_string "You didn't type in any command! \n";
-        run_game_1 state
+  | str -> try run_parse state str true
     with 
     | Empty_list str -> print_string (str ^ "\n"); 
       run_game_1 state
@@ -159,58 +127,18 @@ let rec run_game_1 state =
       run_game_1 state
     | _ -> run_game_1 state
 
-
 (** Helper function *)
-let rec run_game_2 state = 
+and run_game_2 state = 
   let (id,score) = state |> check_win in
-  if (id <> -1) && (score <> -1) then (print_string ("Game ends!"); 
-                                       Printf.printf "Player %d wins" id;
-                                       print_string "\n"; exit 0)
+  if (id <> -1) && (score <> -1) 
+  then (print_string ("Game ends!"); 
+        Printf.printf "Player %d wins" id;
+        print_string "\n"; exit 0)
   else
     print_string "> ";
   match read_line () with
   | exception End_of_file -> state
-  | string -> try match Command.parse string with
-    | exception Empty -> 
-      print_string "You didn't type in any command! \n";
-      run_game_2 state
-    | exception Malformed str -> 
-      print_string str;
-      run_game_2 state
-    | Meld x -> 
-      State.meld state (State.current_player state) x 
-    | Draw x -> 
-      let str = State.print_hand state in
-      printf "Hand card: %s\n" str;
-      State.draw state (State.current_player state) x 
-    | Achieve _ -> 
-      State.achieve state (State.current_player state)
-    | Hand ->
-      let str = State.print_hand state in
-      printf "Hand card: %s\n" str;
-      Frontend.display state;
-      run_game_2 state
-    | Board x ->
-      let str = State.print_player_board state x in
-      printf "Board of %d:\n %s" x str;
-      Frontend.display state;
-      run_game_2 state
-    | Score -> 
-      let score = State.get_current_player_score state in
-      printf "Score: %d\n" score;
-      run_game_2 state
-    | Help -> print_help state;
-      run_game_1 state
-    | Dogma col -> 
-      let num = Player.map_color_to_int col in
-      let stack = Player.get_ith_stack (State.current_player state) 
-          num in
-      let card = Player.get_top_card stack in
-      let dogma = Card.get_dogma card in
-      (* effect list list *)
-      execute_dogmas state dogma
-    | _ -> print_string "You didn't type in any command! \n";
-      run_game_2 state
+  | str -> try run_parse state str false
     with 
     | Empty_list str -> print_string (str ^ "\n"); 
       run_game_2 state
@@ -219,6 +147,61 @@ let rec run_game_2 state =
       run_game_2 state
     | Failure str -> print_string (str ^ "\n"); 
       run_game_2 state
+
+and run_parse state str is_first = 
+  let game_func = 
+    if is_first then run_game_1 else run_game_2 in
+  match Command.parse str with
+  | exception Empty -> 
+    print_string "You didn't type in any command! \n";
+    game_func state
+  | exception Malformed str -> 
+    print_string str; game_func state
+  | Meld x -> 
+    State.meld state (State.current_player state) x 
+  | Draw x -> 
+    State.draw state (State.current_player state) x
+  | Achieve _ -> 
+    State.achieve state (State.current_player state) 
+  | Hand -> run_hand state true
+  | Board x -> run_board state x true
+  | Score -> 
+    let score = State.get_current_player_score state in
+    printf "Score: %d\n" score;
+    game_func state
+  | Help -> print_help state;
+    game_func state
+  | Dogma col -> run_dogma state col
+  | _ -> print_string "You didn't type in any command! \n";
+    game_func state
+
+and run_hand state is_first = 
+  let str = State.print_hand state in
+  Frontend.display state;
+  printf "Hand: %s\n" str;
+  if is_first then run_game_1 state
+  else run_game_2 state
+
+and run_board state x is_first = 
+  let str = State.print_player_board state x in
+  printf "Board of %d:\n %s" x str;
+  Frontend.display state;
+  if is_first then run_game_1 state
+  else run_game_2 state
+
+and run_score state is_first = 
+  let score = State.get_current_player_score state in
+  printf "Score: %d\n" score;
+  if is_first then run_game_1 state
+  else run_game_2 state
+
+and run_dogma state col = 
+  let num = Player.map_color_to_int col in
+  let stack = Player.get_ith_stack (State.current_player state) 
+      num in
+  let card = Player.get_top_card stack in
+  let dogma = Card.get_dogma card in
+  execute_dogmas state dogma
 
 
 let rec play_game state =
@@ -249,7 +232,6 @@ and winner_2 winner state =
     play_game next_player_state
 
 
-
 let rec play_game_ai state = 
   try (
     Frontend.display state;
@@ -275,6 +257,7 @@ let rec play_game_ai state =
     else (print_string ("Game ends! No one Wins! \n");)
   | Empty_list s -> print_endline(s)
   | Failure s -> print_endline(s)
+
 
 let game_rule = "Game Rules:\n
     Meld: put card from your hand to your board, on top of the stack of matching color. 

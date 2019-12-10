@@ -9,6 +9,15 @@ open Printf
 open Frontend
 open Yojson.Basic.Util
 
+(* Test Plan: 
+   The testing of system includes OUnit tests and manual test. 
+   For manual tests, we used 'make play' and tried several different cases under 
+   different situation and test to see if the outcome is what we want. The 
+   manual test part ensures our connection and relationship between each modules
+   and the progress of the game is correct. 
+   For OUnit tests, we focus more on specific functions. We do not run the 
+   whole game anymore, instead, we focus on specific feature in the game.  *)
+
 let innov = Yojson.Basic.from_file "innov.json"
 let test = Yojson.Basic.from_file "test.json"
 let test1 = Yojson.Basic.from_file "test1.json"
@@ -72,7 +81,6 @@ let make_before_draw_test
     (expected_output : string) : test = 
   name >:: (fun _ -> 
       let str = (Player.print_hand (state|>current_player)) in 
-      (* Printf.printf "%s/n" str; *)
       assert_equal expected_output str
     )
 
@@ -103,12 +111,8 @@ let make_after_meld_test
     (state: State.t)
     (expected_output : string) : test = 
   name >:: (fun _ -> 
-      (* let card = (Player.get_ith_stack (state|>current_player) 0) in  *)
-      (* Printf.printf "%s/n" str; *)
       let card_name = Player.get_top_card_name 
           (state|>State.current_player) index in
-      (* Printf.printf "meld:  %s\n" card_name; *)
-      (* Printf.printf "player: %d\n" (Player.get_id (state|>State.current_player)); *)
       assert_equal expected_output card_name
     )
 
@@ -143,9 +147,7 @@ let make_score_test
       assert_equal expected_output 
         (State.get_score_by_id (new_state) 0)
     )
-(* let make_tuck_test 
-    (name : string)
-    (st: State.t) *)
+
 
 (** hand to hand start *)
 let init_state_hh = init_state test1
@@ -153,7 +155,6 @@ let myself_id_hh = 0
 let other_id_hh = 1
 let init_player0_hh = State.get_player init_state_hh myself_id_hh 
 let input_state_hh = State.draw init_state_hh (init_player0_hh) 0
-(* let () = Player.print_player (State.get_player input_state_hh 0) *)
 let card_pile1_hh = Dogma.Self_hand 0
 let card_pile2_hh = Dogma.Other_hand 0
 let idx_hh = 0
@@ -174,10 +175,6 @@ let make_transfer_test_hh
   name >:: (fun _ -> 
       let myself = State.get_player state myself_id in
       let other = State.get_player state other_id in
-      (* 
-      Player.print_player myself; *)
-
-      (* Printf.printf "hh before %d %d\n" myself_hand_length other_hand_length; *)
       let state_after_transfer = 
         State.transfer state myself other card_pile1 
           card_pile2 idx top in
@@ -192,7 +189,6 @@ let make_transfer_test_hh
       let other_updated_length = List.length 
           (Player.get_hand other_updated) in
 
-      (* Printf.printf "hh %d %d\n" myself_updated_hand_length other_updated_hand_length; *)
       (assert_equal (myself_updated_length, 
                      other_updated_length) expected_output) 
     )
@@ -272,12 +268,6 @@ let make_transfer_test_bh
       let myself = State.get_player state myself_id in
       let other = State.get_player state other_id in
 
-      let self_length =
-        Player.get_board_total_length myself in
-      let other_length = 
-        List.length (Player.get_hand other) in
-      (* Printf.printf "lengths before %d %d\n" self_length other_length; *)
-
       let state_after_transfer = 
         State.transfer state myself other card_pile1 
           card_pile2 idx top in
@@ -285,13 +275,10 @@ let make_transfer_test_bh
           state_after_transfer myself_id in
       let other_updated = State.get_player 
           state_after_transfer other_id in
-      (* Printf.printf "ids %d %d" myself_id other_id; *)
       let self_updated_length =
         Player.get_board_total_length myself_updated in
       let other_updated_length = 
         List.length (Player.get_hand other_updated) in
-      (* Printf.printf "lengths %d %d\n" self_updated_length other_updated_length; *)
-
       (assert_equal (self_updated_length, 
                      other_updated_length) expected_output) 
     )
@@ -325,12 +312,6 @@ let make_transfer_test_bb
       let myself = State.get_player state myself_id in
       let other = State.get_player state other_id in
 
-      let self_length =
-        Player.get_board_total_length myself in
-      let other_length = 
-        List.length (Player.get_hand other) in
-      (* Printf.printf "bb lengths before %d %d\n" self_length other_length; *)
-
       let state_after_transfer = 
         State.transfer state myself other card_pile1 
           card_pile2 idx top in
@@ -343,8 +324,6 @@ let make_transfer_test_bb
         Player.get_board_total_length myself_updated in
       let other_updated_length =
         Player.get_board_total_length other_updated in
-
-      (* Printf.printf "bb lengths %d %d\n" self_updated_length other_updated_length; *)
 
       (assert_equal (self_updated_length, 
                      other_updated_length) expected_output) 
@@ -398,8 +377,7 @@ let fake_player = Player.init_player 0
 let state1 = State.draw state0 player0 0
 let player1 = State.get_player state1 0
 let players = State.get_players state1
-(* let state2 = State.draw state_init player1 0
-   let player2 = State.get_player state2 0 *)
+
 
 let make_swap_player
     (name : string)
@@ -411,10 +389,7 @@ let make_swap_player
       let first_player = List.hd updated_player_list in
       let updated_hand_length = Player.get_hand_length first_player in
       assert_equal updated_hand_length expected_output
-
     )
-
-
 
 let state_tests = 
   [
@@ -544,10 +519,6 @@ let card_test =
       test2_card 2;
 
   ]
-
-
-
-
 
 
 let state_init = init_state test
@@ -726,7 +697,6 @@ let player_test =
     make_count_icon_test "count_icon stacked cards" board2 Card.Pattern 2;
 
   ]
-
 
 
 let suite = 

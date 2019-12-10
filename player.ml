@@ -284,7 +284,8 @@ let get_icon (player: t) (icon: Card.icon) =
 
 (* update the ith stack with [new_s] in the stack list**)
 let update_stack_list s_lst i new_s = 
-  let ith = try (List.nth s_lst i) with _ -> failwith ((string_of_int i) ^ " is not a valid index") in
+  let ith = try (List.nth s_lst i) with _ -> 
+    failwith ((string_of_int i) ^ " is not a valid index") in
   let rec update' acc = function
     | [] -> failwith "ith stack not in the list"
     | x::xs -> begin match compare_stack ith x with
