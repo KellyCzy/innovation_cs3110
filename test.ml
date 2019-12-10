@@ -16,7 +16,30 @@ open Yojson.Basic.Util
    manual test part ensures our connection and relationship between each modules
    and the progress of the game is correct. 
    For OUnit tests, we focus more on specific functions. We do not run the 
-   whole game anymore, instead, we focus on specific feature in the game.  *)
+   whole game anymore, instead, we focus on specific feature in the game. We mainly
+   have three parts. 
+
+   The first part tests all the dogma effect we have (functions 
+   in state.ml) Essential functions in state module are tested in state_tests, 
+   including init_state, draw, meld, return, transfer, and score. 
+   The second part tests all the essential functions in card module, including
+   all the getter method. 
+   The third part tests all the essential functions in player module, including 
+   pop, remove, push, and count_icon. 
+
+   All the test are developed using glass box testing. Based on the code we
+   wrote, we believe testing all these functions using OUnit tests and with 
+   all our manual tests, it is enough to ensure our system is correct, because
+   the first part ensures all essential functions in state are correct. If
+   these are correct, the function in main is ensured to be correct. The 
+   second part ensures all essential functions in card module are correct, which
+   make sure the way we init a card from json file is correct, and getter methods
+   in card module are correct as well. Since our game is a board game and relies 
+   on cards, this part of the tests is important. The third part of the test
+   make sure essential functions in player module is correct, which ensures
+   the way the game interact with each player is corret. The crucial part 
+   of the game includes state, player, and cards, which is why we developed 
+   test cases to seperately ensures functions in these modules are correct.  *)
 
 let innov = Yojson.Basic.from_file "innov.json"
 let test = Yojson.Basic.from_file "test.json"
