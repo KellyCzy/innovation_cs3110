@@ -7,6 +7,9 @@ type stack = {
   cards : Card.t list;
 }
 
+let get_dir stack = 
+  stack.splay
+
 let get_top_card stack = 
   try List.hd stack.cards with _ -> failwith "Do not have this color on board."
 

@@ -59,6 +59,13 @@ let color_to_string color : string =
   | Dogma.Green -> "Green"
   | Dogma.Yellow -> "Yellow" 
 
+let color_to_int color = 
+  match color with
+  | Dogma.Red -> 0
+  | Dogma.Purple -> 1
+  | Dogma.Blue -> 2
+  | Dogma.Green -> 3
+  | Dogma.Yellow -> 4
 (* let dogma_to_string = function
    | Draw _ -> 
     "Draw: You can use this dogma to draw cards. It counts as one move\n"
