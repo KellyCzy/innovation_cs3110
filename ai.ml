@@ -1,11 +1,12 @@
 open State
 open Frontend
 
-let game_end = ref 0
-
+(** [rnd_list n] is a list of n random integers *)
 let rnd_list (n : int) : int list =
   QCheck.Gen.(generate ~n int)
 
+(** [dogma_effect_ai state dogma] is the state after executing the
+    effects of a dogma.  *)
 let dogma_effect_ai (state: State.t) (dogma : Dogma.effect) : State.t = 
   match dogma with
   | Draw x -> if (x<0) then
@@ -35,19 +36,25 @@ let dogma_effect_ai (state: State.t) (dogma : Dogma.effect) : State.t =
     State.splay state (State.current_player state) color dir
   | _ -> print_string "Need to be completed \n"; state
 
+(** [go_through_effects state dogma] is state after executing one 
+    dogma. *)
 let rec go_through_effects (state: State.t) (dogma: Dogma.t) : State.t =
   match dogma with 
   | [] -> state
   | x :: t -> let new_state = dogma_effect_ai state x in
     go_through_effects new_state t
 
+(** [execute_dogmas state dogmas] is the state after executing the 
+    dogmas of a card. *)
 let execute_dogmas state dogmas = 
   match dogmas with 
   | x :: y :: [] -> let state_after_x = go_through_effects state x in 
     go_through_effects state_after_x y
   | _ -> failwith "impossible"
 
-(** Draw and draw *)
+(** [strategy1 id state] is the state after the ai player draws a card
+    from the card pile state and then draws another a hand card from the 
+    card pile. *)
 let strategy1 id state = 
   let state_drawn_first = 
     State.draw state (State.current_player state) 0 in 
@@ -63,7 +70,8 @@ let strategy1 id state =
   State.next_player state_drawn_second
 
 
-(** Draw and meld *)
+(** [strategy2 id state] is the state after the ai player draws a card
+    from the card pile state and then melds a hand card to its board. *)
 let strategy2 id state = 
   let state_drawn_first = 
     State.draw state (State.current_player state) 0 in 
@@ -77,8 +85,10 @@ let strategy2 id state =
                 ^ "(AI) has just melded a card.\n\n");
   State.next_player state_melded_second
 
-
-(** Draw and dogma *)
+(** [strategy3 id state] is the state after first determining if at least one 
+    stack of the ai player with id [id] has a card, and if so the state is 
+    the one after the ai player draws a card from the card pile state and 
+    then executes the dogmas of a stack card. *)
 let strategy3 id state = 
   let exist = State.check_color_to_dogma_exist id state in 
   match exist with 
@@ -103,7 +113,7 @@ let strategy3 id state =
   | false -> strategy2 id state
 
 
-(** Return the index of the entry with maximum value *)
+(** [get_max_index lst value index] is the index of the maximum entry in [lst]. *)
 let rec get_max_index lst value index : int = 
   match lst with 
   | [] -> index
@@ -111,6 +121,8 @@ let rec get_max_index lst value index : int =
     if x > value then get_max_index t x (index + 1)
     else get_max_index t value index
 
+(** [ai_play_nondeterministic id state] is the state after the ai player with 
+    index [id] nondeterministicly applies a strategy. *)
 let rec ai_play_nondeterministic id state = 
   print_string "\n";
   let lst = rnd_list 3 in
@@ -121,10 +133,16 @@ let rec ai_play_nondeterministic id state =
   | 2 -> state |> strategy3 id |> player_or_ai_nondeterministic id
   | _ -> failwith "Impossible"
 
+(** [player_or_ai_nondeterministic id state] is the state after first determining
+    whether the next player is still an ai player, and if so the state is the 
+    state after [ai_play_nondeterministic (id + 1) state], and if not is just the 
+    original state. *)
 and player_or_ai_nondeterministic id state = 
   if id = 3 then state
   else ai_play_nondeterministic (id + 1) state
 
+(** [ai_play_deterministic id state] is the state after the ai player with 
+    index [id] deterministicly applies a strategy. *)
 let rec ai_play_deterministic id strategy state = 
   print_string "\n";
   match strategy with 
@@ -133,6 +151,10 @@ let rec ai_play_deterministic id strategy state =
   | 2 -> state |> strategy2 id |> player_or_ai_deterministic id strategy
   | _ -> failwith "Impossible"
 
+(** [player_or_ai_deterministic id state] is the state after first determining
+    whether the next player is still an ai player, and if so the state is the 
+    state after [ai_play_deterministic (id + 1) state], and if not is just the 
+    original state. *)
 and player_or_ai_deterministic id strategy state =
   if id = 3 then state 
   else state |> ai_play_deterministic (id + 1) (strategy + 1)

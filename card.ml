@@ -45,6 +45,13 @@ let get_dogmas_icon card = card.dogmas_icon
 (** [get_icons c] is the icon list on the card of [c].*)
 let get_icons card = card.icons
 
+(** [coubt_icons icon_list icon acc] is number of icons [icon] in icon_list plus [acc]*)
+let rec count_icons icon_list icon acc = 
+  match icon_list with
+  | [] -> acc
+  | x::xs -> if x = icon then count_icons xs icon (acc+1)
+    else count_icons xs icon acc
+
 (** [get_description c] is the description of [c].*)
 let get_description card = card.description
 

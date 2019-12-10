@@ -37,26 +37,20 @@ let dogma_effect (state: State.t) (dogma : Dogma.effect) : State.t =
   match dogma with
   | Draw x -> if (x<0) then let i = input_number " draw" in
       State.draw state (State.current_player state) i
-    else 
-      State.draw state (State.current_player state) x 
+    else State.draw state (State.current_player state) x 
   | Meld x -> if (x<0) then let i = input_number " meld" in
       State.meld state (State.current_player state) i
-    else
-      State.meld state (State.current_player state) x 
+    else State.meld state (State.current_player state) x 
   | Tuck x -> if (x<0) then let i = input_number " tuck"  in
       State.tuck state (State.current_player state) i 
-    else 
-      State.tuck state (State.current_player state) x
+    else State.tuck state (State.current_player state) x
   | Return x -> if (x<0) then let i = input_number " return" in
       let temp = State.return state (State.current_player state) i in
       temp
-
-    else 
-      State.return state (State.current_player state) x
+    else State.return state (State.current_player state) x
   | Score x -> if (x<0) then let i = input_number " score" in
       State.score state (State.current_player state) i 
-    else
-      State.score state (State.current_player state) x 
+    else State.score state (State.current_player state) x 
   | Transfer (cp1, cp2, id) -> let other = State.get_player state id in
     let myself = State.current_player state in 
     State.transfer state myself other cp1 cp2 0 true
@@ -89,12 +83,29 @@ let check_win state =
     get_max_score (State.get_players state)
   else (-1, -1)
 
+let print_help state = 
+  Printf.printf "    You are player %d.\n
+      Now it's your turn.\n
+      Here're a few possible commands you could try.\n
+      🌟 draw [era_num]: draw a card from era [era_num], starting from 0.\n
+      🌟 meld [hand_idx]: meld a card with index [hand_idx] from your hand cards, 
+      starting from 0.\n
+      🌟 board [player_idx]: display the player [player_idx]'s board cards, 
+      [player_idx] ranges from 0 to 3.\n
+      🌟 hand [player_idx]: display the player [player_idx]'s hand cards, 
+      [player_idx] ranges from 0 to 3.\n
+      🌟 score [player_idx]: display the player [player_idx]'s scores, 
+      [player_idx] ranges from 0 to 3.\n
+      🌟 dogma [color]: use the dogma effect on stack with color [color]. 
+      Colors are red, purple, blue, green, yellow.\n" 
+    (State.get_current_player state)
+
 (** Helper function *)
 let rec run_game_1 state = 
   let (id,score) = state |> check_win in
-  if (id <> -1) && (score <> -1) then (print_string ("Game ends!"); 
-                                       Printf.printf "Player %d wins" id;
-                                       print_string "\n"; exit 0)
+  if (id <> -1) && (score <> -1) 
+  then (print_string ("Game ends!"); Printf.printf "Player %d wins" id;
+        print_string "\n"; exit 0)
   else
     print_string "> ";
   match read_line () with
@@ -105,8 +116,7 @@ let rec run_game_1 state =
         print_string "You didn't type in any command! \n";
         run_game_1 state
       | exception Malformed str -> 
-        print_string str;
-        run_game_1 state
+        print_string str; run_game_1 state
       | Meld x -> 
         State.meld state (State.current_player state) x 
       | Draw x -> 
@@ -128,21 +138,7 @@ let rec run_game_1 state =
         let score = State.get_current_player_score state in
         printf "Score: %d\n" score;
         run_game_1 state
-      | Help -> Printf.printf "    You are player %d.\n
-      Now it's your turn.\n
-      Here're a few possible commands you could try.\n
-      🌟 draw [era_num]: draw a card from era [era_num], starting from 0.\n
-      🌟 meld [hand_idx]: meld a card with index [hand_idx] from your hand cards, 
-      starting from 0.\n
-      🌟 board [player_idx]: display the player [player_idx]'s board cards, 
-      [player_idx] ranges from 0 to 3.\n
-      🌟 hand [player_idx]: display the player [player_idx]'s hand cards, 
-      [player_idx] ranges from 0 to 3.\n
-      🌟 score [player_idx]: display the player [player_idx]'s scores, 
-      [player_idx] ranges from 0 to 3.\n
-      🌟 dogma [color]: use the dogma effect on stack with color [color]. 
-      Colors are red, purple, blue, green, yellow.\n" 
-                  (State.get_current_player state);
+      | Help -> print_help state;
         run_game_1 state
       | Dogma col -> 
         let num = Player.map_color_to_int col in
@@ -151,7 +147,6 @@ let rec run_game_1 state =
         let card = Player.get_top_card stack in
         let dogma = Card.get_dogma card in
         execute_dogmas state dogma 
-
       | _ -> print_string "You didn't type in any command! \n";
         run_game_1 state
     with 
@@ -204,6 +199,8 @@ let rec run_game_2 state =
       let score = State.get_current_player_score state in
       printf "Score: %d\n" score;
       run_game_2 state
+    | Help -> print_help state;
+      run_game_1 state
     | Dogma col -> 
       let num = Player.map_color_to_int col in
       let stack = Player.get_ith_stack (State.current_player state) 
@@ -223,34 +220,35 @@ let rec run_game_2 state =
     | Failure str -> print_string (str ^ "\n"); 
       run_game_2 state
 
+
 let rec play_game state =
-  Frontend.display state;
+  Frontend.display state; 
   print_string "\n\n";
   printf "It's player %d's first turn!\n" (State.get_current_player state);
   let state_after_1 = run_game_1 state in
   if state_after_1 = state then (print_string " \n"; exit 0)
-  else
-    Frontend.display state_after_1;
+  else Frontend.display state_after_1;
   let winner1 = state_after_1 |> check_win in
   if fst winner1 > 0 
   then let () = Printf.printf 
            "The game's winner is player %d and the score is %d" 
            (fst winner1) (snd winner1) in (Stdlib.exit 0)
-  else
-    print_string "\n\n";
-  printf "It's player %d's second turn!\n" 
+  else print_string "\n\n"; printf "It's player %d's second turn!\n" 
     (State.get_current_player state_after_1);
   let state_after_2 = run_game_2 state_after_1 in
   if state_after_1 = state then (print_string " \n"; exit 0)
-  else 
-    let winner2 = state_after_2 |> check_win in
-    if fst winner2 > 0 
-    then let () = Printf.printf 
-             "The game's winner is player %d and the score is %d" 
-             (fst winner2) (snd winner2) in (Stdlib.exit 0)
-    else
-      let next_player_state = State.next_player state_after_2 in
-      play_game next_player_state
+  else let winner2 = state_after_2 |> check_win in
+    winner_2 winner2 state_after_2
+
+and winner_2 winner state = 
+  if fst winner > 0 
+  then let () = Printf.printf 
+           "The game's winner is player %d and the score is %d" 
+           (fst winner) (snd winner) in (Stdlib.exit 0)
+  else let next_player_state = State.next_player state in
+    play_game next_player_state
+
+
 
 let rec play_game_ai state = 
   try (
@@ -278,33 +276,7 @@ let rec play_game_ai state =
   | Empty_list s -> print_endline(s)
   | Failure s -> print_endline(s)
 
-(** [main ()] prompts for the game to play, then starts it. *)
-let main () =
-  ANSITerminal.(print_string [red]
-                  "\n\nWelcome to the Innovation engine.\n");
-  print_string "Do you want to play with AI? (y/n)";
-  match read_line() with
-  | "y" -> 
-    ANSITerminal.(print_string [green]
-                    "Game Rules:\n
-                    Meld: put card from your hand to your board, on top of the stack of matching color. 
-                    Continue a spaly if one is present.\n
-                    Draw: Take a card of value equal to your highest top card from the supply piels. 
-                    If empty, draw from the next higher pile.\n
-                    Achieve: To claim, must have a score of at least 5x age number in points, 
-                    and a top card of equal or higher value. Points are not spent, you keep them.\n
-                    Dogma/take action: Pick a top card on your board, and execute each effect on it in order. 
-                    Effects are mandatory unless “You may” precedes them.\n
-                    I Demand effects are executed by each player with fewer of the features icon than you, 
-                    going clockwise. Read the effect out loud to them.\n
-                    Opponents execute non-demand effects before you, 
-                    if they have as many or more of the featured icon, going clockwise.\n
-                    If any opponent shared a non-demand effect, and anything happened, 
-                    take a single free Draw action at the conclusion of your Dogma action.\n");
-    "innov.json" |> game_init |> play_game_ai
-  | "n" -> 
-    ANSITerminal.(print_string [green]
-                    "Game Rules:\n
+let game_rule = "Game Rules:\n
     Meld: put card from your hand to your board, on top of the stack of matching color. 
     Continue a spaly if one is present.\n
     Draw: Take a card of value equal to your highest top card from the supply piels. 
@@ -318,7 +290,19 @@ let main () =
     Opponents execute non-demand effects before you, 
     if they have as many or more of the featured icon, going clockwise.\n
     If any opponent shared a non-demand effect, and anything happened, 
-    take a single free Draw action at the conclusion of your Dogma action.\n");
+    take a single free Draw action at the conclusion of your Dogma action.\n"
+
+(** [main ()] prompts for the game to play, then starts it. *)
+let main () =
+  ANSITerminal.(print_string [red]
+                  "\n\nWelcome to the Innovation engine.\n");
+  print_string "Do you want to play with AI? (y/n)";
+  match read_line() with
+  | "y" -> 
+    ANSITerminal.(print_string [green] game_rule);
+    "innov.json" |> game_init |> play_game_ai
+  | "n" -> 
+    ANSITerminal.(print_string [green] game_rule);
     "innov.json" |> game_init |> play_game
   | _ -> ()
 

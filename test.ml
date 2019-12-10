@@ -61,14 +61,8 @@ let first_card_index = Card.color_to_int (Card.get_color (State.get_era_cards_to
 let new_state_draw_innov = State.draw old_state_draw_innov 
     (old_state_draw_innov|> current_player) 0
 
-(* let old_state_draw_test1 = (get_all_cards test1) |> State.init_state
-   let new_state_draw = 
-   State.draw old_state_draw_test1 
-    (old_state_draw_test1|>current_player) 0 *)
 
 let new_state_draw_two = 
-  (* print_int(let x = State.draw new_state_draw 
-                (new_state_draw|>current_player) 0 in get_hand_size_by_id x 0); *)
   State.draw new_state_draw 
     (new_state_draw|>current_player) 0
 
@@ -88,10 +82,6 @@ let make_after_draw_test
     (expected_output : string) : test = 
   name >:: (fun _ -> 
       let card = (Player.get_ith_hand (state_cur|>current_player) 0) in 
-      (* print_endline "------------------------------------------------------\n"; *)
-      (* print_endline (Card.get_title card); *)
-      (* Printf.printf "%s/n" str; *)
-      (* Printf.printf "draw:  %s\n" (Card.get_title card); *)
       assert_equal expected_output (card|>Card.get_title)
     )
 
@@ -372,7 +362,6 @@ let idx_hs = 0
 let top_hs = false
 let expected_output_hs = (0,1)
 
-
 let make_transfer_test_hs
     (name : string)
     (state : State.t)
@@ -399,7 +388,32 @@ let make_transfer_test_hs
         List.length (Player.get_score_cards other_updated) in
 
       (assert_equal (myself_updated_length, 
-                     other_updated_length) expected_output))
+                     other_updated_length) expected_output)
+    )
+
+let state0 = init_state test
+let player0 = State.get_player state0 0
+let fake_player = Player.init_player 0
+
+let state1 = State.draw state0 player0 0
+let player1 = State.get_player state1 0
+let players = State.get_players state1
+(* let state2 = State.draw state_init player1 0
+   let player2 = State.get_player state2 0 *)
+
+let make_swap_player
+    (name : string)
+    (new_player: Player.t) 
+    (player_list: Player.t list)
+    (expected_output : int) : test = 
+  name >:: (fun _ -> 
+      let updated_player_list = State.swap_player new_player player_list in
+      let first_player = List.hd updated_player_list in
+      let updated_hand_length = Player.get_hand_length first_player in
+      assert_equal updated_hand_length expected_output
+
+    )
+
 
 
 let state_tests = 
@@ -409,9 +423,13 @@ let state_tests =
     make_init_state_test "start player innov" innov 0;
 
     make_player_test "player2" innov 0 0;
+    make_player_test "player1" innov 1 1;
     make_player_test "player1" test 1 1;
     make_player_test "player2" test1 2 2;
     make_player_test "player2" test1 3 3;
+
+    make_swap_player "swap_player" fake_player players 0;
+
 
     make_before_draw_test "before draw card (test file)" 
       old_state_draw "";
@@ -532,25 +550,6 @@ let card_test =
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 let state_init = init_state test
 let player0 = State.get_player state_init 0
 let board = Player.get_board player0
@@ -644,6 +643,60 @@ let make_pop_stack_rest_test
       assert_equal (Card.get_title rest) expected_output
     )
 
+let state5 = State.draw state1 player1 0
+let player5 = State.get_player state5 0
+
+let card_to_push0 = Player.get_ith_hand player5 0
+let card_to_push1 = Player.get_ith_hand player5 1
+
+let one_card_stack = Player.push_stack card_to_push0 empty_stack true 
+
+let make_remove_hand_test 
+    (name : string) 
+    (player: Player.t)
+    (i: int)
+    (expected_output : string): test = 
+  name >:: (fun _ -> 
+      let updated_player = Player.remove_hand player i in
+      let ith_hand = get_ith_hand updated_player 0 in
+      let title = Card.get_title ith_hand in
+      print_endline title;
+      assert_equal title expected_output
+    )
+
+
+let make_push_stack_test 
+    (name : string) 
+    (card: Card.t)
+    (stack: stack) 
+    (top: bool)
+    (expected_output : string): test = 
+  name >:: (fun _ -> 
+      let updated_stack = Player.push_stack card stack top in
+      let _, top_card = Player.pop_stack 0 updated_stack in
+      let title = Card.get_title top_card in
+      assert_equal title expected_output
+    )
+
+let empty_board = Player.get_board player5
+let state6 = State.meld state5 player5 0
+let player6 = State.get_player state6 0
+let board1 = Player.get_board player6
+let state7 = State.meld state6 player6 0
+let player7 = State.get_player state7 0
+let board2 = Player.get_board player7
+
+let make_count_icon_test 
+    (name : string) 
+    (board: stack list)
+    (icon: Card.icon) 
+    (expected_output : int): test = 
+  name >:: (fun _ -> 
+      let num = Player.count_icon board icon 0 in
+      Printf.printf "num%d" num;
+      assert_equal num expected_output
+    )
+
 let player_test = 
   [
     make_get_color_stack_test "get_color_stack" player0 red red_int;
@@ -657,6 +710,21 @@ let player_test =
     make_pop_stack_rest_test "pop_stack check the rest of stack 0" 0 ith_stack "Archery";
     make_pop_stack_test "pop_stack check popped stack" 1 ith_stack "Archery";
     make_pop_stack_rest_test "pop_stack check the rest of stack 1" 1 ith_stack "Oars";
+
+    make_remove_hand_test "remove card 0from hand" player5 0 "Archery";
+    make_remove_hand_test "remove card 1 from hand" player5 1 "Oars";
+
+    make_push_stack_test "push card onto an empty stack" card_to_push0 empty_stack true "Oars";
+    make_push_stack_test "tuck card under an empty stack" card_to_push0 empty_stack false "Oars";
+
+    make_push_stack_test "push card onto an stack with one card" card_to_push1 one_card_stack true "Archery";
+    make_push_stack_test "tuck card under an empty stack with one card" card_to_push1 one_card_stack false "Oars";
+
+    make_count_icon_test "count_icon empty" empty_board Card.Castle 0;
+    make_count_icon_test "count_icon castle" board1 Card.Castle 2;
+    make_count_icon_test "count_icon crown" board1 Card.Crown 1;
+    make_count_icon_test "count_icon stacked cards" board2 Card.Pattern 2;
+
   ]
 
 
