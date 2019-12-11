@@ -1,4 +1,4 @@
-MODULES=dogma card player state game authors main 
+MODULES=dogma card player state game authors frontend main 
 OBJECTS=$(MODULES:=.cmo)
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)
@@ -50,7 +50,7 @@ docs: docs-public docs-private
 	
 docs-public: build
 	mkdir -p doc.public
-	ocamlfind ocamldoc -I _build -package $(PKGS) \
+	ocamlfind ocamldoc -I _build -package yojson,ANSITerminal \
 		-html -stars -d doc.public $(MLIS)
 
 docs-private: build

@@ -2,7 +2,7 @@ open State
 
 (** [get_stack state id] is the stack of on the board of player [id]. *)
 let get_stack state id = 
-  State.get_stacks_by_id state id 
+  State.get_emojis_by_id state id 
 
 (** [print_blist list] prints out the string representing the board [list]. *)
 let print_blist list =

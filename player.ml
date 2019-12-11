@@ -250,8 +250,8 @@ let pop_stack i stack =
     | x::xs -> 
       try let ith =  try (List.nth cards i) 
             with _ -> failwith ((string_of_int i) ^ " is not a valid index") in
-        let updated_cards = List.filter 
-            (fun x -> not (Card.equal x ith)) cards in
+        let not_equal_func = fun x -> not (Card.equal x ith) in
+        let updated_cards = List.filter not_equal_func cards in
         (update_stack_cards stack updated_cards), ith
       with _ -> print_endline "The stack doesn't have i^th element.
       Popped 0^th card by default.\n"; stack, List.hd cards
@@ -293,16 +293,18 @@ let transfer_card_to_stack (card_list: Card.t list)
   if Card.get_color card <> stack.color 
   then failwith "cannot transfer card of a different color"
   else begin 
+    let title = Card.get_title card in
     ANSITerminal.(print_string [green] ("\nYou just transferred a card [" ^ 
-                                        (Card.get_title card) ^ "]\n"));
+                                        title ^ "]\n"));
     let updated_stack = push_stack card stack top in
     updated_card_list, updated_stack 
   end
 
 let transfer_stack_to_card (stack: stack) (card_list: Card.t list) =
   let updated_stack, card = pop_stack 0 stack in
+  let title = Card.get_title card in
   ANSITerminal.(print_string [green] ("\nYou just transferred a card [" ^ 
-                                      (Card.get_title card) ^ "]\n"));
+                                      title ^ "]\n"));
   let updated_card_list = push_card card card_list in
   updated_stack, updated_card_list
 
@@ -344,7 +346,7 @@ let get_score player =
 
 let get_value (player:t) (idx:int) : int= 
   let card = List.nth player.hand idx in
-  card.value
+  Card.get_value card
 
 let update_score player score = {
   id = player.id;

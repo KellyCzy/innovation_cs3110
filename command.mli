@@ -29,7 +29,7 @@ val string_list: string -> string list
 exception Empty
 
 (** Raised when a malformed command is encountered. *)
-exception Malformed
+exception Malformed of string
 
 (** [color_of_b b] takes in a string and return the correspoding dogma color.
     It raises Malformed if the string is not a color*)

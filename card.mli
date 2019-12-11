@@ -1,13 +1,22 @@
+open Dogma 
+
+(** type of an icon.*)
+type icon = Castle | Crown | Factory | Leaf | Clock | Lightbulb | Pattern
+
+(** type of a color.*)
+type color = Dogma.stack_color
 
 (** type of a card. 
       A card should contains a [tile], [value],  [dogma], [icon], [color]*)
-type t 
-
-(** type of an icon.*)
-type icon
-
-(** type of a color.*)
-type color 
+type t = {
+  title : string;
+  description : string;
+  value : int;
+  dogmas : Dogma.t list;
+  dogmas_icon : icon;
+  icons : icon list;
+  color : color;
+}
 
 (** [get_card_title c] is the title of [c]*)
 val get_title : t -> string
@@ -32,16 +41,16 @@ val equal : t -> t -> bool
 val compare : t -> t -> int
 
 (** [get_dogmas_icon c] is the icon of the dogma of [c].*)
-val get_dogma_icon : t -> icon
+val get_dogmas_icon : t -> icon
 
 (** [get_description c] is the description of [c].*)
 val get_description : t -> string
 
 (** [count_icons icon_list icon acc] is number of icons [icon] 
     in icon_list plus [acc]*)
-val coutn_icons : icon list -> icon -> int -> int
+val count_icons : icon list -> icon -> int -> int
 
-(** [color_to_string color] is the string corresboding to the name of [color]*)
+(** [color_to_string color] is the string corresboding to the name of [color] *)
 val color_to_string : color -> string
 
 (** [color_to_int color] is the index of [color] on the board of the player.*)

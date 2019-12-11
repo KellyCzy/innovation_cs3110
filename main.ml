@@ -89,7 +89,7 @@ let execute_dogmas state dogmas =
     of the tuple is the winning player's id, and the second entry is the 
     final score of this player. The tuple is (-1, -1) if no one wins. *)
 let check_win state = 
-  let cards = state.era_cards in
+  let cards = get_era_cards state in
   let win = List.for_all (fun lst -> List.length lst = 0) cards in
   if win then
     let rec get_max_score = function

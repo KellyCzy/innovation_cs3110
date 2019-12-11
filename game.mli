@@ -13,4 +13,4 @@ val string_to_color : string -> Dogma.stack_color
 val string_to_icon : string -> Card.icon
 
 (** [all_cards json era] is all the cards ranging to [era] in [json]. *)
-val all_cards : Yojson.Basic.t -> int -> Card.list list
+val all_cards : Yojson.Basic.t -> int -> Card.t list list

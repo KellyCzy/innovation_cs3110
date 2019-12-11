@@ -4,14 +4,17 @@ open Card
 (** [stack] is the type representing the stack on the board. *)
 type stack
 
+(** type t is the representation of a player.  *)
+type t
+
+
 (** [get_dir stack] is the splay direction of [stack]. *)
 val get_dir : stack -> Dogma.splay_direction
 
 (** [get_top_card stack] is the top card on [stack]. *)
 val get_top_card : stack -> Card.t
 
-(** [t] is the representation of a player. *)
-type t
+
 
 (** [init_stack color] is the initialized stack of [color]. *)
 val init_stack : Dogma.stack_color -> stack
@@ -92,7 +95,7 @@ val get_board_total_length : t -> int
 
 (** [print_board player] is the string representation of the board 
     of [player]. *)
-val print_board : t -> int
+val print_board : t -> string
 
 (** [get_board player] is the board of [player].*)
 val get_board : t -> stack list
@@ -195,7 +198,7 @@ val get_score_cards : t -> Card.t list
 val get_score : t -> int
 
 (** [get_value [layer idx] is the value of the card with index 
-    [idx] on [player]'s hand.*)
+    [idx] on [player]'s hand. *)
 val get_value : t -> int -> int
 
 (** [update_score player score] is the player with player [player]'s score 

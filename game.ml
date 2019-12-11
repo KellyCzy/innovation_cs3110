@@ -82,6 +82,7 @@ let json_to_dogmas (json : Yojson.Basic.t) : Dogma.t list =
   ((eff1_lst json) |> List.map matching) :: 
   ((eff2_lst json) |> List.map matching) :: []
 
+
 (** [single_card json] is the card represented by [json]. *)
 let single_card (json : Yojson.Basic.t) : Card.t = 
   {
