@@ -28,6 +28,9 @@ open Yojson.Basic.Util
     all the getter method. 
     The third part tests all the essential functions in player module, including 
     pop, remove, push, and count_icon. 
+    For the rest modules, such as game.ml, they mainly consists of parsing and 
+    printing statements and we didn't test them. If they are not working, 
+    then our game could not even start. Thus we believe they works.
 
     All the test are developed using glass box testing. Based on the code we
     wrote, we developed test cases to ensure the functions that we wrote are 
@@ -55,6 +58,17 @@ open Yojson.Basic.Util
     that it also works for score cards. That's why we only have one transfer 
     test cases that includes score cards.
 
+    Further, the main feature of our game consists of draw, meld, dogma (which
+    consists of return, transfer, etc.). We've included the test cases of these
+    main features, and we further tested that our [make play] works correctly, 
+    thus we are convinced that our State.ml is correct.
+
+    In addition, for some of the choice of test cases for Player.ml, we place
+    a stronger emphasis on testing on essential helper functions, such as pop_card, 
+    pop_stack, remove_hand, push_hand. For some of the functions we didn't test, 
+    it's either because they are built from the aforementioned helper functions,
+    such as [add_stack], or because they are too straightforward, such as push_card.
+    Therefore, we could say we've tested that our Player.ml is correct.
 *)
 
 let innov = Yojson.Basic.from_file "innov.json"
@@ -485,7 +499,6 @@ let state_tests =
     make_transfer_test_hs "hand to score" input_state_hs 
       myself_id_hs other_id_hs card_pile1_hs card_pile2_hs
       idx_hb top_hs expected_output_hs; 
-
 
     make_return_test "return one" input_state_ro player_ro 
       hand_idx_ro expected_output_ro;

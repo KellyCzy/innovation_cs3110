@@ -44,7 +44,7 @@ perf:
 	gnuplot perf.p
 
 zip:
-	zip innovation_src.zip *.ml* _tags Makefile mli_files innov.json INSTALL.md 
+	zip innovation_src.zip *.ml* _tags Makefile mli_files innov.json test1.json test2.json INSTALL.md 
 	
 docs: docs-public docs-private
 	
