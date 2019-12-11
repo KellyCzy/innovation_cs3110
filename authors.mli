@@ -1,6 +1,10 @@
 (**
    Metadata about this submission.
-   @author TODO All author names and NetIDs. 
+    @author 
+   Ziyao Cheng (zc96),
+   Quintessa Qiao (hq45),
+   Haocheng Shen (hs668),
+   Ruiqi Zhu (rz327)
 *)
 
 (** [hours_worked] is a list of the number of hours each team member

@@ -5,6 +5,7 @@ open State
 open Player
 open Dogma
 open Command
+open Card
 open Printf
 open Frontend
 open Yojson.Basic.Util
@@ -15,6 +16,7 @@ open Yojson.Basic.Util
     different situation and test to see if the outcome is what we want. The 
     manual test part ensures our connection and relationship between each modules
     and the progress of the game is correct. 
+    Specifically, we tested all cards and their dogmas, and commands for each player.
     For OUnit tests, we focus more on specific functions. We do not run the 
     whole game anymore, instead, we focus on specific feature in the game. We mainly
     have three parts. 
@@ -40,7 +42,20 @@ open Yojson.Basic.Util
     make sure essential functions in player module is correct, which ensures
     the way the game interact with each player is corret. The crucial part 
     of the game includes state, player, and cards, which is why we developed 
-    test cases to seperately ensures functions in these modules are correct. *)
+    test cases to seperately ensures functions in these modules are correct. 
+
+    Also, as a side note, we choose to test some functions instead of others 
+    for the given reasons. For example, for the command [transfer], 
+    there are three different sources for cards, which are hand cards, 
+    board cards, score cards. We only tested transferring from hand to hand,
+    hand to board, board to board, board to hand, and hand to score. It is because
+    hand cards and score cards are of the same type [Card.t list], whereas 
+    board cards is of type [stack]. If the four combinations of transferring 
+    from [Card.t list] to [stack] all works correctly, then we could guarantee 
+    that it also works for score cards. That's why we only have one transfer 
+    test cases that includes score cards.
+
+*)
 
 let innov = Yojson.Basic.from_file "innov.json"
 let test = Yojson.Basic.from_file "test.json"
@@ -80,7 +95,6 @@ let make_player_test
          |> Player.get_id)
     )
 
-
 let old_state_draw = (get_all_cards test)|>State.init_state
 
 let new_state_draw = 
@@ -89,11 +103,12 @@ let new_state_draw =
 
 
 let old_state_draw_innov = (get_all_cards innov) |> State.init_state
-let first_card = Card.get_title (State.get_era_cards_top old_state_draw_innov)
-let first_card_index = Card.color_to_int (Card.get_color (State.get_era_cards_top old_state_draw_innov))
+let first_card = Card.get_title 
+    (State.get_era_cards_top old_state_draw_innov)
+let first_card_index = Card.color_to_int 
+    (Card.get_color (State.get_era_cards_top old_state_draw_innov))
 let new_state_draw_innov = State.draw old_state_draw_innov 
     (old_state_draw_innov|> current_player) 0
-
 
 let new_state_draw_two = 
   State.draw new_state_draw 
@@ -248,8 +263,10 @@ let make_transfer_test_hb
       let state_after_transfer = 
         State.transfer state myself other card_pile1 card_pile2 idx top in
 
-      let myself_updated = State.get_player state_after_transfer myself_id in
-      let other_updated = State.get_player state_after_transfer other_id in
+      let myself_updated = State.get_player state_after_transfer 
+          myself_id in
+      let other_updated = State.get_player state_after_transfer 
+          other_id in
 
       let myself_update_length = 
         List.length (Player.get_hand myself_updated) in
@@ -380,10 +397,13 @@ let make_transfer_test_hs
       let other = State.get_player state other_id in
 
       let state_after_transfer = 
-        State.transfer state myself other card_pile1 card_pile2 idx top in
+        State.transfer state myself other card_pile1 card_pile2 
+          idx top in
 
-      let myself_updated = State.get_player state_after_transfer myself_id in
-      let other_updated = State.get_player state_after_transfer other_id in
+      let myself_updated = State.get_player state_after_transfer 
+          myself_id in
+      let other_updated = State.get_player state_after_transfer 
+          other_id in
 
       let myself_updated_length = 
         List.length (Player.get_hand myself_updated) in
@@ -409,7 +429,8 @@ let make_swap_player
     (player_list: Player.t list)
     (expected_output : int) : test = 
   name >:: (fun _ -> 
-      let updated_player_list = State.swap_player new_player player_list in
+      let updated_player_list = State.swap_player new_player 
+          player_list in
       let first_player = List.hd updated_player_list in
       let updated_hand_length = Player.get_hand_length first_player in
       assert_equal updated_hand_length expected_output
@@ -695,31 +716,41 @@ let make_count_icon_test
 let player_test = 
   [
     make_get_color_stack_test "get_color_stack" player0 red red_int;
-    make_update_stack_list_test "update_stack_list" player2 0 empty_stack 0;
+    make_update_stack_list_test "update_stack_list" player2 0 
+      empty_stack 0;
     make_pop_card_test "pop_card check popped card" 0 cards "Archery";
-    make_pop_card_rest_test "pop_card check the rest of card 0" 0 cards "Oars";
+    make_pop_card_rest_test "pop_card check the rest of card 0" 0 cards 
+      "Oars";
     make_pop_card_test "pop_card check popped card" 1 cards "Oars";
-    make_pop_card_rest_test "pop_card check the rest of card 1" 1 cards "Archery";
+    make_pop_card_rest_test "pop_card check the rest of card 1" 1 cards 
+      "Archery";
 
-    make_pop_stack_test "pop_stack check popped stack" 0 ith_stack "Oars";
-    make_pop_stack_rest_test "pop_stack check the rest of stack 0" 0 ith_stack "Archery";
-    make_pop_stack_test "pop_stack check popped stack" 1 ith_stack "Archery";
-    make_pop_stack_rest_test "pop_stack check the rest of stack 1" 1 ith_stack "Oars";
+    make_pop_stack_test "pop_stack check popped stack" 0 
+      ith_stack "Oars";
+    make_pop_stack_rest_test "pop_stack check the rest of stack 0" 0 
+      ith_stack "Archery";
+    make_pop_stack_test "pop_stack check popped stack" 1 
+      ith_stack "Archery";
+    make_pop_stack_rest_test "pop_stack check the rest of stack 1" 1 
+      ith_stack "Oars";
 
     make_remove_hand_test "remove card 0from hand" player5 0 "Archery";
     make_remove_hand_test "remove card 1 from hand" player5 1 "Oars";
 
-    make_push_stack_test "push card onto an empty stack" card_to_push0 empty_stack true "Oars";
-    make_push_stack_test "tuck card under an empty stack" card_to_push0 empty_stack false "Oars";
+    make_push_stack_test "push card onto an empty stack" card_to_push0 
+      empty_stack true "Oars";
+    make_push_stack_test "tuck card under an empty stack" card_to_push0 
+      empty_stack false "Oars";
 
-    make_push_stack_test "push card onto an stack with one card" card_to_push1 one_card_stack true "Archery";
-    make_push_stack_test "tuck card under an empty stack with one card" card_to_push1 one_card_stack false "Oars";
+    make_push_stack_test "push card onto an stack with one card" 
+      card_to_push1 one_card_stack true "Archery";
+    make_push_stack_test "tuck card under an empty stack with one card" 
+      card_to_push1 one_card_stack false "Oars";
 
     make_count_icon_test "count_icon empty" empty_board Card.Castle 0;
     make_count_icon_test "count_icon castle" board1 Card.Castle 2;
     make_count_icon_test "count_icon crown" board1 Card.Crown 1;
     make_count_icon_test "count_icon stacked cards" board2 Card.Pattern 2;
-
   ]
 
 

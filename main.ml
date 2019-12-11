@@ -292,16 +292,8 @@ let game_rule = "Game Rules:\n
     Continue a spaly if one is present.\n
     Draw: Take a card of value equal to your highest top card from the supply piels. 
     If empty, draw from the next higher pile.\n
-    Achieve: To claim, must have a score of at least 5x age number in points, 
-    and a top card of equal or higher value. Points are not spent, you keep them.\n
     Dogma/take action: Pick a top card on your board, and execute each effect on it in order. 
-    Effects are mandatory unless “You may” precedes them.\n
-    I Demand effects are executed by each player with fewer of the features icon than you, 
-    going clockwise. Read the effect out loud to them.\n
-    Opponents execute non-demand effects before you, 
-    if they have as many or more of the featured icon, going clockwise.\n
-    If any opponent shared a non-demand effect, and anything happened, 
-    take a single free Draw action at the conclusion of your Dogma action.\n"
+    Effects are mandatory unless “You may” precedes them.\n"
 
 (** [main ()] prompts for the game to play, then starts it. *)
 let main () =

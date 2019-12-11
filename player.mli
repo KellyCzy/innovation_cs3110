@@ -5,7 +5,7 @@ open Card
 (** [stack] is the type representing the stack on the board. *)
 type stack
 
-(** type t is the representation fo a player. *)
+(** [t] is the representation fo a player. *)
 type t
 
 (** [get_dir stack] is the splay direction of [stack]. *)

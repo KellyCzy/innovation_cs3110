@@ -1,6 +1,5 @@
 open Dogma
 
-
 (** [command] is the type of command that users input. *)
 type command = 
   | Meld of int
@@ -13,12 +12,10 @@ type command =
   | Help
   | Number of int
 
-
 (** [erase_space list] erases all leading and trailing white space 
     of every element in the list and delete element 
     that are just white space*)
 val erase_space : string list -> string list
-
 
 (** [string_list string] takes a string and remove all its leadning 
     and trailing white space and splice it into pieces when there's a 

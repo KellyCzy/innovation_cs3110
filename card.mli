@@ -50,6 +50,9 @@ val get_description : t -> string
     in icon_list plus [acc]*)
 val count_icons : icon list -> icon -> int -> int
 
+(** [icon_to_string] maps an icon to its string representation *)
+val icon_to_string:  icon -> string
+
 (** [color_to_string color] is the string corresboding to the name of [color] *)
 val color_to_string : color -> string
 

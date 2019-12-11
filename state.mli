@@ -5,6 +5,7 @@ open Printf
 
 (** [Win s] is raised when all the era cards are drawn *)
 exception Win of string
+
 (** [Empty_list s] is raised when there is no card in the list anymore *)
 exception Empty_list of string
 
