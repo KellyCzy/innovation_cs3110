@@ -239,7 +239,8 @@ let meld (state: t) (player: Player.t) (hand_idx: int): t =
 (** [tuck state player hand_idx] lets a player tuck a card from hand with 
     hand index hand_idx and returns a new state *)
 let tuck (state: t) (player: Player.t) (hand_idx:int): t = 
-  ANSITerminal.(print_string [green] ("\nYou just tucked a card [" ^ (Card.get_title (Player.get_ith_hand player hand_idx)) ^ "]\n"));
+  let title = Card.get_title (Player.get_ith_hand player hand_idx) in
+  ANSITerminal.(print_string [green] ("\nYou just tucked a card [" ^ (title) ^ "]\n"));
   let updated_player = Player.add_stack player hand_idx false in
   update_player state updated_player
 
@@ -307,18 +308,18 @@ let match_update_card_pile (myself: Player.t) (other: Player.t)
   | Self_hand _ -> Player.update_hand updated_card_list myself, other
   | Other_hand _ -> myself, Player.update_hand updated_card_list other
   | Self_score _ -> 
-    Player.update_score myself updated_card_list, other
-  | Other_score _ -> let temp = Player.update_score 
-                         other updated_card_list in
-    myself, temp
-  | Self_stack c -> update_board 
-                      (Player.update_stack_list 
-                         (Player.get_board myself) 
-                         (Player.map_color_to_int c) updated_stack) 
-                      myself, other
-  | Other_stack c -> myself, update_board 
-                       (Player.update_stack_list (Player.get_board other) 
-                          (Player.map_color_to_int c) updated_stack) other
+    (Player.update_score myself updated_card_list), other
+  | Other_score _ -> 
+    myself, (Player.update_score other updated_card_list)
+  | Self_stack c -> let c_int = Player.map_color_to_int c in
+    let to_update = Player.update_stack_list 
+        (Player.get_board myself) c_int updated_stack in
+    update_board to_update myself, other
+  | Other_stack c -> 
+    let c_int = Player.map_color_to_int c in
+    let to_update = Player.update_stack_list 
+        (Player.get_board other) c_int updated_stack in
+    myself, update_board to_update other
 
 (*[procress_cl1_cl2 cl1 cl2 card_pile1 card_pile2 fake_stack 
   myself other idx top] returns updated card lists cl1 and cl2. *)
@@ -436,7 +437,6 @@ let match_fields myself other card_pile1 card_pile2
         fake_stack fake_card_list myself other idx top
   | _, _, _, _ -> failwith "fail to match card list or stack"
 
-
 (** [transfer state myself' other' card_pile1 card_pile2 idx top] lets 
     a player transfer card from one pile to another. top indicates if the 
     card is on top of the stack. *)
@@ -452,7 +452,6 @@ let transfer (state: t) (myself': Player.t) (other': Player.t)
       fake_stack fake_card_list card_list1 stack1 card_list2 stack2 idx top  
   in
   update_player (update_player state updated_player1) updated_player2
-
 
 (** [score state player hand_idx] lets 
     a player score a card from his hand with hand index hand_idx *)
@@ -484,7 +483,6 @@ let rec search_color board : Dogma.stack_color =
     if lst = [] then search_color t
     else Player.get_stack_color x
   | _ -> failwith "impossible"
-
 
 (** [give_color_to_dogma id state] returns the color of the specific 
     board of a player with id 'id' *)

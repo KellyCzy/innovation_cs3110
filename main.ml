@@ -113,8 +113,7 @@ let print_help state =
       [player_idx] ranges from 0 to 3.\n
       🌟 hand [player_idx]: display the player [player_idx]'s hand cards, 
       [player_idx] ranges from 0 to 3.\n
-      🌟 score [player_idx]: display the player [player_idx]'s scores, 
-      [player_idx] ranges from 0 to 3.\n
+      🌟 score: display current player's scores.\n
       🌟 dogma [color]: use the dogma effect on stack with color [color]. 
       Colors are red, purple, blue, green, yellow.\n" 
     (State.get_current_player state)

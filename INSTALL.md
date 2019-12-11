@@ -37,11 +37,16 @@ Five achievements cards could be achieved anytime when satisfied the requirement
 ## Build
 * `make build` to build the game
 * `make play` to start playing
+* `make test` to start testing
 
 ## Commands
+* All indices start at ZERO!!
 * `draw [era_num]`: draw a card from era `era_num`
 * `meld [hand_idx]`: meld a card with index `hand_idx` from your hand cards
 * `board [player_idx]`: display the player `player_idx`'s board cards
+* `hand`: display current player's hand cards
+* `score`: display current player's scores
+* `dogma [color]`: use the dogma on top card on [color] stack on the player's board. [color] includes [red, purple, blue, green, yellow]. Notice that the player should have at least one [color] color card on his/her board.
 * More features upcoming!
 
 ## One Example of How to Play
@@ -54,4 +59,19 @@ Five achievements cards could be achieved anytime when satisfied the requirement
 * `draw 0`
 * `meld 0`
 * `dogma yellow` if there's a yellow card on player's board
+* `hand`
+* `score`
 * ...
+
+## JSON format:
+*  Draw : ["Draw i"] [i] is the era of the card
+    Meld : ["Meld i"] [i] is the index of the card
+    Tuck : ["Tuck i"] [i] is the index of the card
+    Return : ["Return i"] [i] is the index of the card
+    Score : ["Score i"] [i] is the index of the card
+    Splay : ["Splay dir"] [dir] is the splay direction can be ["Up"], ["Right"], ["Left"]
+    Transfer : ["Transfer pile:i/c,pile:i/c"]
+            ["pile:i/c"] is the card pile can be:
+            ["Self_hand:i"], ["Other_hand:i"], ["Self_stack:c"], ["Other_stack:c"], ["Self_score:i"], ["Other_score:i"]
+            [i] is the index of the card or player
+            [c] is the color of the stack, can be ["Red"], ["Purple"], ["Blue"], ["Green"], ["Yellow"]

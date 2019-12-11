@@ -10,17 +10,42 @@ type icon
 type color 
 
 (** [get_card_title c] is the title of [c]*)
-val title : t -> string
+val get_title : t -> string
 
 (** [get_value c] is the value/era of [c]*)
-val value : t -> int
+val get_value : t -> int
 
 (** [get_dogma c] is the list of dogmas on the card [c]*)
-val dogma_list : t -> Dogma.t list
+val get_dogma : t -> Dogma.t list
 
 (** [get_icon c] is the list of icons on the card [c]*)
-val icon : t -> icon list
+val get_icons : t -> icon list
 
-(** [get_colorc c] is the color of the card [c]*)
-val color : t -> color
+(** [get_color c] is the color of the card [c]*)
+val get_color : t -> color
 
+(** [equal c1 c2] is the ture if cards [c1] and [c2] is the same. *)
+val equal : t -> t -> bool
+
+(** [compare c1 c2] is 0 if the cards [c1] and [c2] is equal, negative if 
+    the title of [c1] is less than [c2], otherwise positive.*)
+val compare : t -> t -> int
+
+(** [get_dogmas_icon c] is the icon of the dogma of [c].*)
+val get_dogma_icon : t -> icon
+
+(** [get_description c] is the description of [c].*)
+val get_description : t -> string
+
+(** [count_icons icon_list icon acc] is number of icons [icon] 
+    in icon_list plus [acc]*)
+val coutn_icons : icon list -> icon -> int -> int
+
+(** [color_to_string color] is the string corresboding to the name of [color]*)
+val color_to_string : color -> string
+
+(** [color_to_int color] is the index of [color] on the board of the player.*)
+val color_to_int : color -> int
+
+(** [card_to_string card] is the string representing [card].*)
+val card_to_string : t -> string

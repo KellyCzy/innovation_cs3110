@@ -2,11 +2,8 @@ open Yojson.Basic.Util
 open Card
 open Dogma
 
-(** [Invalid_json_format s] is raise when there is a invalid json 
-    where the error is reported with [s]*)
 exception Invalid_json_format of string
 
-(** [string_to_color str] is the Dogma.stack_color type represented by [str]. *)
 let string_to_color str : Dogma.stack_color =
   match str with 
   | "Red" -> Dogma.Red
@@ -16,7 +13,6 @@ let string_to_color str : Dogma.stack_color =
   | "Yellow" -> Dogma.Yellow
   | _ -> raise (Invalid_json_format str)
 
-(** [string_to_icon str] is the Card.icon type represented by [str]. *)
 let string_to_icon str : Card.icon =
   match str with 
   | "Castle" -> Card.Castle
@@ -27,20 +23,6 @@ let string_to_icon str : Card.icon =
   | "Lightbulb" -> Card.Lightbulb
   | "Pattern" -> Card.Pattern
   | _ -> raise (Invalid_json_format str)
-
-(** JSON format:
-    Draw : ["Draw i"] [i] is the era of the card
-    Meld : ["Meld i"] [i] is the index of the card
-    Tuck : ["Tuck i"] [i] is the index of the card
-    Return : ["Return i"] [i] is the index of the card
-    Score : ["Score i"] [i] is the index of the card
-    Splay : ["Splay dir"] [dir] is the splay direction can be ["Up"], ["Right"], ["Left"]
-    Transfer : ["Transfer pile:i/c,pile:i/c"]
-             ["pile:i/c"] is the card pile can be:
-              ["Self_hand:i"], ["Other_hand:i"], ["Self_stack:c"], ["Other_stack:c"], ["Self_score:i"], ["Other_score:i"]
-             [i] is the index of the card or player
-             [c] is the color of the stack, can be ["Red"], ["Purple"], ["Blue"], ["Green"], ["Yellow"]
-*)
 
 (** [eff1_lst json] is the list of effect 1 of [json]. *)
 let eff1_lst json = 
@@ -107,9 +89,8 @@ let single_card (json : Yojson.Basic.t) : Card.t =
     description = json |> member "description" |> to_string;
     value = json |> member "value" |> to_int;
     dogmas = json |> member "dogmas" |> json_to_dogmas;
-    dogmas_icon = json |> member "dogmas_icon" |> to_string 
-                  |> string_to_icon;
-    icons = json |> member "icons" |> to_list
+    dogmas_icon = json |> member "dogmas_icon" |> to_string |> string_to_icon;
+    icons = json |> member "icons" |> to_list 
             |> List.map to_string |> List.map string_to_icon;
     color = json |> member "color" |> to_string |> string_to_color
   }
@@ -123,7 +104,6 @@ let shuffle clist =
   clist
 (* QCheck.Gen.(generate1 (shuffle_l clist)) *)
 
-(** [all_cards json era] is all the cards ranging to [era] in [json]. *)
 let rec all_cards (json : Yojson.Basic.t) (eras : int) : 
   Card.t list list = 
   match eras with 

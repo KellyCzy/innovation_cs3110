@@ -1,22 +1,18 @@
 open Dogma
 open Card 
 
-(** [stack] is the type representing the stack on the board. *)
 type stack = {
   color : Dogma.stack_color;
   splay : Dogma.splay_direction;
   cards : Card.t list;
 }
 
-(** [get_dir stack] is the splay direction of [stack]. *)
 let get_dir stack = 
   stack.splay
 
-(** [get_top_card stack] is the top card on [stack]. *)
 let get_top_card stack = 
   try List.hd stack.cards with _ -> failwith "Do not have this color on board."
 
-(** [t] is the representation of a player. *)
 type t = {
   id : int;
   hand : Card.t list;
@@ -25,14 +21,12 @@ type t = {
   achievements : int list;  
 }
 
-(** [init_stack color] is the initialized stack of [color]. *)
 let init_stack color = {
   color = color;
   splay = No;
   cards = [];
 }
 
-(** [init_player id] is the initialized player of [id]. *)
 let init_player id = {
   id = id;
   hand = [];
@@ -41,7 +35,6 @@ let init_player id = {
   achievements = [];
 }
 
-(** [map_color_to_int] is corresponding index of a color. *)
 let map_color_to_int = function
   | Dogma.Red -> 0
   | Dogma.Purple -> 1
@@ -49,7 +42,6 @@ let map_color_to_int = function
   | Dogma.Green -> 3
   | Dogma.Yellow -> 4
 
-(** [map_color_to_string] is the string representing the the color. *)
 let map_color_to_string = function
   | Dogma.Red -> "Red"
   | Dogma.Purple -> "Purple"
@@ -57,31 +49,22 @@ let map_color_to_string = function
   | Dogma.Green -> "Green"
   | Dogma.Yellow -> "Yellow"
 
-(** [get_stack_color stack] is color of [stack]. *)
 let get_stack_color stack =
   stack.color
 
-(** [get_stack_cards stack] is the cards list of [stack]. *)
 let get_stack_cards stack = 
   stack.cards
 
-(** [get_stack_length stack] is the length of the card list in [stack]. *)
 let get_stack_length stack = 
   List.length (stack.cards)
 
-(** [compare_player p1 p2] is 0 when the id of [p1] and [p2] is equal, 
-    negative if [p1] is less than [p2] and positive otherwise*)
 let compare_player player1 player2 = 
   Stdlib.compare player1.id player2.id
 
-(** [compare_stack s1 s2] is 0 when the color of [s1] and [s2] is equal,
-    negative if [s1] is less than [s2] and positive otherwise. *)
 let compare_stack stack1 stack2 = 
   Stdlib.compare (map_color_to_int stack1.color) 
     (map_color_to_int stack2.color)
 
-(** [update_hand hand player] is a player 
-    derived by updated [player] with a new [hand].*)
 let update_hand hand player = {
   id = player.id;
   hand = hand;
@@ -90,8 +73,6 @@ let update_hand hand player = {
   achievements = player.achievements;
 }
 
-(** [update_board board player] is a player 
-    derived by updated [player] with a new [board].*)
 let update_board board player= {
   id = player.id;
   hand = player.hand;
@@ -100,8 +81,6 @@ let update_board board player= {
   achievements = player.achievements;
 }
 
-(** [update_splay_direction] is a stack 
-    with the splay of [stack] changes to [direction]. *)
 let update_splay_direction (stack: stack) 
     (direction: Dogma.splay_direction) = {
   color = stack.color;
@@ -109,117 +88,88 @@ let update_splay_direction (stack: stack)
   cards = stack.cards;
 }
 
-(** [update_stack_cards stack cards] is a stack 
-    with the cards of [stack] changes to [cards]. *)
 let update_stack_cards stack cards = {
   color = stack.color;
   splay = stack.splay;
   cards = cards;
 }
 
-(** [get_id player] is the id of [player]. *)
 let get_id player =
   player.id
 
-(** [get_hand player] is the hand of [player]. *)
 let get_hand player =
   player.hand
 
-(** [get_hand_length player] is the number of cards in the hand of [player]. *)
 let get_hand_length player = 
   List.length (player.hand)
 
-(** [print_hand player] is the string representation of the hand cards of [player]. *)
 let print_hand player = 
   String.concat " " (List.map Card.card_to_string player.hand)
 
-(** [get_ith_stack player i] is the stack of index [i] on the board of [player]. *)
 let get_ith_stack player i = 
   List.nth player.board i
 
-(** [get_stack_top player index] is the top card of stack 
-    with the index [index] on the board of [player].
-    Raise: Failure when the stack is empty. *)
 let get_stack_top (player: t) (index: int): string =
   let stack = List.nth player.board index in
   try
     (List.nth stack.cards 0) |> Card.card_to_string
-  with Failure _ ->  " empty stack"
+  with Failure _ -> "The stack has no card at given index"
 
-(** [get_top_cards_name player index] is the name of the top card of stack
-    with the index [index] on the board of [player].
-    Raise: Failure when the stack is empty.*)
 let get_top_card_name player index = 
   let stack = List.nth player.board index in
   try
     (List.nth stack.cards 0)|>Card.get_title
-  with Failure _ ->  "empty stack"
+  with Failure _ -> "The stack has no card at given index"
 
-(** [get_board_total_length player] is total number of cards 
-    on the board of [player].*)
 let get_board_total_length player = 
   let board = player.board in
   List.fold_left (fun acc b -> acc + List.length b.cards) 0 board
 
-(** [print_board player] is the string representation of the board of [player]. *)
 let print_board player =
-  try (
+  try 
     String.concat "\n" 
       ["Red: " ^ get_stack_top player 0 ^ "\n";
        "Purple: " ^ get_stack_top player 1 ^ "\n";
        "Blue: " ^ get_stack_top player 2 ^ "\n";
        "Green: " ^ get_stack_top player 3 ^ "\n";
        "Yellow: " ^ get_stack_top player 4 ^ "\n"]
-  ) with _ -> "wrong!"
+  with _ -> "wrong!"
 
-(** [get_board player] is the board of [player].*)
 let get_board player =
   player.board
 
-(** [add_hand player card] is the player with a
-    [card] added to the hand of [player]. *)
 let add_hand player card =  
   update_hand (card::player.hand) player
 
-(** [get_ith_hand player i] is the card of index [i] in the hand of [player]. 
-    Raise: Failure when i is not a valid index. *)
 let get_ith_hand player i = 
   try (List.nth player.hand i) 
   with _ -> failwith ((string_of_int i) ^ "is not a valid index")
 
-(** [get_color_stack player c] is the stack with color [c] of [player]. *)
 let get_color_stack (player: t) (c: Dogma.stack_color) : stack = 
   get_ith_stack player (map_color_to_int c)
 
-(** [count_left stack icon acc] is the number of [icon] in a left-splayed [stack], 
-    the initial number is [acc]. *)
+let rec count_num lst ac icon =
+  match lst with 
+  | [] -> ac
+  | a :: t -> if a = icon then count_num t (ac + 1) icon else count_num t ac icon
+
 let rec count_left stack icon acc = 
   match stack with
   | [] -> acc
   | a :: [] -> 
     let icons = Card.get_icons a in
-    let rec num lst ac =
-      match lst with 
-      | [] -> ac
-      | a :: t -> if a = icon then num t (ac + 1) else num t ac in
-    count_left [] icon (num icons acc)
+    count_left [] icon (count_num icons acc icon)
   | x :: xs ->
     let icons = Card.get_icons x in
     if List.nth icons 3 = icon 
     then count_left xs icon acc + 1 else count_left xs icon acc
 
-(** [count_right stack icon acc] is the number of [icon] in a right-splayed [stack],
-    the initial number is [acc]. *)
 let rec count_right stack icon acc = 
   match stack with
   | [] -> acc
   | a :: [] -> 
     let icons = Card.get_icons a in
-    let rec num lst ac =
-      match lst with 
-      | [] -> ac
-      | a :: t -> if a = icon then num t (ac + 1) else num t ac in
-    count_right [] icon (num icons acc)
+    count_right [] icon (count_num icons acc icon)
   | x :: xs ->
     let icons = Card.get_icons x in
     let num = if List.nth icons 0 = icon && List.nth icons 1 = icon then acc + 2 
@@ -227,18 +177,12 @@ let rec count_right stack icon acc =
       else acc in
     count_right xs icon num 
 
-(** [count_up stack icon acc] is the number of [icon] in a up-splayed [stack],
-    the initial number is [acc].*)
 let rec count_up stack icon acc = 
   match stack with
   | [] -> acc
   | a :: [] -> 
     let icons = Card.get_icons a in
-    let rec num lst ac =
-      match lst with 
-      | [] -> ac
-      | a :: t -> if a = icon then num t (ac + 1) else num t ac in
-    count_up [] icon (num icons acc)
+    count_up [] icon (count_num icons acc icon)
   | x :: xs ->
     let icons = Card.get_icons x in
     let num = 
@@ -249,10 +193,9 @@ let rec count_up stack icon acc =
       else if List.nth icons 2 = icon && List.nth icons 3 = icon then acc + 2
       else if List.nth icons 1 <> icon && 
               List.nth icons 2 <> icon && List.nth icons 3 <> icon then acc
-      else acc + 1 in count_up xs icon num
+      else acc + 1 in 
+    count_up xs icon num
 
-(** [count_no stack icon acc] is the number of [icon] in a no-splayed [stack],
-    the initial number is [acc].*)
 let rec count_no cards icon acc = 
   match cards with
   | [] -> acc
@@ -261,8 +204,6 @@ let rec count_no cards icon acc =
     let icons_num = Card.count_icons icons icon 0 in
     count_no t icon (icons_num + acc)
 
-(** [count_icon board icon acc] is the number of [icon] on the [board],
-    the initial number is [acc].*)
 let rec count_icon board icon acc = 
   match board with 
   | [] -> acc
@@ -273,11 +214,9 @@ let rec count_icon board icon acc =
     | No -> count_icon t icon (count_no (List.rev a.cards) icon acc)
     | Up -> count_icon t icon (count_up (List.rev a.cards) icon acc)
 
-(** [get_icon player icon] is the number of [icon] on the board of [player]. *)
 let get_icon (player: t) (icon: Card.icon) = 
   count_icon player.board icon 0
 
-(* update the ith stack with [new_s] in the stack list**)
 let update_stack_list s_lst i new_s = 
   let ith = try (List.nth s_lst i) with _ -> 
     failwith ((string_of_int i) ^ " is not a valid index") in
@@ -289,9 +228,6 @@ let update_stack_list s_lst i new_s =
       end in 
   update' [] s_lst |> List.sort compare_stack
 
-(** [pop_card i lst] is a card list and card pair, where the card list is [lst] 
-    with [i]th card removed and the card is the [i]th card in [lst]
-    Raise: Failure if [lst] is empty or doesn't have a [i]th element. *)
 let pop_card i lst = 
   match lst with
   | [] -> failwith "cannot pop element from empty list"
@@ -304,9 +240,6 @@ let pop_card i lst =
     Popped 0^th card by default.\n"; 
       lst, List.hd lst
 
-(** [pop_stack i stack] is a stack and card pair, where the stack is [stack] 
-    with [i]th card removed and the card is the [i]th card in [stack]
-    Raise: Failure if [stack] is empty or doesn't have a [i]th element. *)
 let pop_stack i stack = 
   let cards = stack.cards in
   if i = 0 then 
@@ -317,34 +250,25 @@ let pop_stack i stack =
     | x::xs -> 
       try let ith =  try (List.nth cards i) 
             with _ -> failwith ((string_of_int i) ^ " is not a valid index") in
-        let updated_cards = (List.filter 
-                               (fun x -> not (Card.equal x ith)) cards) in
+        let updated_cards = List.filter 
+            (fun x -> not (Card.equal x ith)) cards in
         (update_stack_cards stack updated_cards), ith
       with _ -> print_endline "The stack doesn't have i^th element.
       Popped 0^th card by default.\n"; stack, List.hd cards
 
-(** [remove_hand player i] is a player with [player]'s [i]the hand card removed.*)
 let remove_hand player i = 
   let card_list, _ = pop_card i player.hand in
   update_hand card_list player
 
-(** [push_stack card stack top] is the stack after [card] is pushed into [stack],
-    when [top] is ture, the card is pushed to the top of the stack 
-    and when [top] is false the card is pushed to the bottom of the stack.*)
 let push_stack (card: Card.t) (stack: stack) (top: bool): stack = {
   color = stack.color;
   splay = stack.splay;
   cards = if top then card::stack.cards else stack.cards@[card]
 }
 
-(** [push_card card card_list] is a card_list with [card] added to [card_list].*)
 let push_card (card: Card.t) (card_list: Card.t list) : Card.t list =
   card::card_list
 
-(** [add_stack palyer hand_idx top] is the stack of [player] with his card
-    in the hand with [hand_idx] add to his stack according to the color 
-    of the card.  When [top] is true the card is pushed to the top of the stack,
-    otherwise bottom. *)
 let add_stack (player: t) (hand_idx: int) (top: bool): t = 
   let updated_hand, card_to_add = pop_card hand_idx player.hand  in
   let color = card_to_add |> Card.get_color in
@@ -356,9 +280,6 @@ let add_stack (player: t) (hand_idx: int) (top: bool): t =
   player |> update_hand updated_hand |> update_board updated_stack_list
 
 
-(** [remove_stack player color] removes the top element from a stack with 
-    color [color] of player [player], return the updated stack and 
-    the card removed. *)
 let remove_stack player color = 
   let int_of_color = color |> map_color_to_int in
   let rest, ele = int_of_color |> get_ith_stack player |> pop_stack 0 in 
@@ -366,8 +287,6 @@ let remove_stack player color =
                         int_of_color in
   (update_board updated_board player), ele
 
-(** [transfer_card_to_stack card_list] transfer one card from [card_list] to 
-    stack, return updated card list and updated stack pair. *)
 let transfer_card_to_stack (card_list: Card.t list) 
     (stack: stack) (idx: int) (top: bool)= 
   let updated_card_list, card = pop_card idx card_list in 
@@ -380,8 +299,6 @@ let transfer_card_to_stack (card_list: Card.t list)
     updated_card_list, updated_stack 
   end
 
-(** [transfer_stack_to_card stack card_list] transfer on card from [stack] to
-    [card_list], return the updates stack and card list pair. *)
 let transfer_stack_to_card (stack: stack) (card_list: Card.t list) =
   let updated_stack, card = pop_stack 0 stack in
   ANSITerminal.(print_string [green] ("\nYou just transferred a card [" ^ 
@@ -389,8 +306,6 @@ let transfer_stack_to_card (stack: stack) (card_list: Card.t list) =
   let updated_card_list = push_card card card_list in
   updated_stack, updated_card_list
 
-(** [transfer_card_to_card card_list1 card_list2 idx] 
-    transfer card at position [idx] from [card_list1] to [card_list2]. *)
 let transfer_card_to_card (card_list1: Card.t list) 
     (card_list2: Card.t list) (idx:int) =
   let updated_card_list1, card = pop_card idx card_list1 in 
@@ -399,9 +314,6 @@ let transfer_card_to_card (card_list1: Card.t list)
   let updated_card_list2 = push_card card card_list2 in
   updated_card_list1, updated_card_list2
 
-(** [transfer_stack_to_stack stack1 stackt2 idx] 
-    transfer the card from [stack1] to [stack2]. When [top] is true, transfer
-    the top card, transfer the bottom card otherwise. *)
 let transfer_stack_to_stack (stack1: stack) (stack2: stack) (top: bool) =
   if stack1.color <> stack2.color 
   then failwith "cannot transfer card of a different color"
@@ -414,8 +326,6 @@ let transfer_stack_to_stack (stack1: stack) (stack2: stack) (top: bool) =
   end
 
 
-(** [splaye player color direction] splay the [player]'s [color] 
-    stack to [direction].*)
 let splay (player: t) (color: Dogma.stack_color) 
     (direction: Dogma.splay_direction) : t =
   let color_idx = map_color_to_int color in 
@@ -425,23 +335,17 @@ let splay (player: t) (color: Dogma.stack_color)
       player.board color_idx updated_stack in
   player |> update_board updated_stack_list
 
-(** [get_score_cards player] is the score cards list of [player]. *)
 let get_score_cards player = 
   player.score
 
-(** [get_score player] is the score of [player] by summing the score cards. *)
 let get_score player =
   List.fold_left (fun acc ele -> (Card.get_value ele) 
                                  + acc + 1) 0 player.score
 
-(** [get_value [layer idx] is the value of the card with index 
-    [idx] on [player]'s hand.*)
 let get_value (player:t) (idx:int) : int= 
   let card = List.nth player.hand idx in
   card.value
 
-(** [update_score player score] is the player with player [player]'s score 
-    updayted by [score].*)
 let update_score player score = {
   id = player.id;
   hand = player.hand;
@@ -450,8 +354,6 @@ let update_score player score = {
   achievements = player.achievements
 }
 
-(** [updated_achievements player a] is the player with [player]'s achievements 
-    updated by [a]. *)
 let update_achievements (player: t) (a: int list) = {
   id = player.id;
   hand = player.hand;
@@ -460,22 +362,16 @@ let update_achievements (player: t) (a: int list) = {
   achievements = a;
 }
 
-(** [add_score player score_card] is the player with [score_card] 
-    add to [player]'s score pile.*)
 let add_score player score_card = 
   score_card::player.score |> update_score player 
 
-(** [get_achiements player] is the achievements list of player [player]. *)
 let get_achievements player = 
   player.achievements
 
-(** [add_achievement player era] is the player with achievements with [era] 
-    number added to the achievements list of [player]. *)
 let add_achievement (player: t) (era: int) = 
   if (get_score player < era*5) then failwith "not enough score to achieve"
   else era::player.achievements |> update_achievements player
 
-(** [print_player player] is the string represatation of [player]. *)
 let print_player player = 
   Printf.printf "id %d\n" player.id;
   Printf.printf "hand length %d\n" (List.length (get_hand player));
